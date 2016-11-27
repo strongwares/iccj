@@ -1,0 +1,21 @@
+Sun: 11/27/2016
+
+Made ~/projects/iccw
+
+Created github repo:  https://github.com/strongwares/iccj
+
+git clone https://github.com/strongwares/iccj.git
+~/projects/iccj
+README.md
+
+git config --global user.email "strongwares@gmail.com"
+git config --global user.name "strongwares"
+
+# only this if not first git clone:
+git remote add origin https://github.com/strongwares/iccj.git
+
+git add <>
+git commit -m "..."
+git push -u origin master
+
+
