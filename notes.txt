@@ -1,6 +1,6 @@
 Sun: 11/27/2016
 
-Made ~/projects/iccw
+Made ~/projects/iccj
 
 Created github repo:  https://github.com/strongwares/iccj
 
@@ -16,5 +16,39 @@ git remote add origin https://github.com/strongwares/iccj.git
 git add <>
 git commit -m "..."
 git push -u origin master
+
+mkdir -p src/main/java/org/iotacontrolcenter/ui/properties
+mkdir -p src/main/java/org/iotacontrolcenter/ui/proxy
+mkdir -p src/main/java/org/iotacontrolcenter/ui/dialog
+mkdir -p src/main/java/org/iotacontrolcenter/ui/panel
+mkdir -p src/main/java/org/iotacontrolcenter/ui/app
+
+cp -r ~/projects/iccr/iccr/properties/src/main/java/org/iotacontrolcenter/properties/locale src/main/java/org/iotacontrolcenter/ui/properties
+cp -r ~/projects/iccr/iccr/properties/src/main/java/org/iotacontrolcenter/properties/source src/main/java/org/iotacontrolcenter/ui/properties
+cp -r ~/projects/iccr/iccr/properties/src/main/java/org/iotacontrolcenter/properties/util src/main/java/org/iotacontrolcenter/ui/properties
+
+
+install oracle jdk 8
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt update
+sudo apt-get install oracle-java8-installer
+
+sudo rm /usr/lib/jvm/default-java
+sudo ln -s /usr/lib/jvm/java-8-oracle  /usr/lib/jvm/default-java
+
+enable ssh on optiplex ubuntu:
+sudo apt-get install openssh-client
+sudo apt-get install openssh-server
+sudo systemctl restart sshd.service
+
+tested jfx and swing, go with swing
+cp src/main/java/org/iotacontrolcenter/ui/app/Main.java ~/projects/attic/iccj-Main.java.jfx
+
+
+
+todo
+populate icc props:
+icc.properties in /opt/icc/conf
+Messages bundles in /opt/icc/conf
 
 
