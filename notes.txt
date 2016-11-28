@@ -44,11 +44,48 @@ sudo systemctl restart sshd.service
 tested jfx and swing, go with swing
 cp src/main/java/org/iotacontrolcenter/ui/app/Main.java ~/projects/attic/iccj-Main.java.jfx
 
+Checked in
 
-
-todo
 populate icc props:
 icc.properties in /opt/icc/conf
 Messages bundles in /opt/icc/conf
+
+ui design
+
+main class:
+get property source
+get localizer
+create main ui
+
+main panel
+
+ui props in prop file:
+iccRefreshNeighbors=90
+iccRefreshNodeInfo=10
+iotaDownloadLink=http://85.93.93.110
+iotaDownloadFilename=IRI-1.1.0.jar
+
+todo
+ui props in prop source:
+
+
+initial login prompt for api key
+
+main menu
+
+controller
+
+proxy
+
+need footer
+
+proxy that uses resteasy client?
+
+checkin prop files or put in another mvn sub module
+
+
+questions:
+do us
+
 
 
