@@ -1,5 +1,11 @@
 package org.iotacontrolcenter.ui.panel;
 
 
-public class ServerTabPanel {
+import javax.swing.*;
+
+public class ServerTabPanel extends JTabbedPane {
+
+    public ServerTabPanel() {
+        super();
+    }
 }
