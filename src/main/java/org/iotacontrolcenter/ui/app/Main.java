@@ -18,10 +18,28 @@ public class Main {
     }
 
     public static void createAndShowGui() {
+
+        try {
+            /*
+            UIManager.setLookAndFeel(
+                    UIManager.getCrossPlatformLookAndFeelClassName());
+            */
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Exception setting L&F: " + e);
+        }
+
         mainController = new MainController();
         mainFrame = new MainFrame(mainController);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();
+        mainFrame.setSize(800, 400);
         mainFrame.pack();
         mainFrame.setVisible(true);
     }

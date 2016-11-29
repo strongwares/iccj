@@ -22,12 +22,13 @@ public class MainFrame extends JFrame {
         setJMenuBar(mainMenu);
 
         serverTabPanel = new ServerTabPanel();
+        serverTabPanel.setPreferredSize(new Dimension(800,400));
         mainController.setServerTabPanel(serverTabPanel);
 
         mainPanel = new MainPanel();
         mainPanel.add(serverTabPanel);
 
         mainController.init();
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        getContentPane().add(mainPanel, BorderLayout.PAGE_START);
     }
 }

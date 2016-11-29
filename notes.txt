@@ -65,17 +65,44 @@ iccRefreshNodeInfo=10
 iotaDownloadLink=http://85.93.93.110
 iotaDownloadFilename=IRI-1.1.0.jar
 
-todo
-ui props in prop source:
-
-
-initial login prompt for api key
-
 main menu
 
 controller
 
 proxy
+
+Checked in
+----------
+Mon 11/28/16
+
+temp comment out props and localizer to get layout done
+
+Give ServerTabpanel has preferred size
+
+Set nimbus L&F
+
+Add appassembler build to gen script and zip it all up
+
+Copy property files to appassembler conf dir
+
+.bat file runs on windows
+
+Rename artifact to icc
+
+Property files loaded from appassembler conf dir
+
+Make server tab expandable 
+
+todo
+Local tab label localizable
+
+Finish server tab with child components
+
+do initial prompt to connect to local server
+
+ui props in prop source:
+
+initial login prompt for api key
 
 need footer
 

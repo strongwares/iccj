@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.iotacontrolcenter.dto.IccrIotaNeighborsPropertyDto;
-import org.iotacontrolcenter.dto.NeighborDto;
 
 public class PropertySource {
 
@@ -28,18 +26,12 @@ public class PropertySource {
     private static final Pattern PATTERN_FALSE = Pattern.compile("0|off|false|no", Pattern.CASE_INSENSITIVE);
     private static final String CONF_FILE = "icc.properties";
 
-    public static final String ICC_DIR_PROP = "iccDir";
-    public static final String ICC_DIR_DEFAULT = "/opt/icc";
-
     private static final String LOC_COUNTRY_PROP = "iccCountryLocale";
     private static final String LOC_LANG_PROP = "iccLanguageLocale";
     private static final String LOC_LANG_DEFAULT = "en";
     private static final String LOC_COUNTRY_DEFAULT = "US";
 
     private Properties props;
-    private String confDir;
-    private String confFile;
-    private String iccDir;
     private String osName;
     private PropertiesConfiguration propWriter;
     private DateTimeFormatter ymdhmsFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -49,17 +41,12 @@ public class PropertySource {
 
         osName = System.getProperty("os.name").toLowerCase();
 
-        iccDir = System.getProperty(ICC_DIR_PROP);
-        if(iccDir == null || iccDir.isEmpty()) {
-            System.out.println(ICC_DIR_PROP + " system setting not available, using default: " + ICC_DIR_DEFAULT);
-            iccDir = ICC_DIR_DEFAULT;
-        }
-
-        confDir = iccDir + "/conf";
-        confFile = confDir + "/" + CONF_FILE;
-
         try {
-            propWriter = new PropertiesConfiguration(confFile);
+            // Direct file path load/store:
+            //propWriter = new PropertiesConfiguration(confFile);
+
+            // From classpath:
+            propWriter = new PropertiesConfiguration(CONF_FILE);
         }
         catch(Exception e) {
             System.out.println("PropertySource exception creating PropertiesConfiguration: " + e.getLocalizedMessage());
@@ -71,25 +58,21 @@ public class PropertySource {
 
     public void load() {
         try {
-            InputStream is = new FileInputStream(confFile);
+            // Direct file path load
+            //InputStream is = new FileInputStream(confFile);
+
+            // From classpath:
+            InputStream is = this.getClass().getResourceAsStream("/" + CONF_FILE);
             props.load(is);
         }
         catch(Exception e) {
-            System.out.println("failed to load icc.properties from " + confDir);
+            System.out.println("failed to load icc.properties");
             e.printStackTrace();
         }
     }
 
     public String getNowDateTimestamp() {
         return ymdhmsFormatter.format(LocalDateTime.now());
-    }
-
-    public String getIccConfDir() {
-        return confDir;
-    }
-
-    public String getIccDir() {
-        return iccDir;
     }
 
     public String getOsName() {

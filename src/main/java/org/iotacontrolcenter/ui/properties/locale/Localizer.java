@@ -2,9 +2,6 @@ package org.iotacontrolcenter.ui.properties.locale;
 
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -38,8 +35,6 @@ public class Localizer {
 
         propSource = PropertySource.getInstance();
 
-        confDir = propSource.getIccConfDir();
-
         lang = propSource.getLocaleLanguage();
         country = propSource.getLocaleCountry();
         loc = new Locale(lang, country);
@@ -48,13 +43,22 @@ public class Localizer {
 
         try {
             // Need to load the resource bundle prop file from the ICC conf dir
-            File file = new File(confDir);
-            URL[] urls = {file.toURI().toURL()};
-            ClassLoader loader = new URLClassLoader(urls);
+            // From specific path:
+            //File file = new File(confDir);
+            //URL[] urls = {file.toURI().toURL()};
+            //ClassLoader loader = new URLClassLoader(urls);
+            //locText = ResourceBundle.getBundle("MessagesBundle", loc, loader);
 
-            locText = ResourceBundle.getBundle("MessagesBundle", loc, loader);
+            // From classpath
+            locText = ResourceBundle.getBundle("MessagesBundle", loc);
+
             defaultLoc = new Locale("en", "US");
-            defLocText = ResourceBundle.getBundle("MessagesBundle", defaultLoc, loader);
+
+            // From specific path:
+            //defLocText = ResourceBundle.getBundle("MessagesBundle", defaultLoc, loader);
+
+            // From classpath
+            defLocText = ResourceBundle.getBundle("MessagesBundle", defaultLoc);
         }
         catch(Exception e) {
             System.out.println("Localizer exception: " + e.getLocalizedMessage());

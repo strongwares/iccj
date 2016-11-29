@@ -7,6 +7,6 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         super();
-        //setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     }
 }
