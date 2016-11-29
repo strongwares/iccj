@@ -1,5 +1,6 @@
 package org.iotacontrolcenter.ui.menu;
 
+import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.MainController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
@@ -10,7 +11,7 @@ public class MainMenu extends JMenuBar {
 
     private Localizer localizer;
     private MainController mainController;
-    private JButton openAddServer;
+    private JMenu openAddServer;
     private JButton settings;
 
     public MainMenu(MainController mainController) {
@@ -25,11 +26,10 @@ public class MainMenu extends JMenuBar {
         settings = new JButton(localizer.getLocalText("mainMenuSettingsLabel"));
         settings.setBorder(BorderFactory.createEmptyBorder());
         settings.setContentAreaFilled(false);
-        settings.setActionCommand("icc-settings");
+        settings.setActionCommand(Constants.MM_ICC_SETTINGS_ACTION);
         settings.addActionListener(mainController);
         add(settings);
 
-        //JSeparator sep = new JSeparator(SwingConstants.VERTICAL);
         JButton sep = new JButton("|");
         sep.setMinimumSize(new Dimension(30, 40));
         sep.setMaximumSize(new Dimension(30, 40));
@@ -37,11 +37,22 @@ public class MainMenu extends JMenuBar {
         sep.setContentAreaFilled(false);
         add(sep);
 
-        openAddServer = new JButton(localizer.getLocalText("mainMenuOpenOrAddServerLabel"));
-        openAddServer.setBorder(BorderFactory.createEmptyBorder());
-        openAddServer.setContentAreaFilled(false);
-        openAddServer.setActionCommand("openoraddserver");
-        openAddServer.addActionListener(mainController);
+        openAddServer = new JMenu(localizer.getLocalText("mainMenuOpenOrAddServerLabel"));
+        //openAddServer.setBorder(BorderFactory.createEmptyBorder());
+        //openAddServer.setContentAreaFilled(false);
+        //openAddServer.setActionCommand(Constants.OPEN_ADD_SERVER_ACTION);
+        //openAddServer.addActionListener(mainController);
+
+        JMenuItem addServer = new JMenuItem(localizer.getLocalText("mainMenuAddServerLabel"));
+        addServer.setActionCommand(Constants.MM_ADD_SERVER_ACTION);
+        addServer.addActionListener(mainController);
+        openAddServer.add(addServer);
+
+        JMenuItem openServer = new JMenuItem(localizer.getLocalText("mainMenuOpenServerLabel"));
+        openServer.setActionCommand(Constants.MM_OPEN_SERVER_ACTION);
+        openServer.addActionListener(mainController);
+        openAddServer.add(openServer);
+
         add(openAddServer);
 
         add(Box.createHorizontalGlue());
