@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
         setJMenuBar(mainMenu);
 
         serverTabPanel = new ServerTabPanel();
-        serverTabPanel.setPreferredSize(new Dimension(800,400));
+        serverTabPanel.setPreferredSize(new Dimension(900,400));
         mainController.setServerTabPanel(serverTabPanel);
 
         mainPanel = new MainPanel();

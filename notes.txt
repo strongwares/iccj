@@ -99,12 +99,40 @@ Fixed main menu
 
 ConfigServerDialog
 
-checked in
+Checked in
+
+Add/Edit Server Dialog
+
+ICC Settings dialog
+
+OpenServerDialog
+
+server settigns dialog
+
+server panel
+
+nbr panel: nbr model, table, panel
+
+server action panel
+
+console log panel
+
+checkin
 
 todo
+fix console log size
+
+Console log header on console log
+
+need mechanism to add and remove neighbors
+
+populate dialogs
+
 get dialog input
 
 post to create new svr
+
+add bevel borders to scrollables
 
 Load server list:
 name

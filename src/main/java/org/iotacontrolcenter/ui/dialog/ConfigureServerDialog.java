@@ -11,7 +11,6 @@ public class ConfigureServerDialog extends JDialog {
 
     private Localizer localizer;
     private String title;
-
     public JPanel panel;
     public JTextField serverIpTextField;
     public JTextField iccrPortTextField;
@@ -40,30 +39,32 @@ public class ConfigureServerDialog extends JDialog {
         setTitle(title);
         setModal(true);
         setLayout(new BorderLayout());
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         panel = new JPanel(new SpringLayout());
-        JLabel serverIp = new JLabel(localizer.getLocalText("fieldLabelRemoteServerIp"), JLabel.TRAILING);
+        JLabel serverIp = new JLabel(localizer.getLocalText("fieldLabelRemoteServerIp") + ":", JLabel.TRAILING);
         panel.add(serverIp);
         serverIpTextField = new JTextField(10);
         serverIpTextField.setToolTipText(localizer.getLocalText("fieldLabelRemoteServerIpTooltip"));
         serverIp.setLabelFor(serverIpTextField);
         panel.add(serverIpTextField);
 
-        JLabel iccrPort = new JLabel(localizer.getLocalText("fieldLabelIccrPort"), JLabel.TRAILING);
+        JLabel iccrPort = new JLabel(localizer.getLocalText("fieldLabelIccrPort") + ":", JLabel.TRAILING);
         panel.add(iccrPort);
         iccrPortTextField = new JTextField(10);
-        serverIpTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPortTooltip"));
+        iccrPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPortTooltip"));
         iccrPort.setLabelFor(iccrPortTextField);
         panel.add(iccrPortTextField);
 
-        JLabel iccrPassword = new JLabel(localizer.getLocalText("fieldLabelIccrPassword"), JLabel.TRAILING);
+        JLabel iccrPassword = new JLabel(localizer.getLocalText("fieldLabelIccrPassword") + ":", JLabel.TRAILING);
         panel.add(iccrPassword);
         iccrPwdTextField = new JPasswordField(10);
-        serverIpTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPasswordTooltip"));
+        iccrPwdTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPasswordTooltip"));
         iccrPassword.setLabelFor(iccrPwdTextField);
         panel.add(iccrPwdTextField);
 
-        JLabel serverName = new JLabel(localizer.getLocalText("fieldLabelServerName"), JLabel.TRAILING);
+        JLabel serverName = new JLabel(localizer.getLocalText("fieldLabelServerName") + ":", JLabel.TRAILING);
         panel.add(serverName);
         serverNameTextField = new JTextField(10);
         serverNameTextField.setToolTipText(localizer.getLocalText("fieldLabelServerNameTooltip"));
@@ -80,6 +81,7 @@ public class ConfigureServerDialog extends JDialog {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         cancel = new JButton(localizer.getLocalText("buttonLabelCancel"));
         cancel.setActionCommand(Constants.DIALOG_CONFIG_SERVER_CANCEL);
@@ -92,11 +94,6 @@ public class ConfigureServerDialog extends JDialog {
         buttonPanel.add(save);
 
         add(buttonPanel, BorderLayout.SOUTH);
-
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        //setUndecorated(true);
-        //getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
 
         pack();
     }

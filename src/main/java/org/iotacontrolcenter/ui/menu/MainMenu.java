@@ -26,6 +26,9 @@ public class MainMenu extends JMenuBar {
         settings = new JButton(localizer.getLocalText("mainMenuSettingsLabel"));
         settings.setBorder(BorderFactory.createEmptyBorder());
         settings.setContentAreaFilled(false);
+        settings.setBorderPainted(false);
+        settings.setFocusPainted(false);
+        settings.setOpaque(false);
         settings.setActionCommand(Constants.MM_ICC_SETTINGS_ACTION);
         settings.addActionListener(mainController);
         add(settings);
@@ -35,6 +38,8 @@ public class MainMenu extends JMenuBar {
         sep.setMaximumSize(new Dimension(30, 40));
         sep.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         sep.setContentAreaFilled(false);
+        sep.setBorderPainted(false);
+        settings.setFocusPainted(false);
         add(sep);
 
         openAddServer = new JMenu(localizer.getLocalText("mainMenuOpenOrAddServerLabel"));
