@@ -2,6 +2,7 @@ package org.iotacontrolcenter.ui.app;
 
 import org.iotacontrolcenter.ui.controller.MainController;
 import org.iotacontrolcenter.ui.panel.MainFrame;
+import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 import javax.swing.*;
 
@@ -39,7 +40,8 @@ public class Main {
         mainFrame = new MainFrame(mainController);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();
-        mainFrame.setSize(800, 400);
+        mainFrame.setSize(1000, 425);
+        mainFrame.setTitle(Localizer.getInstance().getLocalText("mainWindowTitle"));
         mainFrame.pack();
         mainFrame.setVisible(true);
     }

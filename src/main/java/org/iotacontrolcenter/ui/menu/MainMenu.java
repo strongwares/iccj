@@ -36,13 +36,14 @@ public class MainMenu extends JMenuBar {
         JButton sep = new JButton("|");
         sep.setMinimumSize(new Dimension(30, 40));
         sep.setMaximumSize(new Dimension(30, 40));
-        sep.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        sep.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         sep.setContentAreaFilled(false);
         sep.setBorderPainted(false);
-        settings.setFocusPainted(false);
+        sep.setFocusPainted(false);
         add(sep);
 
         openAddServer = new JMenu(localizer.getLocalText("mainMenuOpenOrAddServerLabel"));
+        openAddServer.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
         //openAddServer.setBorder(BorderFactory.createEmptyBorder());
         //openAddServer.setContentAreaFilled(false);
         //openAddServer.setActionCommand(Constants.OPEN_ADD_SERVER_ACTION);

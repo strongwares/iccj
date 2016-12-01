@@ -26,9 +26,9 @@ public class NeighborPanel extends JPanel {
 
     private void init() {
         //setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
+                BorderFactory.createRaisedBevelBorder()));
 
         neighborModel = new NeighborModel(localizer);
 
@@ -40,6 +40,8 @@ public class NeighborPanel extends JPanel {
         scrollPane.setBackground(Color.white);
         scrollPane.getViewport().setBackground(Color.white);
         scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();

@@ -52,18 +52,10 @@ public class NeighborModel extends AbstractTableModel {
         return o.getClass();
     }
 
-    /*
-     * Don't need to implement this method unless your table's
-     * editable.
-     */
     public boolean isCellEditable(int row, int col) {
         return true;
     }
 
-    /*
-     * Don't need to implement this method unless your table's
-     * data can change.
-     */
     public void setValueAt(Object value, int row, int col) {
 
             System.out.println("Setting value at " + row + "," + col

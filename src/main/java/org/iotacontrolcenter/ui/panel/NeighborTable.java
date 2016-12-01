@@ -14,5 +14,15 @@ public class NeighborTable extends JTable {
         super(neighborModel);
         this.neighborModel = neighborModel;
         this.ctlr = ctlr;
+        init();
+    }
+
+    private void init() {
+        getColumnModel().getColumn(0).setPreferredWidth(60);
+        getColumnModel().getColumn(0).setMinWidth(60);
+        getColumnModel().getColumn(0).setMaxWidth(60);
+        getColumnModel().getColumn(1).setPreferredWidth(150);
+        getColumnModel().getColumn(2).setPreferredWidth(190);
+        setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 }

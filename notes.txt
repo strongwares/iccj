@@ -118,11 +118,29 @@ server action panel
 console log panel
 
 checkin
+----------
+Wed 11/30/16
 
-todo
 fix console log size
 
+get right vertical spacing of server action buttons
+
 Console log header on console log
+
+Footer panel
+
+set nbr table col max sizes
+
+need main window title: IOTA Control Center
+
+server action buttons to be same width
+
+add bevel borders to scrollables
+
+checked in 
+
+todo
+get desired color for server action buttons
 
 need mechanism to add and remove neighbors
 
@@ -132,16 +150,11 @@ get dialog input
 
 post to create new svr
 
-add bevel borders to scrollables
-
 Load server list:
 name
 ip
 portNumber
 apiAccessKey
-
-
-
 
 do initial prompt to connect to local server
 
@@ -151,8 +164,6 @@ Finish server tab with child components
 ui props in prop source:
 
 initial login prompt for api key
-
-need footer
 
 proxy that uses resteasy client?
 

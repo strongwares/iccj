@@ -45,35 +45,35 @@ public class ServerSettingsDialog extends JDialog {
 
         JLabel iccrPort = new JLabel(localizer.getLocalText("fieldLabelIccrPort") + ":", JLabel.TRAILING);
         panel.add(iccrPort);
-        iccrPortTextField = new JTextField(10);
+        iccrPortTextField = new JTextField(20);
         iccrPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPortTooltip"));
         iccrPort.setLabelFor(iccrPortTextField);
         panel.add(iccrPortTextField);
 
         JLabel iotaFolderLocation = new JLabel(localizer.getLocalText("fieldLabelIotaFolderLocation") + ":", JLabel.TRAILING);
         panel.add(iotaFolderLocation);
-        iotaFolderTextField = new JTextField(10);
+        iotaFolderTextField = new JTextField(20);
         iotaFolderTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaFolderLocationTooltip"));
         iotaFolderLocation.setLabelFor(iotaFolderTextField);
         panel.add(iotaFolderTextField);
 
         JLabel iotaStartCmd = new JLabel(localizer.getLocalText("fieldLabelIotaStartCmd") + ":", JLabel.TRAILING);
         panel.add(iotaStartCmd);
-        iotaStartTextField = new JTextField(10);
+        iotaStartTextField = new JTextField(20);
         iotaStartTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaStartCmdTooltip"));
         iotaStartCmd.setLabelFor(iotaStartTextField);
         panel.add(iotaStartTextField);
 
         JLabel iotaPort = new JLabel(localizer.getLocalText("fieldLabelIotaPort") + ":", JLabel.TRAILING);
         panel.add(iotaPort);
-        iotaPortTextField = new JTextField(10);
+        iotaPortTextField = new JTextField(20);
         iotaPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaPortTooltip"));
         iotaPort.setLabelFor(iotaPortTextField);
         panel.add(iotaPortTextField);
 
         JLabel nbrRefreshTime = new JLabel(localizer.getLocalText("fieldLabelNbrRefreshTime") + ":", JLabel.TRAILING);
         panel.add(nbrRefreshTime);
-        nbrRefreshTextField = new JTextField(10);
+        nbrRefreshTextField = new JTextField(20);
         nbrRefreshTextField.setToolTipText(localizer.getLocalText("fieldLabelNbrRefreshTimeTooltip"));
         nbrRefreshTime.setLabelFor(nbrRefreshTextField);
         panel.add(nbrRefreshTextField);
