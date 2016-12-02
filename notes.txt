@@ -181,14 +181,44 @@ handle open server from dialog
 
 handle remove selected server from dialog
 
-don't have server tab open twice 
+don't have server tab open twice
 
-query for node settings
+checked in
 
-http proxy instances
-proxy that uses resteasy client?
+query for iccr settings on node:
+proxy/http
+
+httpproxy that uses resteasy client
+
+copy of iccrservice into iccj ui proxy 
+
+example of iccrGetConfig rsponse
+response status: 200
+iccrStartAtStartup->false
+iccrStartIotaAtStartup->false
+iccrStopIotaAtShutdown->false
+iotaPortNumber->14265
+iotaDownloadLink->http://85.93.93.110
+iotaDownloadFilename->IRI-1.1.0.jar
+iotaDir->/opt/iota
+iotaStartCmd->java -jar IRI.jar
+iotaNeighborRefreshTime->10
+
+checked in
+
+--------------
 
 todo:
+add separte get nbr list,set nbr list resorces in iccr and update the copied iccrservice in iccj
+
+add new server  props to iccj
+
+need scheme config for server, http or https
+
+icc settings dialog
+
+Add (in seconds) sub label to icc settings dialog
+
 iccr actions
 
 iota actions

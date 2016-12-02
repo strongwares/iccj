@@ -332,8 +332,8 @@ public class MainController implements ActionListener {
         if(serverTabPanel.serverIsOpen(name)) {
             throw new IllegalStateException(localizer.getLocalText("dialogServerErrorAlreadyOpen"));
         }
-        ServerProxy proxy = new ServerProxy();
-        ServerController ctlr = new ServerController(localizer, proxy);
+        ServerProxy proxy = new ServerProxy(serverProps);
+        ServerController ctlr = new ServerController(localizer, proxy, serverProps);
 
         ServerPanel server = new ServerPanel(serverProps.getProperty(PropertySource.SERVER_ID_PROP), localizer, ctlr);
         ctlr.setServerPanel(server);

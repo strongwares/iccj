@@ -13,17 +13,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Properties;
 
 public class ServerController implements ActionListener {
 
     private Localizer localizer;
     private ServerProxy proxy;
     private ServerPanel serverPanel;
+    private Properties serverProps;
     private ServerSettingsDialog serverSettingsDialog;
 
-    public ServerController(Localizer localizer, ServerProxy proxy) {
+    public ServerController(Localizer localizer, ServerProxy proxy, Properties serverProps) {
         this.localizer = localizer;
         this.proxy = proxy;
+        this.serverProps = serverProps;
     }
 
     public void setServerPanel(ServerPanel serverPanel) {
@@ -61,6 +64,16 @@ public class ServerController implements ActionListener {
     }
 
     private void showServerSettingsDialog() {
+
+        Properties iccrProps = null;
+        try {
+            iccrProps = proxy.iccrGetConfig();
+        }
+        catch(Exception e) {
+            System.out.println("showServerSettingsDialog exception from proxy: ");
+            e.printStackTrace();
+        }
+
         serverSettingsDialog = new ServerSettingsDialog(localizer, this);
         serverSettingsDialog.setLocationRelativeTo(serverPanel);
 
@@ -79,5 +92,7 @@ public class ServerController implements ActionListener {
         });
 
         serverSettingsDialog.setVisible(true);
+
+
     }
 }
