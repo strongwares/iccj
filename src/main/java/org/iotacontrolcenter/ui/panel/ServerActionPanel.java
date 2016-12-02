@@ -30,63 +30,66 @@ public class ServerActionPanel extends JPanel {
     }
 
     private void init() {
-        //setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
         internalPanel = new JPanel(new SpringLayout());
         internalPanel.setBackground(Color.lightGray);
         internalPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        //internalPanel.setLayout(new BoxLayout(internalPanel, BoxLayout.PAGE_AXIS));
-
-        settings = new JButton(localizer.getLocalText("buttonLabelSettings"));
+        settings = new JButton(localizer.getLocalText("buttonLabelSettings") + "...");
+        settings.setToolTipText(localizer.getLocalText("buttonLabelSettingsTooltip"));
         settings.setAlignmentX(Component.CENTER_ALIGNMENT);
         settings.setActionCommand(Constants.SERVER_ACTION_SETTINGS);
         settings.addActionListener(ctlr);
         internalPanel.add(settings);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         installIota = new JButton(localizer.getLocalText("buttonLabelInstallIota"));
+        installIota.setToolTipText(localizer.getLocalText("buttonLabelInstallIotaTooltip"));
+        installIota.setBackground(Color.darkGray);
+        installIota.setForeground(Color.white);
         installIota.setAlignmentX(Component.CENTER_ALIGNMENT);
         installIota.setActionCommand(Constants.SERVER_ACTION_INSTALL_IOTA);
         installIota.addActionListener(ctlr);
         internalPanel.add(installIota);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         startIota = new JButton(localizer.getLocalText("buttonLabelStartIota"));
+        startIota.setToolTipText(localizer.getLocalText("buttonLabelStartIotaTooltip"));
+        startIota.setBackground(Color.green);
+        startIota.setForeground(Color.white);
         startIota.setAlignmentX(Component.CENTER_ALIGNMENT);
         startIota.setActionCommand(Constants.SERVER_ACTION_START_IOTA);
         startIota.addActionListener(ctlr);
         internalPanel.add(startIota);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         stopIota = new JButton(localizer.getLocalText("buttonLabelStopIota"));
+        stopIota.setToolTipText(localizer.getLocalText("buttonLabelStopIotaTooltip"));
+        stopIota.setBackground(Color.red);
+        stopIota.setForeground(Color.white);
         stopIota.setAlignmentX(Component.CENTER_ALIGNMENT);
         stopIota.setActionCommand(Constants.SERVER_ACTION_STOP_IOTA);
         stopIota.addActionListener(ctlr);
         internalPanel.add(stopIota);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         startWallet = new JButton(localizer.getLocalText("buttonLabelStartWallet"));
+        startWallet.setToolTipText(localizer.getLocalText("buttonLabelStartWalletTooltip"));
+        startWallet.setBackground(Color.blue);
+        startWallet.setForeground(Color.white);
         startWallet.setAlignmentX(Component.CENTER_ALIGNMENT);
         startWallet.setActionCommand(Constants.SERVER_ACTION_START_WALLET);
         startWallet.addActionListener(ctlr);
         internalPanel.add(startWallet);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         deleteIotaDb = new JButton(localizer.getLocalText("buttonLabelDeleteIotaDb"));
+        deleteIotaDb.setToolTipText(localizer.getLocalText("buttonLabelDeleteIotaDbTooltip"));
+        deleteIotaDb.setBackground(Color.darkGray);
+        deleteIotaDb.setForeground(Color.white);
         deleteIotaDb.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteIotaDb.setActionCommand(Constants.SERVER_ACTION_DELETEDB_IOTA);
         deleteIotaDb.addActionListener(ctlr);
         internalPanel.add(deleteIotaDb);
 
-        //internalPanel.add(Box.createRigidArea(new Dimension(20, 10)));
-
         deleteIota = new JButton(localizer.getLocalText("buttonLabelUninstallIota"));
+        deleteIota.setToolTipText(localizer.getLocalText("buttonLabelUninstallIotaTooltip"));
+        deleteIota.setBackground(Color.darkGray);
+        deleteIota.setForeground(Color.white);
         deleteIota.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteIota.setActionCommand(Constants.SERVER_ACTION_UNINSTALL_IOTA);
         deleteIota.addActionListener(ctlr);

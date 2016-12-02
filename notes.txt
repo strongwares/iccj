@@ -137,39 +137,77 @@ server action buttons to be same width
 
 add bevel borders to scrollables
 
-checked in 
+checked in
 
-todo
-get desired color for server action buttons
+----------
+Thu: 12/1/16
 
-need mechanism to add and remove neighbors
-
-populate dialogs
-
-get dialog input
-
-post to create new svr
+open add svr menu is offset from icc settings button label
 
 Load server list:
 name
 ip
 portNumber
 apiAccessKey
+walletStartCmd
+
+servers is a map (id -> properties) of Properties key -> val
+
+populate open server dialog
+
+make open server action buttons same width
+
+Fixed second time open server is called no server names are there
+
+set desired color for server action buttons
+
+need server action buttons tool tip text
+
+handle edit server
+
+handle add server
+
+persist save server changes
+
+enforce unique server names
+
+handle server name name changes: tab label change, jlist change
+
+put default for iccr  port
+
+handle open server from mm
+
+handle open server from dialog
+
+handle remove selected server from dialog
+
+don't have server tab open twice 
+
+query for node settings
+
+http proxy instances
+proxy that uses resteasy client?
+
+todo:
+iccr actions
+
+iota actions
+
+query for  node info
+
+query for nbrs
+
+mechanism to add nbrs to table
+
+mechanism to edit nbrs in table
+
+mechanism to add and remove neighbors
 
 do initial prompt to connect to local server
 
-Finish server tab with child components
-
-
-ui props in prop source:
-
 initial login prompt for api key
 
-proxy that uses resteasy client?
-
 checkin prop files or put in another mvn sub module
-
-open add svr menu is offset from icc settings button label
 
 do us
 
@@ -185,6 +223,8 @@ ICC Settings: IOTA client download link should be sent to server to update serve
 initially and when changed?
 
 What is online in footer?
+
+Remove selected is remove from server tab panel as well as delete server configuration?
 
 
 

@@ -37,8 +37,8 @@ public class ServerConsoleLogPanel extends JPanel {
         //consoleText = new JList<>();
         consoleText = new JTextArea(22, 30);
         consoleText.setBackground(Color.black);
-        consoleText.setForeground(Color.white);
-        //consoleText.setEditable(false);
+        consoleText.setForeground(Color.yellow);
+        consoleText.setEditable(false);
 
         /*
         JPanel p2 = new JPanel();

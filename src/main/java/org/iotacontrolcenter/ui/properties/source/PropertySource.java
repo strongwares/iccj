@@ -3,11 +3,10 @@ package org.iotacontrolcenter.ui.properties.source;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 public class PropertySource {
 
@@ -24,17 +23,42 @@ public class PropertySource {
 
     private static final Pattern PATTERN_TRUE = Pattern.compile("1|on|true|yes", Pattern.CASE_INSENSITIVE);
     private static final Pattern PATTERN_FALSE = Pattern.compile("0|off|false|no", Pattern.CASE_INSENSITIVE);
+
     private static final String CONF_FILE = "icc.properties";
 
-    private static final String LOC_COUNTRY_PROP = "iccCountryLocale";
-    private static final String LOC_LANG_PROP = "iccLanguageLocale";
+    private static final String LOC_COUNTRY_PROP = "countryLocale";
+    private static final String LOC_LANG_PROP = "languageLocale";
     private static final String LOC_LANG_DEFAULT = "en";
     private static final String LOC_COUNTRY_DEFAULT = "US";
 
-    private Properties props;
+    public static final String ICCR_PORT_DEFAULT_PROP = "iccrDefaultPortNumber";
+
+    private static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";
+    private static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
+    private static final String IOTA_DLD_LINK_PROP = "iotaDownloadLink";
+    private static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
+    private static final String WALLET_START_PROP = "iotaDownloadFilename";
+    private static final String SERVERKEYS_PROP = "serverKeys";
+
+    private static final String SERVER_LOCAL_KEY_VAL="local";
+    private static final String SERVERKEYS_NAME_PREFIX_PROP = "server.name.";
+    private static final String SERVERKEYS_IP_PREFIX_PROP = "server.ip.";
+    private static final String SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP = "server.iccrPortNumber.";
+    private static final String SERVERKEYS_ICCR_API_KEY_PREFIX_PROP = "server.iccrApiKey.";
+    private static final String SERVERKEYS_WALLET_CMD_PREFIX_PROP = "server.walletCommand.";
+
+    public static final String SERVER_ID_PROP = "id";
+    public static final String SERVER_IP_PROP = "ip";
+    public static final String SERVER_NAME_PROP = "name";
+    public static final String SERVER_ICCR_PORT_NUM_PROP = "iccrPortNumber";
+    public static final String SERVER_ICCR_API_KEY_PROP = "iccrApiKey";
+    public static final String SERVER_WALLET_CMD_PROP = "walletCommand";
+
+    private Properties _props;
     private String osName;
     private PropertiesConfiguration propWriter;
     private DateTimeFormatter ymdhmsFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private Map<String, Properties> servers;
 
     private PropertySource() {
         System.out.println("new PropertySource");
@@ -52,7 +76,7 @@ public class PropertySource {
             System.out.println("PropertySource exception creating PropertiesConfiguration: " + e.getLocalizedMessage());
         }
 
-        props = new Properties();
+        _props = new Properties();
         load();
     }
 
@@ -63,12 +87,171 @@ public class PropertySource {
 
             // From classpath:
             InputStream is = this.getClass().getResourceAsStream("/" + CONF_FILE);
-            props.load(is);
+            _props.load(is);
         }
         catch(Exception e) {
             System.out.println("failed to load icc.properties");
             e.printStackTrace();
         }
+    }
+
+    public String getIccrDefaultPortNumber() {
+        return getString(ICCR_PORT_DEFAULT_PROP);
+    }
+
+    public String getIotaDownloadUrl() {
+        return getString(IOTA_DLD_LINK_PROP) + "/" + getIotaDownloadFilename();
+    }
+
+    public String getIotaDownloadFilename() {
+        return getString(IOTA_DLD_FILENAME_PROP);
+    }
+
+    public String getWalletStartCmd() {
+        return getString(WALLET_START_PROP);
+    }
+
+    public String getRefreshNbrsTime() {
+        return getString(REFRESH_NBRS_PROP);
+    }
+
+    public String getRefreshNodeInfoTime() {
+        return getString(REFRESH_NODEINFO_PROP);
+    }
+
+    public String getServerIdsString() {
+        return getString(SERVERKEYS_PROP);
+    }
+
+    public List<String> getServerIds() {
+        return getList(SERVERKEYS_PROP);
+    }
+
+    public Map<String, Properties> getServers() {
+        if(servers == null) {
+            System.out.println("servers is null, new map");
+            servers = new HashMap<>();
+        }
+        for(String id : getServerIds()) {
+            try {
+                Properties serverProps = new Properties();
+                serverProps.put(SERVER_ID_PROP, id);
+                serverProps.put(SERVER_NAME_PROP, getString(PropertySource.SERVERKEYS_NAME_PREFIX_PROP + id));
+                serverProps.put(SERVER_IP_PROP, getString(PropertySource.SERVERKEYS_IP_PREFIX_PROP + id));
+                serverProps.put(SERVER_ICCR_PORT_NUM_PROP, getString(PropertySource.SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id));
+                serverProps.put(SERVER_ICCR_API_KEY_PROP, getString(PropertySource.SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id));
+                serverProps.put(SERVER_WALLET_CMD_PROP, getString(PropertySource.SERVERKEYS_WALLET_CMD_PREFIX_PROP + id));
+
+                servers.put(id, serverProps);
+
+            }
+            catch(Exception e) {
+                System.out.println("getServers exception: " + e.getLocalizedMessage());
+            }
+        }
+        return servers;
+    }
+
+    public boolean isServerNameChange(Properties newProps, Properties prevProps) {
+        return newProps != null && prevProps != null &&
+                newProps.getProperty(SERVER_NAME_PROP) != null &&
+                prevProps.getProperty(SERVER_NAME_PROP) != null &&
+                !newProps.getProperty(SERVER_NAME_PROP).equals(prevProps.getProperty(SERVER_NAME_PROP));
+
+    }
+
+    public boolean isServerNameTaken(String name) {
+        for(String id : getServerIds()) {
+            if(name.equalsIgnoreCase(getServerName(id))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getServerName(String id) {
+        if(servers == null) {
+            getServers();
+        }
+        return getServerProperties(id).getProperty("name");
+    }
+
+    public Properties getServerProperties(String id) {
+        if(servers == null) {
+            getServers();
+        }
+        return servers.get(id);
+    }
+
+    public Properties getLocalServerProperties() {
+        if(servers == null) {
+            getServers();
+        }
+        for(String id : getServerIds()) {
+            Properties props = getServerProperties(id);
+            if(props != null) {
+                if (UiUtil.isLocalhostIp(props.getProperty(SERVER_IP_PROP))) {
+                    return props;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void addServerProperties(Properties newProps) {
+        String serverIds = getServerIdsString();
+
+        String id = newProps.getProperty(SERVER_ID_PROP);
+        if(serverIds == null || serverIds.isEmpty()) {
+            serverIds = id;
+        }
+        else {
+            serverIds += "," + id;
+        }
+        setProperty(SERVERKEYS_PROP, serverIds);
+        setProperty(SERVERKEYS_NAME_PREFIX_PROP + id, newProps.getProperty(SERVER_NAME_PROP));
+        setProperty(SERVERKEYS_IP_PREFIX_PROP + id, newProps.getProperty(SERVER_IP_PROP));
+        setProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_PORT_NUM_PROP));
+        setProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_API_KEY_PROP));
+        setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
+
+        storeProperties();
+
+        // Force reload of server properties next time it is requested
+        servers = null;
+    }
+
+    public void setServerProperties(Properties newProps, Properties prevProps) {
+        String id = prevProps.getProperty(SERVER_ID_PROP);
+
+        setProperty(SERVERKEYS_NAME_PREFIX_PROP + id, newProps.getProperty(SERVER_NAME_PROP));
+        setProperty(SERVERKEYS_IP_PREFIX_PROP + id, newProps.getProperty(SERVER_IP_PROP));
+        setProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_PORT_NUM_PROP));
+        setProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_API_KEY_PROP));
+        setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
+
+        storeProperties();
+
+        // Force reload of server properties next time it is requested
+        servers = null;
+    }
+
+    public Properties getServerPropertiesForServerName(String serverName) {
+        if(servers == null) {
+            getServers();
+        }
+
+        for(String id : getServerIds()) {
+
+            Properties props = getServerProperties(id);
+
+            if(props != null) {
+                if (serverName.equals(props.getProperty(SERVER_NAME_PROP))) {
+                    return props;
+                }
+            }
+        }
+        return null;
     }
 
     public String getNowDateTimestamp() {
@@ -87,10 +270,12 @@ public class PropertySource {
         return (osName.indexOf("mac") >= 0);
     }
 
-    public void setProperty(String key, Object value) {
-        props.setProperty(key, (String)value);
+    private void setProperty(String key, Object value) {
+        _props.setProperty(key, (String)value);
         propWriter.setProperty(key, value);
+    }
 
+    private void storeProperties() {
         try {
             propWriter.save();
         }
@@ -116,11 +301,11 @@ public class PropertySource {
     }
 
     public String getString(String key) {
-        return props.getProperty(key);
+        return _props.getProperty(key);
     }
 
     public boolean getBoolean(String key) {
-        String val = props.getProperty(key);
+        String val = _props.getProperty(key);
         if(val != null) {
             if(PATTERN_TRUE.matcher(val).matches()) {
                 return true;
@@ -136,7 +321,7 @@ public class PropertySource {
     }
 
     public int getInteger(String key) {
-        String val = props.getProperty(key);
+        String val = _props.getProperty(key);
         if(val != null) {
             try {
                 return Integer.parseInt(val);

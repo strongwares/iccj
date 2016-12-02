@@ -3,6 +3,7 @@ package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.properties.source.PropertySource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,39 +17,26 @@ public class OpenServerDialog extends JDialog  {
     public JButton addServer;
     public JPanel buttonPanel;
     public JButton cancel;
+    private ActionListener ctlr;
     public JButton editServer;
     public JButton openServer;
+    private PropertySource propertySource = PropertySource.getInstance();
     public JButton remove;
     public JPanel serverActionPanel;
     public JList<String> serverList;
+    public DefaultListModel<String> serverListModel;
     public JScrollPane serverPanel;
 
-    public OpenServerDialog(Localizer localizer, String title) {
+    public OpenServerDialog(Localizer localizer, String title, ActionListener ctlr) {
         super();
         this.title = title;
         this.localizer = localizer;
+        this.ctlr = ctlr;
         init();
     }
 
-    public void addCtlr(ActionListener actionListener) {
-        if(remove != null) {
-            remove.addActionListener(actionListener);
-        }
-        if(cancel != null) {
-            cancel.addActionListener(actionListener);
-        }
-        if(addServer != null) {
-            addServer.addActionListener(actionListener);
-        }
-        if(editServer != null) {
-            editServer.addActionListener(actionListener);
-        }
-        if(openServer != null) {
-            openServer.addActionListener(actionListener);
-        }
-    }
-
     private void init() {
+        System.out.println("open server dialog init");
         setTitle(title);
         setModal(true);
         setLayout(new BorderLayout());
@@ -56,7 +44,13 @@ public class OpenServerDialog extends JDialog  {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        serverList = new JList<>();
+        serverListModel = new DefaultListModel<>();
+        serverList = new JList<>(serverListModel);
+
+        for(String id : propertySource.getServerIds()) {
+            System.out.println("adding server id" + id);
+            serverListModel.addElement(propertySource.getServerName(id));
+        }
 
         serverPanel = new JScrollPane(serverList);
         serverPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -69,23 +63,31 @@ public class OpenServerDialog extends JDialog  {
         add(serverPanel, BorderLayout.WEST);
 
         serverActionPanel = new JPanel();
-        serverActionPanel.setLayout(new BoxLayout(serverActionPanel, BoxLayout.PAGE_AXIS));
+        serverActionPanel.setLayout(new SpringLayout());
         serverActionPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         openServer = new JButton(localizer.getLocalText("buttonLabelOpen"));
         openServer.setAlignmentX(Component.CENTER_ALIGNMENT);
         openServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_OPEN);
+        openServer.addActionListener(ctlr);
         serverActionPanel.add(openServer);
 
         editServer = new JButton(localizer.getLocalText("buttonLabelEdit"));
         editServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_EDIT);
         editServer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editServer.addActionListener(ctlr);
         serverActionPanel.add(editServer);
 
         addServer = new JButton(localizer.getLocalText("buttonLabelAddServer"));
         addServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_ADD_SERVER);
         addServer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addServer.addActionListener(ctlr);
         serverActionPanel.add(addServer);
+
+        SpringUtilities.makeCompactGrid(serverActionPanel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
 
         add(serverActionPanel, BorderLayout.EAST);
 
@@ -95,12 +97,14 @@ public class OpenServerDialog extends JDialog  {
 
         remove = new JButton(localizer.getLocalText("buttonLabelRemoveSelected"));
         remove.setActionCommand(Constants.DIALOG_OPEN_SERVER_REMOVE);
+        remove.addActionListener(ctlr);
         buttonPanel.add(remove);
 
         buttonPanel.add(Box.createHorizontalGlue());
 
         cancel = new JButton(localizer.getLocalText("buttonLabelCancel"));
         cancel.setActionCommand(Constants.DIALOG_OPEN_SERVER_CANCEL);
+        cancel.addActionListener(ctlr);
         buttonPanel.add(cancel);
 
         add(buttonPanel, BorderLayout.SOUTH);

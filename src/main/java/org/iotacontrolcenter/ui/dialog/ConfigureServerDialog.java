@@ -2,13 +2,19 @@ package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.properties.source.PropertySource;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 public class ConfigureServerDialog extends JDialog {
 
+    public JButton cancel;
+    private ActionListener ctlr;
+    public boolean isAdd;
     private Localizer localizer;
     private String title;
     public JPanel panel;
@@ -17,22 +23,18 @@ public class ConfigureServerDialog extends JDialog {
     public JPasswordField iccrPwdTextField;
     public JTextField serverNameTextField;
     public JButton save;
-    public JButton cancel;
+    public Properties serverProps;
+    public JLabel walletCmdLabel;
+    public JTextField walletCmdTextField;
 
-    public ConfigureServerDialog(Localizer localizer, String title) {
+    public ConfigureServerDialog(Localizer localizer, String title, ActionListener ctlr, Properties serverProps, boolean isAdd) {
         super();
         this.title = title;
         this.localizer = localizer;
+        this.ctlr = ctlr;
+        this.serverProps = serverProps;
+        this.isAdd = isAdd;
         init();
-    }
-
-    public void addCtlr(ActionListener actionListener) {
-        if(save != null) {
-            save.addActionListener(actionListener);
-        }
-        if(cancel != null) {
-            cancel.addActionListener(actionListener);
-        }
     }
 
     private void init() {
@@ -43,9 +45,12 @@ public class ConfigureServerDialog extends JDialog {
         setResizable(false);
 
         panel = new JPanel(new SpringLayout());
+
         JLabel serverIp = new JLabel(localizer.getLocalText("fieldLabelRemoteServerIp") + ":", JLabel.TRAILING);
         panel.add(serverIp);
+
         serverIpTextField = new JTextField(10);
+        serverIpTextField.setName(localizer.getLocalText("fieldLabelRemoteServerIp"));
         serverIpTextField.setToolTipText(localizer.getLocalText("fieldLabelRemoteServerIpTooltip"));
         serverIp.setLabelFor(serverIpTextField);
         panel.add(serverIpTextField);
@@ -53,6 +58,7 @@ public class ConfigureServerDialog extends JDialog {
         JLabel iccrPort = new JLabel(localizer.getLocalText("fieldLabelIccrPort") + ":", JLabel.TRAILING);
         panel.add(iccrPort);
         iccrPortTextField = new JTextField(10);
+        iccrPortTextField.setName(localizer.getLocalText("fieldLabelIccrPort"));
         iccrPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPortTooltip"));
         iccrPort.setLabelFor(iccrPortTextField);
         panel.add(iccrPortTextField);
@@ -60,6 +66,7 @@ public class ConfigureServerDialog extends JDialog {
         JLabel iccrPassword = new JLabel(localizer.getLocalText("fieldLabelIccrPassword") + ":", JLabel.TRAILING);
         panel.add(iccrPassword);
         iccrPwdTextField = new JPasswordField(10);
+        iccrPwdTextField.setName(localizer.getLocalText("fieldLabelIccrPassword"));
         iccrPwdTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPasswordTooltip"));
         iccrPassword.setLabelFor(iccrPwdTextField);
         panel.add(iccrPwdTextField);
@@ -67,12 +74,21 @@ public class ConfigureServerDialog extends JDialog {
         JLabel serverName = new JLabel(localizer.getLocalText("fieldLabelServerName") + ":", JLabel.TRAILING);
         panel.add(serverName);
         serverNameTextField = new JTextField(10);
+        serverNameTextField.setName(localizer.getLocalText("fieldLabelServerName"));
         serverNameTextField.setToolTipText(localizer.getLocalText("fieldLabelServerNameTooltip"));
         serverName.setLabelFor(serverNameTextField);
         panel.add(serverNameTextField);
 
+        walletCmdLabel = new JLabel(localizer.getLocalText("fieldLabelServerWalletCommand") + ":", JLabel.TRAILING);
+        panel.add(walletCmdLabel);
+        walletCmdTextField = new JTextField(10);
+        walletCmdTextField.setName(localizer.getLocalText("fieldLabelServerWalletCommand"));
+        walletCmdTextField.setToolTipText(localizer.getLocalText("fieldLabelServerWalletCommandTooltip"));
+        walletCmdLabel.setLabelFor(walletCmdTextField);
+        panel.add(walletCmdTextField);
+
         SpringUtilities.makeCompactGrid(panel,
-                4, 2, //rows, cols
+                5, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -85,16 +101,39 @@ public class ConfigureServerDialog extends JDialog {
 
         cancel = new JButton(localizer.getLocalText("buttonLabelCancel"));
         cancel.setActionCommand(Constants.DIALOG_CONFIG_SERVER_CANCEL);
+        cancel.addActionListener(ctlr);
         buttonPanel.add(cancel);
 
         buttonPanel.add(Box.createHorizontalGlue());
 
         save = new JButton(localizer.getLocalText("buttonLabelSave"));
-        save.setActionCommand(Constants.DIALOG_CONFIG_SERVER_SAVE);
+        save.setActionCommand(isAdd ? Constants.DIALOG_CONFIG_ADD_SERVER_SAVE : Constants.DIALOG_CONFIG_EDIT_SERVER_SAVE);
+        save.addActionListener(ctlr);
         buttonPanel.add(save);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
+        if(!isAdd && serverProps != null) {
+            insertValues();
+        }
+
         pack();
+    }
+
+    private void insertValues() {
+        serverIpTextField.setText(serverProps.getProperty(PropertySource.SERVER_IP_PROP));
+        iccrPortTextField.setText(serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP));
+        iccrPwdTextField.setText(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
+        serverNameTextField.setText(serverProps.getProperty(PropertySource.SERVER_NAME_PROP));
+        walletCmdTextField.setText(serverProps.getProperty(PropertySource.SERVER_WALLET_CMD_PROP));
+
+        if(UiUtil.isLocalhostIp(serverProps.getProperty(PropertySource.SERVER_IP_PROP))) {
+            walletCmdTextField.setVisible(true);
+            walletCmdLabel.setVisible(true);
+        }
+        else {
+            walletCmdTextField.setVisible(false);
+            walletCmdLabel.setVisible(false);
+        }
     }
 }

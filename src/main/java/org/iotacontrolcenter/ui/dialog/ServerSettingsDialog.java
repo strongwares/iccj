@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 public class ServerSettingsDialog extends JDialog {
 
+    private ActionListener ctlr;
     private Localizer localizer;
     public JPanel panel;
     public JTextField iotaFolderTextField;
@@ -19,19 +20,11 @@ public class ServerSettingsDialog extends JDialog {
     public JButton save;
     public JButton cancel;
 
-    public ServerSettingsDialog(Localizer localizer) {
+    public ServerSettingsDialog(Localizer localizer, ActionListener ctlr) {
         super();
         this.localizer = localizer;
+        this.ctlr = ctlr;
         init();
-    }
-
-    public void addCtlr(ActionListener actionListener) {
-        if(save != null) {
-            save.addActionListener(actionListener);
-        }
-        if(cancel != null) {
-            cancel.addActionListener(actionListener);
-        }
     }
 
     private void init() {
@@ -91,13 +84,15 @@ public class ServerSettingsDialog extends JDialog {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         cancel = new JButton(localizer.getLocalText("buttonLabelCancel"));
-        cancel.setActionCommand(Constants.DIALOG_CONFIG_SERVER_CANCEL);
+        cancel.setActionCommand(Constants.DIALOG_SERVER_SETTINGS_CANCEL);
+        cancel.addActionListener(ctlr);
         buttonPanel.add(cancel);
 
         buttonPanel.add(Box.createHorizontalGlue());
 
         save = new JButton(localizer.getLocalText("buttonLabelSave"));
-        save.setActionCommand(Constants.DIALOG_CONFIG_SERVER_SAVE);
+        save.setActionCommand(Constants.DIALOG_SERVER_SETTINGS_SAVE);
+        save.addActionListener(ctlr);
         buttonPanel.add(save);
 
         add(buttonPanel, BorderLayout.SOUTH);

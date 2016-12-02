@@ -38,12 +38,31 @@ public class ServerController implements ActionListener {
         if(action.equals(Constants.SERVER_ACTION_SETTINGS)) {
             showServerSettingsDialog();
         }
+        else if(action.equals(Constants.DIALOG_SERVER_SETTINGS_CANCEL)) {
+            serverSettingsDialogClose();
+        }
+        else if(action.equals(Constants.DIALOG_SERVER_SETTINGS_SAVE)) {
+            serverSettingsDialogSave();
+        }
+    }
+
+    private void serverSettingsDialogSave() {
+
+
+        serverSettingsDialogClose();
+    }
+
+    private void serverSettingsDialogClose() {
+        if(serverSettingsDialog != null) {
+            serverSettingsDialog.setVisible(false);
+            serverSettingsDialog.dispose();
+            serverSettingsDialog = null;
+        }
     }
 
     private void showServerSettingsDialog() {
-        serverSettingsDialog = new ServerSettingsDialog(localizer);
+        serverSettingsDialog = new ServerSettingsDialog(localizer, this);
         serverSettingsDialog.setLocationRelativeTo(serverPanel);
-        serverSettingsDialog.addCtlr(this);
 
         serverSettingsDialog.addWindowListener(new WindowAdapter() {
             @Override

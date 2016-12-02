@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class Main {
 
-    static MainFrame mainFrame;
+    public static MainFrame mainFrame;
     static MainController mainController;
 
     public Main() {
@@ -40,7 +40,7 @@ public class Main {
         mainFrame = new MainFrame(mainController);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();
-        mainFrame.setSize(1000, 425);
+        //mainFrame.setSize(1200, 425);
         mainFrame.setTitle(Localizer.getInstance().getLocalText("mainWindowTitle"));
         mainFrame.pack();
         mainFrame.setVisible(true);

@@ -33,7 +33,7 @@ public class NeighborPanel extends JPanel {
         neighborModel = new NeighborModel(localizer);
 
         neighborTable = new NeighborTable(neighborModel, ctlr);
-        neighborTable.setPreferredScrollableViewportSize(new Dimension(400, 400));
+        neighborTable.setPreferredScrollableViewportSize(new Dimension(500, 400));
         neighborTable.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(neighborTable);
