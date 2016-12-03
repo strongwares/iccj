@@ -50,6 +50,182 @@ public class ServerController implements ActionListener {
         else if(action.equals(Constants.DIALOG_SERVER_SETTINGS_SAVE)) {
             serverSettingsDialogSave();
         }
+        else if(action.equals(Constants.SERVER_ACTION_INSTALL_IOTA)) {
+            serverActionInstallIota();
+        }
+        else if(action.equals(Constants.SERVER_ACTION_START_IOTA)) {
+            serverActionStartIota();
+        }
+        else if(action.equals(Constants.SERVER_ACTION_STOP_IOTA)) {
+            serverActionStopIota();
+        }
+        else if(action.equals(Constants.SERVER_ACTION_START_WALLET)) {
+            serverActionStartWallet();
+        }
+        else if(action.equals(Constants.SERVER_ACTION_DELETEDB_IOTA)) {
+            serverActionDeleteDb();
+        }
+        else if(action.equals(Constants.SERVER_ACTION_UNINSTALL_IOTA)) {
+            serverActionUninstallIota();
+        }
+        else {
+            // TODO: localization
+            System.out.println("server controller, unrecognized action: " + action);
+            UiUtil.showErrorDialog("Action Error", "Unrecognized action: " + action);
+        }
+    }
+
+    private void serverActionInstallIota() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallInstallIota"));
+
+        try {
+            proxy.doIotaAction(Constants.IOTA_ACTION_INSTALL);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("installIota: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("installIota exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("installIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
+    }
+
+    private void serverActionStartIota() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStartIota"));
+
+        try {
+            proxy.doIotaAction(Constants.IOTA_ACTION_START);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("startIota: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("startIota exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("startIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
+    }
+
+    private void serverActionStopIota() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStopIota"));
+
+        try {
+            proxy.doIotaAction(Constants.IOTA_ACTION_STOP);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("stopIota: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("stopIota exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("stopIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
+    }
+
+    private void serverActionStartWallet() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStartWallet"));
+
+        // TODO
+        /*
+        try {
+            proxy.();
+        }
+        catch(BadResponseException bre) {
+            System.out.println("installIota: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("installIota exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("installIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
+        */
+    }
+
+    private void serverActionDeleteDb() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallDeleteDb"));
+
+        try {
+            proxy.doIotaAction(Constants.IOTA_ACTION_DELETEDB);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("deleteIotaDb: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("deleteIotaDb exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("consoleLogApiCallDeleteDb"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
+    }
+
+    private void serverActionUninstallIota() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallDeleteIota"));
+
+        try {
+            proxy.doIotaAction(Constants.IOTA_ACTION_DELETE);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("deleteIota: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("deleteIota exception from proxy: ");
+            e.printStackTrace();
+
+            UiUtil.showErrorDialog(localizer.getLocalText("consoleLogApiCallDeleteIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+        }
     }
 
     private void serverSettingsDialogSave() {

@@ -101,6 +101,43 @@ public class HttpProxy {
         }
     }
 
+    public void doIotaAction(String action) {
+        System.out.println("doIotaAction " + action + "...");
+        Response response = null;
+        try {
+            response = proxy.doIotaAction(action);
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() != HttpStatus.SC_OK) {
+                throw new BadResponseException("iotaAction" + action,
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(Exception e) {
+            System.out.println("iotaAction" + action  + " exception: ");
+            e.printStackTrace();
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+    }
+
+    public void startIota() {
+    }
+
+    public void stopIota() {
+    }
+
+    public void deleteIotaDb() {
+    }
+
+    public void deleteIota() {
+    }
+
     private String buildPath() {
         String serverUrl = "http://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
                 ":" + serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
@@ -121,6 +158,5 @@ public class HttpProxy {
         target = client.target(UriBuilder.fromPath(path));
         proxy = target.proxy(IccrService.class);
     }
-
 }
 

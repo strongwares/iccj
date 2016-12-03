@@ -211,28 +211,30 @@ Fri: 12/2/16
 
 HttpProxy checks status, throws bad resp exc if not ok
 
+add new server  props to iccj
 
+iota actions
+
+checked in
 
 todo:
+prinnt api call was successful to log
+
+query for  node info
+
+query for nbrs
+
+iccr actions
+
 localize dialg save validation error failure error dialo title
 
 add separte get nbr list,set nbr list resorces in iccr and update the copied iccrservice in iccj
-
-add new server  props to iccj
 
 need scheme config for server, http or https
 
 icc settings dialog
 
 Add (in seconds) sub label to icc settings dialog
-
-iccr actions
-
-iota actions
-
-query for  node info
-
-query for nbrs
 
 mechanism to add nbrs to table
 

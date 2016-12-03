@@ -43,4 +43,9 @@ iotaNeighborRefreshTime->10
     public void iccrSetConfig(Properties props) throws BadResponseException {
         httpProxy.iccrSetConfig(props);
     }
+
+    public void doIotaAction(String action) throws BadResponseException {
+        httpProxy.doIotaAction(action);
+    }
+
 }
