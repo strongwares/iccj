@@ -220,7 +220,7 @@ public class MainController implements ActionListener {
                 sep = "\n";
             }
         }
-        if(port == null || port.isEmpty() || !UiUtil.isValidPortNumber(port)) {
+        if(port == null || port.isEmpty() || !UiUtil.isValidPositiveNumber(port)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.iccrPortTextField.getName();

@@ -6,24 +6,29 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Properties;
 
 public class ServerSettingsDialog extends JDialog {
 
+    public JButton cancel;
     private ActionListener ctlr;
     private Localizer localizer;
-    public JPanel panel;
-    public JTextField iotaFolderTextField;
+    public Properties iccrProps;
     public JTextField iccrPortTextField;
-    public JTextField nbrRefreshTextField;
     public JTextField iotaPortTextField;
     public JTextField iotaStartTextField;
+    public JTextField iotaFolderTextField;
+    public JTextField nbrRefreshTextField;
+    public JPanel panel;
+    public java.util.List<String> propList;
     public JButton save;
-    public JButton cancel;
 
-    public ServerSettingsDialog(Localizer localizer, ActionListener ctlr) {
+    public ServerSettingsDialog(Localizer localizer, ActionListener ctlr, Properties iccrProps) {
         super();
         this.localizer = localizer;
         this.ctlr = ctlr;
+        this.iccrProps = iccrProps;
         init();
     }
 
@@ -41,6 +46,7 @@ public class ServerSettingsDialog extends JDialog {
         iccrPortTextField = new JTextField(20);
         iccrPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIccrPortTooltip"));
         iccrPort.setLabelFor(iccrPortTextField);
+        iccrPortTextField.setName(localizer.getLocalText("fieldLabelIccrPort"));
         panel.add(iccrPortTextField);
 
         JLabel iotaFolderLocation = new JLabel(localizer.getLocalText("fieldLabelIotaFolderLocation") + ":", JLabel.TRAILING);
@@ -48,6 +54,7 @@ public class ServerSettingsDialog extends JDialog {
         iotaFolderTextField = new JTextField(20);
         iotaFolderTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaFolderLocationTooltip"));
         iotaFolderLocation.setLabelFor(iotaFolderTextField);
+        iotaFolderTextField.setName(localizer.getLocalText("fieldLabelIotaFolderLocation"));
         panel.add(iotaFolderTextField);
 
         JLabel iotaStartCmd = new JLabel(localizer.getLocalText("fieldLabelIotaStartCmd") + ":", JLabel.TRAILING);
@@ -55,6 +62,7 @@ public class ServerSettingsDialog extends JDialog {
         iotaStartTextField = new JTextField(20);
         iotaStartTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaStartCmdTooltip"));
         iotaStartCmd.setLabelFor(iotaStartTextField);
+        iotaStartTextField.setName(localizer.getLocalText("fieldLabelIotaStartCmd"));
         panel.add(iotaStartTextField);
 
         JLabel iotaPort = new JLabel(localizer.getLocalText("fieldLabelIotaPort") + ":", JLabel.TRAILING);
@@ -62,6 +70,7 @@ public class ServerSettingsDialog extends JDialog {
         iotaPortTextField = new JTextField(20);
         iotaPortTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaPortTooltip"));
         iotaPort.setLabelFor(iotaPortTextField);
+        iotaPortTextField.setName(localizer.getLocalText("fieldLabelIotaPort"));
         panel.add(iotaPortTextField);
 
         JLabel nbrRefreshTime = new JLabel(localizer.getLocalText("fieldLabelNbrRefreshTime") + ":", JLabel.TRAILING);
@@ -69,6 +78,7 @@ public class ServerSettingsDialog extends JDialog {
         nbrRefreshTextField = new JTextField(20);
         nbrRefreshTextField.setToolTipText(localizer.getLocalText("fieldLabelNbrRefreshTimeTooltip"));
         nbrRefreshTime.setLabelFor(nbrRefreshTextField);
+        nbrRefreshTextField.setName(localizer.getLocalText("fieldLabelNbrRefreshTime"));
         panel.add(nbrRefreshTextField);
 
         SpringUtilities.makeCompactGrid(panel,
@@ -97,6 +107,30 @@ public class ServerSettingsDialog extends JDialog {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
+        if(iccrProps != null) {
+            insertValues();
+        }
+
         pack();
+    }
+
+    private void insertValues() {
+        propList = new ArrayList<>();
+
+        iccrPortTextField.setText(iccrProps.getProperty("iccrPortNumber"));
+        propList.add("iccrPortNumber");
+
+        iotaFolderTextField.setText(iccrProps.getProperty("iotaDir"));
+        propList.add("iotaDir");
+
+        nbrRefreshTextField.setText(iccrProps.getProperty("iotaNeighborRefreshTime"));
+        propList.add("iotaNeighborRefreshTime");
+
+        iotaPortTextField.setText(iccrProps.getProperty("iotaPortNumber"));
+        propList.add("iotaPortNumber");
+
+        iotaStartTextField.setText(iccrProps.getProperty("iotaStartCmd"));
+        propList.add("iotaStartCmd");
+
     }
 }

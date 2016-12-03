@@ -1,11 +1,14 @@
 package org.iotacontrolcenter.ui.proxy.http;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.iotacontrolcenter.dto.IccrPropertyDto;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.SimpleResponse;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
+import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -34,39 +37,75 @@ public class HttpProxy {
         setUp();
     }
 
-    public Properties iccrGetConfig() {
+    public IccrPropertyListDto iccrGetConfig() throws BadResponseException {
         System.out.println("iccrGetConfig...");
-
-        Properties props = new Properties();
+        IccrPropertyListDto dto = null;
+        Response response = null;
         try {
-            Response response = proxy.getConfigProperties();
+            response = proxy.getConfigProperties();
 
             System.out.println("response status: " + response.getStatus());
 
-            IccrPropertyListDto dto = response.readEntity(IccrPropertyListDto.class);
-
-            for(IccrPropertyDto prop : dto.getProperties()) {
-                System.out.println(prop.getKey() + "->" + prop.getValue());
-                props.setProperty(prop.getKey(), prop.getValue());
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                dto = response.readEntity(IccrPropertyListDto.class);
+            }
+            else {
+                throw new BadResponseException("iccrGetConfigError",
+                        response.readEntity(SimpleResponse.class));
             }
 
-            response.close();
         }
         catch(Exception e) {
             System.out.println("iccrGetConfig exception: ");
             e.printStackTrace();
         }
-
-        return props;
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return dto;
     }
 
+    public void iccrSetConfig(Properties props) throws BadResponseException {
+        System.out.println("iccrSetConfig...");
+
+        for(Object o : props.keySet()) {
+            String key = (String)o;
+            String val = props.getProperty(key);
+            System.out.println("setting " + key + " -> " + val);
+
+            Response response =  null;
+            try {
+                response = proxy.updateConfigProperty(key, new IccrPropertyDto(key, val));
+
+                System.out.println("response status: " + response.getStatus());
+
+                if(response.getStatus() != HttpStatus.SC_OK) {
+                    throw new BadResponseException("iccrSetConfigError",
+                            response.readEntity(SimpleResponse.class));
+                }
+            }
+            catch(Exception e) {
+                System.out.println("iccrSetConfig exception: ");
+                e.printStackTrace();
+
+                throw new BadResponseException("iccrSetConfigError",
+                        new SimpleResponse(false, e.getLocalizedMessage()));
+            }
+            finally {
+                if(response != null) {
+                    response.close();
+                }
+            }
+        }
+    }
 
     private String buildPath() {
         String serverUrl = "http://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
                 ":" + serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
 
         return serverUrl;
-
     }
 
     private void setUp() {

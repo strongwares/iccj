@@ -67,6 +67,13 @@ public class ServerPanel extends JPanel {
         gbc.anchor = GridBagConstraints.LAST_LINE_START;
         //gbc.gridheight = GridBagConstraints.NORTH;
         add(footerPanel, gbc);
+    }
 
+    public void addConsoleLogMsg(String msg) {
+        consoleLogPanel.consoleText.append(msg);
+    }
+
+    public void addConsoleLogLine(String line) {
+        consoleLogPanel.consoleText.append(line + "\n");
     }
 }

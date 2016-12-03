@@ -207,8 +207,15 @@ iotaNeighborRefreshTime->10
 checked in
 
 --------------
+Fri: 12/2/16
+
+HttpProxy checks status, throws bad resp exc if not ok
+
+
 
 todo:
+localize dialg save validation error failure error dialo title
+
 add separte get nbr list,set nbr list resorces in iccr and update the copied iccrservice in iccj
 
 add new server  props to iccj

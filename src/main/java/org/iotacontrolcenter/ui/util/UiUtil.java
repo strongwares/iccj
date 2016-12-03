@@ -31,7 +31,7 @@ public class UiUtil {
         return ipV4Pattern.matcher(ip).matches();
     }
 
-    public static boolean isValidPortNumber(String port) {
+    public static boolean isValidPositiveNumber(String port) {
         try {
             Integer num = Integer.parseInt(port);
             return num > 0;
