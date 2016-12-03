@@ -217,9 +217,26 @@ iota actions
 
 checked in
 
-todo:
-prinnt api call was successful to log
+-----------------
+Sat: 12/3/16
 
+Get actionresponse from all action calls
+
+do initial prompt to connect to local server
+
+on first load of tab, connect, get status
+
+print api call was successful to log
+
+first prompt  needs to come after UI is displayed?
+
+main panel needs preferred size
+
+extract caused by exception from http client
+
+checked in
+
+todo:
 query for  node info
 
 query for nbrs
@@ -241,8 +258,6 @@ mechanism to add nbrs to table
 mechanism to edit nbrs in table
 
 mechanism to add and remove neighbors
-
-do initial prompt to connect to local server
 
 initial login prompt for api key
 

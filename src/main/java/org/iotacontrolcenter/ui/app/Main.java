@@ -40,10 +40,13 @@ public class Main {
         mainFrame = new MainFrame(mainController);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();
-        //mainFrame.setSize(1200, 425);
         mainFrame.setTitle(Localizer.getInstance().getLocalText("mainWindowTitle"));
         mainFrame.pack();
         mainFrame.setVisible(true);
+
+        SwingUtilities.invokeLater(() -> {
+            mainController.initialPrompts();
+        });
     }
 }
 

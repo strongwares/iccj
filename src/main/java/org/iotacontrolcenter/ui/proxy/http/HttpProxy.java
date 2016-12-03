@@ -4,6 +4,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.iotacontrolcenter.dto.ActionResponse;
 import org.iotacontrolcenter.dto.IccrPropertyDto;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
 import org.iotacontrolcenter.dto.SimpleResponse;
@@ -14,8 +15,11 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
+import javax.swing.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class HttpProxy {
@@ -55,9 +59,23 @@ public class HttpProxy {
             }
 
         }
+        catch(BadResponseException bre) {
+            throw bre;
+        }
         catch(Exception e) {
             System.out.println("iccrGetConfig exception: ");
             e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("iccrGetConfigError",
+                    new SimpleResponse(false, msg));
         }
         finally {
             if(response != null) {
@@ -67,15 +85,19 @@ public class HttpProxy {
         return dto;
     }
 
-    public void iccrSetConfig(Properties props) throws BadResponseException {
+    public List<SimpleResponse> iccrSetConfig(Properties props) throws BadResponseException {
         System.out.println("iccrSetConfig...");
+
+        List<SimpleResponse> dtos = new ArrayList<>();
 
         for(Object o : props.keySet()) {
             String key = (String)o;
             String val = props.getProperty(key);
+
             System.out.println("setting " + key + " -> " + val);
 
             Response response =  null;
+            SimpleResponse dto = null;
             try {
                 response = proxy.updateConfigProperty(key, new IccrPropertyDto(key, val));
 
@@ -85,6 +107,12 @@ public class HttpProxy {
                     throw new BadResponseException("iccrSetConfigError",
                             response.readEntity(SimpleResponse.class));
                 }
+                else {
+                    dtos.add(response.readEntity(SimpleResponse.class));
+                }
+            }
+            catch(BadResponseException bre) {
+                throw bre;
             }
             catch(Exception e) {
                 System.out.println("iccrSetConfig exception: ");
@@ -99,43 +127,46 @@ public class HttpProxy {
                 }
             }
         }
+        return dtos;
     }
 
-    public void doIotaAction(String action) {
+    public ActionResponse doIotaAction(String action)  throws BadResponseException {
         System.out.println("doIotaAction " + action + "...");
         Response response = null;
+        ActionResponse dto = null;
         try {
             response = proxy.doIotaAction(action);
 
             System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() != HttpStatus.SC_OK) {
-                throw new BadResponseException("iotaAction" + action,
-                        response.readEntity(SimpleResponse.class));
-            }
 
+                SimpleResponse simple = response.readEntity(SimpleResponse.class);
+
+                System.out.println("iota action " + action + " failed: " + simple.getMsg());
+
+                throw new BadResponseException(action + "IotaActionError",
+                        simple);
+            }
+            dto = response.readEntity(ActionResponse.class);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("Caught BRE, rethrowing");
+            throw bre;
         }
         catch(Exception e) {
             System.out.println("iotaAction" + action  + " exception: ");
             e.printStackTrace();
+
+            throw new BadResponseException(action + "IotaActionError",
+                    new SimpleResponse(false, e.getLocalizedMessage()));
         }
         finally {
             if(response != null) {
                 response.close();
             }
         }
-    }
-
-    public void startIota() {
-    }
-
-    public void stopIota() {
-    }
-
-    public void deleteIotaDb() {
-    }
-
-    public void deleteIota() {
+        return dto;
     }
 
     private String buildPath() {

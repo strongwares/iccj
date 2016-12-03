@@ -14,8 +14,17 @@ public class UiUtil {
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
-    public static final void showErrorDialog(String title, String msg) {
+    public static boolean promptUserYorN(String title, String msg) {
+        int reply = JOptionPane.showConfirmDialog(Main.mainFrame, msg, title, JOptionPane.YES_NO_OPTION);
+        return reply == JOptionPane.YES_OPTION;
+    }
+
+    public static final void showInfoDialog(String title, String msg) {
         JOptionPane.showMessageDialog(Main.mainFrame,  msg, title,  JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static final void showErrorDialog(String title, String msg) {
+        JOptionPane.showMessageDialog(Main.mainFrame,  msg, title,  JOptionPane.ERROR_MESSAGE);
     }
 
     public static boolean isValidIpV4(String ip) {

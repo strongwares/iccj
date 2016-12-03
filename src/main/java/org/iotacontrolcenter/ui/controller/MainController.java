@@ -30,7 +30,23 @@ public class MainController implements ActionListener {
 
     public void init() {
         localizer = Localizer.getInstance();
-        addServerTabPanel(propertySource.getLocalServerProperties());
+    }
+
+    public void initialPrompts() {
+        Properties props = propertySource.getLocalServerProperties();
+
+        if(props == null) {
+            UiUtil.showInfoDialog(localizer.getLocalText("initialAddServerTitle"),
+                    localizer.getLocalText("initialAddServerMsg"));
+        }
+        else {
+            boolean addLocal = UiUtil.promptUserYorN(localizer.getLocalText("openServerPromptTitle"),
+                    localizer.getLocalText("openServerPromptMsg") + " " +
+                    props.getProperty(PropertySource.SERVER_NAME_PROP));
+            if (addLocal) {
+                addServerTabPanel(props);
+            }
+        }
     }
 
     @Override
@@ -338,5 +354,11 @@ public class MainController implements ActionListener {
         ServerPanel server = new ServerPanel(serverProps.getProperty(PropertySource.SERVER_ID_PROP), localizer, ctlr);
         ctlr.setServerPanel(server);
         serverTabPanel.add(name, server);
+
+        SwingUtilities.invokeLater(() -> {
+            if(ctlr.connectToServer()) {
+                ctlr.serverActionStatusIota();
+            }
+        });
     }
 }
