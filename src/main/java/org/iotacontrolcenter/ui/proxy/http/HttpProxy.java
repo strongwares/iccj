@@ -12,6 +12,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class HttpProxy {
     private ResteasyClient client;
     private PoolingHttpClientConnectionManager connectionManager;
     private ApacheHttpClient4Engine engine;
-    private CloseableHttpClient httpClient;
+    private RequestHeaderFilter headerFilter;
     private String path;
     private IccrService proxy;
     private Properties serverProps;
@@ -35,6 +36,10 @@ public class HttpProxy {
     public HttpProxy(Properties serverProps) {
         this.serverProps = serverProps;
         setUp();
+    }
+
+    public void apiKeyChange(String newApiKey) {
+        headerFilter.setHeader(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_HEADER_NAME_PROP), newApiKey);
     }
 
     public IccrPropertyListDto iccrGetConfig() throws BadResponseException {
@@ -311,7 +316,15 @@ public class HttpProxy {
         engine = new ApacheHttpClient4Engine(httpClient);
 
         client = new ResteasyClientBuilder().httpEngine(engine).build();
+
+        headerFilter = new RequestHeaderFilter();
+        headerFilter.addHeader(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_HEADER_NAME_PROP),
+                serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
+
+        client.register(headerFilter);
+
         target = client.target(UriBuilder.fromPath(path));
+
         proxy = target.proxy(IccrService.class);
     }
 }

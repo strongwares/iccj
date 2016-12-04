@@ -271,15 +271,20 @@ send dld link and filename as actionprops to install iota cmd
 checked in
 
 -------------------
+Sun: 12/4/2016
 
-todo:
 on delete db, if iota was running, restrt it after delete
 
+support for api key
+
+on api key change, change proxy header
+
+checked in
+
+todo:
 query for  iota node info
 
 query for iota nbrs
-
-initial login prompt for api key
 
 Add (in seconds) sub label to icc settings dialog
 
@@ -298,12 +303,10 @@ do us
 us: add lang locale and country locale to icc props
 
 questions:
-If ICC is on system with no local iota node, initial prompt to load local?
+ICC is on system with no local iota node, initial prompt to load local?
 
 ICC Settings: time for icc to refresh nbrs status being 90 seconds is to display the server tab's neighbors table?
 ICC Settings: time for icc to refresh node info is for updating what, the footer and just a health and status check?
-ICC Settings: IOTA client download link should be sent to server to update server's iota dld link property?
-initially and when changed?
 
 What is online in footer?
 

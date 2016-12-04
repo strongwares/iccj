@@ -18,6 +18,11 @@ public class ServerProxy {
         httpProxy = new HttpProxy(serverProps);
     }
 
+    public void apiKeyChange(String newApiKey) {
+        System.out.println("apiKeyChange: " + newApiKey);
+        httpProxy.apiKeyChange(newApiKey);
+    }
+
     public Properties iccrGetConfig() throws BadResponseException {
         Properties resp = new Properties();
 

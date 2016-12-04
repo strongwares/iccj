@@ -34,6 +34,7 @@ public class PropertySource {
     public static final String IOTA_NEIGHBORS_PROP="iotaNeighbors";
 
     public static final String ICCR_PORT_DEFAULT_PROP = "iccrDefaultPortNumber";
+    public static final String ICCR_API_KEY_DEFAULT_PROP = "iccrDefaultApiKey";
 
     public static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";
     public static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
@@ -54,6 +55,8 @@ public class PropertySource {
     public static final String SERVER_NAME_PROP = "name";
     public static final String SERVER_ICCR_PORT_NUM_PROP = "iccrPortNumber";
     public static final String SERVER_ICCR_API_KEY_PROP = "iccrApiKey";
+    public static final String SERVER_ICCR_API_KEY_HEADER_NAME_PROP = "iccrApiKeyHeaderName";
+    public static final String SERVER_ICCR_API_KEY_HEADER_NAME_VAL = "ICCR-API-KEY";
     public static final String SERVER_WALLET_CMD_PROP = "walletCommand";
 
     private Properties _props;
@@ -95,6 +98,10 @@ public class PropertySource {
             System.out.println("failed to load icc.properties");
             e.printStackTrace();
         }
+    }
+
+    public String getIccrDefaultApiKey() {
+        return getString(ICCR_API_KEY_DEFAULT_PROP);
     }
 
     public String getIccrDefaultPortNumber() {
@@ -142,6 +149,7 @@ public class PropertySource {
                 serverProps.put(SERVER_IP_PROP, getString(PropertySource.SERVERKEYS_IP_PREFIX_PROP + id));
                 serverProps.put(SERVER_ICCR_PORT_NUM_PROP, getString(PropertySource.SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id));
                 serverProps.put(SERVER_ICCR_API_KEY_PROP, getString(PropertySource.SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id));
+                serverProps.put(SERVER_ICCR_API_KEY_HEADER_NAME_PROP, SERVER_ICCR_API_KEY_HEADER_NAME_VAL);
                 serverProps.put(SERVER_WALLET_CMD_PROP, getString(PropertySource.SERVERKEYS_WALLET_CMD_PREFIX_PROP + id));
 
                 servers.put(id, serverProps);

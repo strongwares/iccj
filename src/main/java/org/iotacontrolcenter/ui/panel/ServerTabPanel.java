@@ -1,12 +1,27 @@
 package org.iotacontrolcenter.ui.panel;
 
-
 import javax.swing.*;
+import java.awt.*;
 
 public class ServerTabPanel extends JTabbedPane {
 
     public ServerTabPanel() {
         super();
+    }
+
+    public void serverApiKeyChange(String serverName, String newApiKey) {
+        Component panel = null;
+        for(int i = 0; i < getTabCount(); i++) {
+            if(getTitleAt(i).equals(serverName)) {
+                panel = getComponentAt(i);
+                break;
+            }
+        }
+        if(panel == null) {
+            throw new IllegalStateException("API Key Change: panel for server name " + serverName + " not found");
+        }
+        ServerPanel serverPanel = ((ServerPanel) panel);
+        serverPanel.ctlr.proxy.apiKeyChange(newApiKey);
     }
 
     public void serverNameChange(String prevName, String newName) {
@@ -16,7 +31,7 @@ public class ServerTabPanel extends JTabbedPane {
                 return;
             }
         }
-        throw new IllegalStateException("Tab for server name " + prevName + " not found");
+        throw new IllegalStateException("Name change: panel for server name " + prevName + " not found");
     }
 
     public boolean serverIsOpen(String name) {
@@ -41,7 +56,7 @@ public class ServerTabPanel extends JTabbedPane {
         }
         else {
             // TODO: localization
-            throw new IllegalStateException("Tab for server name " + name + " not found");
+            throw new IllegalStateException("Remove Server: panel for server name " + name + " not found");
         }
     }
 }

@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class ServerPanel extends JPanel {
 
-    private ServerController ctlr;
+    public ServerController ctlr;
     private FooterPanel footerPanel;
     private String id;
     private JPanel internalPanel;

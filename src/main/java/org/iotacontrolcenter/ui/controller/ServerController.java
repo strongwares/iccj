@@ -29,7 +29,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private Localizer localizer;
     private Properties iccrProps;
     private PropertySource propertySource;
-    private ServerProxy proxy;
+    public ServerProxy proxy;
     private ServerPanel serverPanel;
     private Properties serverProps;
     private ServerSettingsDialog serverSettingsDialog;

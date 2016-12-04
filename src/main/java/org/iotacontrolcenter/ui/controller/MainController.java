@@ -264,6 +264,7 @@ public class MainController implements ActionListener {
 
         if(isAdd) {
             cfgServerDialog.iccrPortTextField.setText(propertySource.getIccrDefaultPortNumber());
+            cfgServerDialog.iccrPwdTextField.setText(propertySource.getIccrDefaultApiKey());
         }
 
         cfgServerDialog.setVisible(true);
@@ -359,17 +360,28 @@ public class MainController implements ActionListener {
             return;
         }
 
+        boolean apiKeyChange = false;
         if(cfgServerDialog.isAdd) {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
         }
         else {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
+            apiKeyChange = !newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP).equals(
+                    cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
+
+            System.out.println("server configuration edit: apiKeyChange: " + apiKeyChange);
         }
 
         persistCfgServerSettings(newProps, cfgServerDialog.serverProps, cfgServerDialog.isAdd);
-
+        
         if(!cfgServerDialog.isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
             serverTabPanel.serverNameChange(cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
+        }
+
+        if(apiKeyChange) {
+            serverTabPanel.serverApiKeyChange(
+                    cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP),
+                    newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
         }
 
         cfgServerDialogClose();
