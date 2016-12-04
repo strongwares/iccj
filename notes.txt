@@ -264,8 +264,16 @@ localize dialg save validation error failure error dialo title
 
 checked in
 
-todo:
 icc settings dialog
+
+send dld link and filename as actionprops to install iota cmd
+
+checked in
+
+-------------------
+
+todo:
+on delete db, if iota was running, restrt it after delete
 
 query for  iota node info
 
@@ -290,7 +298,6 @@ do us
 us: add lang locale and country locale to icc props
 
 questions:
-
 If ICC is on system with no local iota node, initial prompt to load local?
 
 ICC Settings: time for icc to refresh nbrs status being 90 seconds is to display the server tab's neighbors table?
@@ -301,8 +308,6 @@ initially and when changed?
 What is online in footer?
 
 Remove selected is remove from server tab panel as well as delete server configuration?
-
-
 
 
 

@@ -249,12 +249,18 @@ public class HttpProxy {
     }
 
 
-    public ActionResponse doIotaAction(String action)  throws BadResponseException {
+    public ActionResponse doIotaAction(String action, IccrPropertyListDto actionProps)  throws BadResponseException {
         System.out.println("doIotaAction " + action + "...");
         Response response = null;
         ActionResponse dto = null;
         try {
-            response = proxy.doIotaAction(action);
+            if(actionProps == null) {
+                actionProps = new IccrPropertyListDto();
+            }
+
+            System.out.println("actionProps: " + actionProps);
+
+            response = proxy.doIotaAction(action, actionProps);
 
             System.out.println("response status: " + response.getStatus());
 

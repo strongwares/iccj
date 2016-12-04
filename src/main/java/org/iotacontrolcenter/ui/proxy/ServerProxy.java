@@ -54,8 +54,8 @@ iotaNeighborRefreshTime->10
         httpProxy.iccrUpdateIotaNbrs(nbrs);
     }
 
-    public ActionResponse doIotaAction(String action) throws BadResponseException {
-        return httpProxy.doIotaAction(action);
+    public ActionResponse doIotaAction(String action, IccrPropertyListDto actionProps) throws BadResponseException {
+        return httpProxy.doIotaAction(action, actionProps);
     }
 
 }

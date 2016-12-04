@@ -35,12 +35,12 @@ public class PropertySource {
 
     public static final String ICCR_PORT_DEFAULT_PROP = "iccrDefaultPortNumber";
 
-    private static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";
-    private static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
-    private static final String IOTA_DLD_LINK_PROP = "iotaDownloadLink";
-    private static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
-    private static final String WALLET_START_PROP = "iotaDownloadFilename";
-    private static final String SERVERKEYS_PROP = "serverKeys";
+    public static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";
+    public static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
+    public static final String IOTA_DLD_LINK_PROP = "iotaDownloadLink";
+    public static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
+    public static final String WALLET_START_PROP = "iotaDownloadFilename";
+    public static final String SERVERKEYS_PROP = "serverKeys";
 
     private static final String SERVER_LOCAL_KEY_VAL="local";
     private static final String SERVERKEYS_NAME_PREFIX_PROP = "server.name.";
@@ -101,12 +101,12 @@ public class PropertySource {
         return getString(ICCR_PORT_DEFAULT_PROP);
     }
 
-    public String getIotaDownloadUrl() {
-        return getString(IOTA_DLD_LINK_PROP) + "/" + getIotaDownloadFilename();
-    }
-
     public String getIotaDownloadFilename() {
         return getString(IOTA_DLD_FILENAME_PROP);
+    }
+
+    public String getIotaDownloadLink() {
+        return getString(IOTA_DLD_LINK_PROP);
     }
 
     public String getWalletStartCmd() {
@@ -272,12 +272,12 @@ public class PropertySource {
         return (osName.indexOf("mac") >= 0);
     }
 
-    private void setProperty(String key, Object value) {
+    public void setProperty(String key, Object value) {
         _props.setProperty(key, (String)value);
         propWriter.setProperty(key, value);
     }
 
-    private void storeProperties() {
+    public void storeProperties() {
         try {
             propWriter.save();
         }

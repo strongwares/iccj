@@ -72,12 +72,10 @@ public class MainController implements ActionListener {
             cfgServerDialogClose();
         }
         else if(action.equals(Constants.DIALOG_ICC_SETTINGS_CANCEL)) {
-            if(iccSettingsDialog != null) {
-                iccSettingsDialog.dispose();
-            }
+            iccSettingsDialogClose();
         }
         else if(action.equals(Constants.DIALOG_ICC_SETTINGS_SAVE)) {
-            iccSettingsDialog.dispose();
+            iccSettingsDialogSave();
         }
         else if(action.equals(Constants.DIALOG_OPEN_SERVER_OPEN)) {
             String serverName = openServerDialog.serverList.getSelectedValue();
@@ -124,6 +122,81 @@ public class MainController implements ActionListener {
         this.serverTabPanel = serverTabPanel;
     }
 
+    private boolean iccSettingsDialogSave() {
+        if(iccSettingsDialog == null) {
+            System.out.println("iccSettingsDialog not found!");
+
+            // TODO: localization
+            UiUtil.showErrorDialog("ICC Settings Save Error", "Dialog not found!");
+            return false;
+        }
+
+        String nbrRefresh = iccSettingsDialog.nbrRefreshTimeTextField.getText();
+        String nodeInfoRefresh = iccSettingsDialog.nodeInfoRefreshTimeTextField.getText();
+        String iotaDldLink = iccSettingsDialog.iotaDownloadLinkTextField.getText();
+        String iotaDldFile = iccSettingsDialog.iotaDownloadFileTextField.getText();
+
+        String errors = "";
+        String sep = "";
+        boolean isError = false;
+        if(nbrRefresh == null || nbrRefresh.isEmpty() || !UiUtil.isValidPositiveNumber(nbrRefresh)) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
+                    iccSettingsDialog.nbrRefreshTimeTextField.getName();
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
+        if(nodeInfoRefresh == null || nodeInfoRefresh.isEmpty() ||
+                !UiUtil.isValidPositiveNumber(nodeInfoRefresh)) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
+                    iccSettingsDialog.nodeInfoRefreshTimeTextField.getName();
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
+        if(iotaDldLink == null || iotaDldLink.isEmpty()) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
+                    iccSettingsDialog.iotaDownloadLinkTextField.getName();
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
+        if(iotaDldFile == null || iotaDldFile.isEmpty()) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
+                    iccSettingsDialog.iotaDownloadFileTextField.getName();
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
+
+        if(isError) {
+            UiUtil.showErrorDialog(localizer.getLocalText("dialogSaveIccErrorTitle"), errors);
+            return false;
+        }
+
+        propertySource.setProperty(PropertySource.REFRESH_NBRS_PROP, nbrRefresh);
+        propertySource.setProperty(PropertySource.REFRESH_NODEINFO_PROP, nodeInfoRefresh);
+        propertySource.setProperty(PropertySource.IOTA_DLD_LINK_PROP, iotaDldLink);
+        propertySource.setProperty(PropertySource.IOTA_DLD_FILENAME_PROP, iotaDldFile);
+
+        propertySource.storeProperties();
+
+        iccSettingsDialogClose();
+
+        return true;
+    }
+
+    private void iccSettingsDialogClose() {
+        if(iccSettingsDialog != null) {
+            iccSettingsDialog.dispose();
+            iccSettingsDialog = null;
+        }
+    }
+
     private void openSelectedServer(String serverName) {
         try {
             addServerTabPanel(propertySource.getServerPropertiesForServerName(serverName));
@@ -143,9 +216,8 @@ public class MainController implements ActionListener {
     }
 
     private void showIccSettingsDialog() {
-        iccSettingsDialog = new IccSettingsDialog(localizer);
+        iccSettingsDialog = new IccSettingsDialog(localizer, propertySource, this);
         iccSettingsDialog.setLocationRelativeTo(serverTabPanel);
-        iccSettingsDialog.addCtlr(this);
 
         iccSettingsDialog.addWindowListener(new WindowAdapter() {
             @Override

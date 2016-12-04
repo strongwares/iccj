@@ -293,13 +293,21 @@ public class ServerController implements ActionListener, TableModelListener {
 
     private boolean doInstallIota() {
         boolean isSuccess = false;
+
+        IccrPropertyListDto actionProps = new IccrPropertyListDto();
+        actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_LINK_PROP,
+                propertySource.getIotaDownloadLink()));
+        actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_FILENAME_PROP,
+                propertySource.getIotaDownloadFilename()));
+
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_INSTALL);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_INSTALL, actionProps);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_INSTALL, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
                 isSuccess = false;
-                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotInstalled"));
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotInstalled") +
+                        " " + resp.getMsg());
             }
             else {
                 isSuccess = true;
@@ -336,7 +344,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         boolean isActive = false;
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STATUS);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STATUS, null);
 
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STATUS, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
@@ -388,7 +396,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private boolean doStartIota() {
         boolean isSuccess = false;
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_START);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_START, null);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_START, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
@@ -435,7 +443,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private boolean doStopIota() {
         boolean isSuccess = false;
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STOP);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STOP, null);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STOP, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
@@ -511,7 +519,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         boolean isSuccess = false;
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETEDB);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETEDB, null);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_DELETE_DB, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
@@ -558,7 +566,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         boolean isSuccess = false;
         try {
-            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETE);
+            ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETE, null);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_DELETE, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {

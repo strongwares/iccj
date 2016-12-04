@@ -50,7 +50,7 @@ public interface IccrService {
     @Path("/iota/cmd/{action}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response doIotaAction(@DefaultValue("") @PathParam("action") String action);
+    Response doIotaAction(@DefaultValue("") @PathParam("action") String action, IccrPropertyListDto actionProps);
 
     @GET
     @Path("/iota/neighbors")

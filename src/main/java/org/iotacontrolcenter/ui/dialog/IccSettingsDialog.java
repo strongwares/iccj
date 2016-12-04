@@ -3,6 +3,8 @@ package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.properties.source.PropertySource;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,26 +15,22 @@ public class IccSettingsDialog extends JDialog {
     private Localizer localizer;
 
     public JButton cancel;
+    private ActionListener ctlr;
     public JTextField nbrRefreshTimeTextField;
     public JTextField nodeInfoRefreshTimeTextField;
     public JTextField iotaDownloadLinkTextField;
+    public JTextField iotaDownloadFileTextField;
     public JPanel panel;
+    private PropertySource propertySource;
     public JButton save;
 
 
-    public IccSettingsDialog(Localizer localizer) {
+    public IccSettingsDialog(Localizer localizer, PropertySource propertySource, ActionListener ctlr) {
         super();
         this.localizer = localizer;
+        this.propertySource = propertySource;
+        this.ctlr = ctlr;
         init();
-    }
-
-    public void addCtlr(ActionListener actionListener) {
-        if (save != null) {
-            save.addActionListener(actionListener);
-        }
-        if (cancel != null) {
-            cancel.addActionListener(actionListener);
-        }
     }
 
     private void init() {
@@ -47,6 +45,7 @@ public class IccSettingsDialog extends JDialog {
         JLabel nbrRefreshTime = new JLabel(localizer.getLocalText("fieldLabelNeighborRefreshTime") + ":", JLabel.TRAILING);
         panel.add(nbrRefreshTime);
         nbrRefreshTimeTextField = new JTextField(5);
+        nbrRefreshTimeTextField.setName(localizer.getLocalText("fieldLabelNeighborRefreshTime"));
         nbrRefreshTimeTextField.setToolTipText(localizer.getLocalText("fieldLabelNeighborRefreshTimeTooltip"));
         nbrRefreshTime.setLabelFor(nbrRefreshTimeTextField);
         panel.add(nbrRefreshTimeTextField);
@@ -54,6 +53,7 @@ public class IccSettingsDialog extends JDialog {
         JLabel nodeInfoRefreshTime = new JLabel(localizer.getLocalText("fieldLabelNodeInfoRefreshTime") + ":", JLabel.TRAILING);
         panel.add(nodeInfoRefreshTime);
         nodeInfoRefreshTimeTextField = new JTextField(10);
+        nodeInfoRefreshTimeTextField.setName(localizer.getLocalText("fieldLabelNodeInfoRefreshTime"));
         nodeInfoRefreshTimeTextField.setToolTipText(localizer.getLocalText("fieldLabelNodeInfoRefreshTimeTooltip"));
         nodeInfoRefreshTime.setLabelFor(nodeInfoRefreshTimeTextField);
         panel.add(nodeInfoRefreshTimeTextField);
@@ -61,12 +61,21 @@ public class IccSettingsDialog extends JDialog {
         JLabel iotaDownloadLink = new JLabel(localizer.getLocalText("fieldLabelIotaDownloadLink") + ":", JLabel.TRAILING);
         panel.add(iotaDownloadLink);
         iotaDownloadLinkTextField = new JTextField(5);
+        iotaDownloadLinkTextField.setName(localizer.getLocalText("fieldLabelIotaDownloadLink"));
         iotaDownloadLinkTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaDownloadLinkTooltip"));
         iotaDownloadLink.setLabelFor(iotaDownloadLinkTextField);
         panel.add(iotaDownloadLinkTextField);
 
+        JLabel iotaDownloadFile = new JLabel(localizer.getLocalText("fieldLabelIotaDownloadFile") + ":", JLabel.TRAILING);
+        panel.add(iotaDownloadFile);
+        iotaDownloadFileTextField = new JTextField(5);
+        iotaDownloadFileTextField.setName(localizer.getLocalText("fieldLabelIotaDownloadFile"));
+        iotaDownloadFileTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaDownloadFileTooltip"));
+        iotaDownloadFile.setLabelFor(iotaDownloadFileTextField);
+        panel.add(iotaDownloadFileTextField);
+
         SpringUtilities.makeCompactGrid(panel,
-                3, 2, //rows, cols
+                4, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -79,16 +88,27 @@ public class IccSettingsDialog extends JDialog {
 
         cancel = new JButton(localizer.getLocalText("buttonLabelCancel"));
         cancel.setActionCommand(Constants.DIALOG_ICC_SETTINGS_CANCEL);
+        cancel.addActionListener(ctlr);
         buttonPanel.add(cancel);
 
         buttonPanel.add(Box.createHorizontalGlue());
 
         save = new JButton(localizer.getLocalText("buttonLabelSave"));
         save.setActionCommand(Constants.DIALOG_ICC_SETTINGS_SAVE);
+        save.addActionListener(ctlr);
         buttonPanel.add(save);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
+        insertValues();
+
         pack();
+    }
+
+    private void insertValues() {
+        nbrRefreshTimeTextField.setText(propertySource.getString(PropertySource.REFRESH_NBRS_PROP));
+        nodeInfoRefreshTimeTextField.setText(propertySource.getString(PropertySource.REFRESH_NODEINFO_PROP));
+        iotaDownloadLinkTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_LINK_PROP));
+        iotaDownloadFileTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_FILENAME_PROP));
     }
 }
