@@ -31,6 +31,8 @@ public class PropertySource {
     private static final String LOC_LANG_DEFAULT = "en";
     private static final String LOC_COUNTRY_DEFAULT = "US";
 
+    public static final String IOTA_NEIGHBORS_PROP="iotaNeighbors";
+
     public static final String ICCR_PORT_DEFAULT_PROP = "iccrDefaultPortNumber";
 
     private static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";

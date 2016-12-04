@@ -15,9 +15,9 @@ public class ServerPanel extends JPanel {
     private String id;
     private JPanel internalPanel;
     private Localizer localizer;
-    private NeighborPanel neighborPanel;
-    private ServerActionPanel serverActionPanel;
-    private ServerConsoleLogPanel consoleLogPanel;
+    public NeighborPanel neighborPanel;
+    public ServerActionPanel serverActionPanel;
+    public ServerConsoleLogPanel consoleLogPanel;
 
     public ServerPanel(String id, Localizer localizer, ServerController ctlr) {
         super();

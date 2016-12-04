@@ -23,6 +23,11 @@ public interface IccrService {
     @Produces(MediaType.APPLICATION_JSON)
     Response getConfigProperty(@DefaultValue("") @PathParam("key") String key);
 
+    @GET
+    @Path("/app/config/iota/nbrs")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response getIotaNbrsConfig();
+
     @PUT
     @Path("/app/config")
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +39,12 @@ public interface IccrService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     Response updateConfigProperty(@DefaultValue("") @PathParam("key") String key, IccrPropertyDto prop);
+
+    @PUT
+    @Path("/app/config/iota/nbrs")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response updateIotaNbrsConfig(IccrIotaNeighborsPropertyDto nbrs);
 
     @POST
     @Path("/iota/cmd/{action}")

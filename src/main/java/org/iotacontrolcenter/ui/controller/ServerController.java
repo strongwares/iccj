@@ -1,12 +1,10 @@
 package org.iotacontrolcenter.ui.controller;
 
 
-import org.iotacontrolcenter.dto.ActionResponse;
-import org.iotacontrolcenter.dto.IccrPropertyDto;
-import org.iotacontrolcenter.dto.IccrPropertyListDto;
-import org.iotacontrolcenter.dto.SimpleResponse;
+import org.iotacontrolcenter.dto.*;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.dialog.ServerSettingsDialog;
+import org.iotacontrolcenter.ui.model.NeighborModel;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
@@ -15,16 +13,22 @@ import org.iotacontrolcenter.ui.proxy.ServerProxy;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-public class ServerController implements ActionListener {
+public class ServerController implements ActionListener, TableModelListener {
 
     private boolean wasConnected = false;
     private Localizer localizer;
+    private Properties iccrProps;
+    private PropertySource propertySource;
     private ServerProxy proxy;
     private ServerPanel serverPanel;
     private Properties serverProps;
@@ -34,6 +38,20 @@ public class ServerController implements ActionListener {
         this.localizer = localizer;
         this.proxy = proxy;
         this.serverProps = serverProps;
+        propertySource = PropertySource.getInstance();
+    }
+
+    public void serverSetup() {
+        boolean isSuccess = connectToServer();
+        if(!isSuccess) {
+            return;
+        }
+
+        serverPanel.neighborPanel.setNeighbors(serverActionGetConfigNbrsList());
+
+        serverPanel.neighborPanel.save.setEnabled(false);
+
+        serverActionStatusIota();
     }
 
     public boolean connectToServer() {
@@ -57,6 +75,34 @@ public class ServerController implements ActionListener {
 
     public void setServerPanel(ServerPanel serverPanel) {
         this.serverPanel = serverPanel;
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        int changeType = e.getType();
+        int row = e.getFirstRow();
+        int col = e.getColumn();
+
+        if(changeType == TableModelEvent.DELETE) {
+            System.out.println("Server nbr table change event " + changeType +
+                    ", deleted row: " + row);
+        }
+        else if(changeType == TableModelEvent.INSERT) {
+            System.out.println("Server nbr table change event " + changeType +
+                    ", inserted row: " + row);
+
+            NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
+            System.out.println("new nbr: " + nbr);
+        }
+        else {
+            System.out.println("Server nbr table change event " + changeType +
+                    ", row: " + row + ", col: " + col);
+
+            NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
+            System.out.println("updated nbr: " + nbr);
+        }
+
+        serverPanel.neighborPanel.save.setEnabled(true);
     }
 
     @Override
@@ -97,6 +143,12 @@ public class ServerController implements ActionListener {
         else if(action.equals(Constants.NEIGHBOR_PANEL_SAVE_CHANGES)) {
             nbrPanelSave();
         }
+        else if(action.equals(Constants.NEIGHBOR_PANEL_REMOVE_SELECTED)) {
+            nbrPanelRemoveSelected();
+        }
+        else if(action.equals(Constants.NEIGHBOR_PANEL_ADD_NEW)) {
+            nbrPanelAddNew();
+        }
         else {
             // TODO: localization
             System.out.println("server controller, unrecognized action: " + action);
@@ -104,10 +156,128 @@ public class ServerController implements ActionListener {
         }
     }
 
-    private boolean nbrPanelSave() {
-        //serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallInstallIota"));
+    private boolean nbrPanelRemoveSelected() {
+
+        int row = serverPanel.neighborPanel.neighborTable.getSelectedRow();
+        System.out.println("nbrPanelRemoveSelected, row: " + row);
+
+        if(row < 0) {
+            UiUtil.showErrorDialog(localizer.getLocalText("dialogNbrErrorTitle"),
+                    localizer.getLocalText("dialogNbrErrorUnselectedMsg"));
+            return false;
+        }
+
+        NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
+        String who = nbr.getDescr() != null &&  !nbr.getDescr().isEmpty()  ? nbr.getDescr() : "";
+
+        if(!UiUtil.promptUserYorN(localizer.getLocalText("removeNbrPromptTitle"),
+                localizer.getLocalText("removeNbrPromptMsg") + " " + who)) {
+            return false;
+        }
+
+        serverPanel.neighborPanel.neighborModel.removeNeighbor(row);
+
+        serverPanel.neighborPanel.save.setEnabled(true);
+
+        return true;
+    }
+
+    private boolean nbrPanelAddNew() {
         boolean isSuccess = false;
 
+        NeighborDto nbr = new NeighborDto();
+        nbr.setActive(true);
+        nbr.setKey(propertySource.getNowDateTimestamp());
+        nbr.setScheme("udp");
+        nbr.setIp("0.0.0.0");
+        if(iccrProps !=  null && !iccrProps.getProperty("iotaPortNumber").isEmpty()) {
+            nbr.setPort(Integer.valueOf(iccrProps.getProperty("iotaPortNumber")));
+        }
+
+        serverPanel.neighborPanel.neighborModel.addNeighbor(nbr);
+
+        serverPanel.neighborPanel.save.setEnabled(true);
+
+        return isSuccess;
+    }
+
+    private boolean nbrPanelSave() {
+        boolean isSuccess = false;
+
+
+        /*
+        if(nbrToAdd.isEmpty() && nbrToRemove.isEmpty()) {
+            UiUtil.showErrorDialog(localizer.getLocalText("dialogNbrNoChangesTitle"),
+                    localizer.getLocalText("dialogNbrErrorNothingToSaveMsg"));
+            return false;
+        }
+        */
+        IccrIotaNeighborsPropertyDto nbrs = new IccrIotaNeighborsPropertyDto();
+
+        String errors = "";
+        String sep = "";
+        for(NeighborDto nbr : serverPanel.neighborPanel.neighborModel.nbrs) {
+            System.out.println("saving nbr: " + nbr);
+            if(nbr.getIp() == null || nbr.getIp().isEmpty() ||
+                    nbr.getIp().equals("0.0.0.0") ||
+                    !UiUtil.isValidIpV4(nbr.getIp())) {
+                errors += sep + localizer.getLocalText("neighborTableIpError");
+                if(sep.isEmpty()) {
+                    sep = "\n";
+                }
+            }
+            if(nbr.getScheme() == null || nbr.getScheme().isEmpty()) {
+                errors += sep + localizer.getLocalText("neighborTableSchemeError");
+                if(sep.isEmpty()) {
+                    sep = "\n";
+                }
+            }
+            if(nbr.getPort() <= 0) {
+                errors += sep + localizer.getLocalText("neighborTablePortError");
+                if(sep.isEmpty()) {
+                    sep = "\n";
+                }
+            }
+            if(nbr.getDescr() == null) {
+                nbr.setDescr("");
+            }
+            nbrs.addNeighbor(nbr);
+        };
+
+        if(!errors.isEmpty()) {
+            UiUtil.showErrorDialog("neighborSaveErrorTitle", errors);
+            return false;
+        }
+
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrSetNeighborsList"));
+
+
+        try {
+            proxy.iccrSetNbrsConfigProperty(nbrs);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("nbrPanelSave: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+        }
+        catch(Exception e) {
+            System.out.println("nbrPanelSave exception from proxy: ");
+            e.printStackTrace();
+
+            serverPanel.addConsoleLogLine(localizer.getLocalText("iccrApiException"));
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+
+            UiUtil.showErrorDialog(localizer.getLocalText("iccrSetNbrsConfigPropertyError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+        }
+
+        serverPanel.neighborPanel.save.setEnabled(false);
 
         return isSuccess;
     }
@@ -383,7 +553,7 @@ public class ServerController implements ActionListener {
                 localizer.getLocalText("deleteIotaPromptMsg"))) {
             return false;
         }
-        
+
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallDeleteIota"));
 
         boolean isSuccess = false;
@@ -518,8 +688,7 @@ public class ServerController implements ActionListener {
         }
 
         if(isError) {
-            // TODO: localization
-            UiUtil.showErrorDialog("Server Settings Error", errors);
+            UiUtil.showErrorDialog("dialogSaveErrorTitle", errors);
             return;
         }
 
@@ -560,7 +729,7 @@ public class ServerController implements ActionListener {
     }
 
     private void showServerSettingsDialog() {
-        Properties iccrProps = getServerSettingProperties();
+        iccrProps = getServerSettingProperties();
 
         if(iccrProps == null) {
             logIsConnected(false);
@@ -588,6 +757,37 @@ public class ServerController implements ActionListener {
         });
 
         serverSettingsDialog.setVisible(true);
+    }
+
+    public IccrIotaNeighborsPropertyDto serverActionGetConfigNbrsList() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrGetNeighborsList"));
+        IccrIotaNeighborsPropertyDto dto = null;
+        try {
+            dto = proxy.iccrGetNbrsConfigProperty();
+        }
+        catch(BadResponseException bre) {
+            System.out.println("serverActionGetConfigNbrsList: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+
+            serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+
+        }
+        catch(Exception e) {
+            System.out.println("serverActionGetConfigNbrsList exception from proxy: ");
+            e.printStackTrace();
+
+            serverPanel.addConsoleLogLine(localizer.getLocalText("iccrGetNbrsConfigPropertyError"));
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+
+            UiUtil.showErrorDialog(localizer.getLocalText("iccrGetNbrsConfigPropertyError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+        }
+        return dto;
     }
 
     private Properties getServerSettingProperties() {

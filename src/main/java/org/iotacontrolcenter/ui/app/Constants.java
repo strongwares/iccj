@@ -43,6 +43,9 @@ public class Constants {
     public static final String DIALOG_ICC_SETTINGS_CANCEL = "dialog-icc-settings-cancel";
 
     public static final String NEIGHBOR_PANEL_SAVE_CHANGES = "nbr-panel-save-changes";
+    public static final String NEIGHBOR_PANEL_REMOVE_SELECTED = "nbr-panel-remove-selected";
+    public static final String NEIGHBOR_PANEL_ADD_NEW = "nbr-panel-add-new";
+
 
     public static final String SERVER_ACTION_SETTINGS = "svr-action-settings";
     public static final String SERVER_ACTION_INSTALL_IOTA = "svr-action-install-iota";

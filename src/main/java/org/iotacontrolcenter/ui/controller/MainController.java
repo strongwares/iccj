@@ -356,9 +356,7 @@ public class MainController implements ActionListener {
         serverTabPanel.add(name, server);
 
         SwingUtilities.invokeLater(() -> {
-            if(ctlr.connectToServer()) {
-                ctlr.serverActionStatusIota();
-            }
+            ctlr.serverSetup();
         });
     }
 }

@@ -236,22 +236,19 @@ extract caused by exception from http client
 
 checked in
 
-todo:
-query for  node info
+use iccr get prop(key) to get nbr list, and set  prop (key) to set nbr list resorces in iccr
 
-query for nbrs
+added get prop key
 
-iccr actions
+added get nbr prop
 
-localize dialg save validation error failure error dialo title
+added inserts to table model
 
-add separte get nbr list,set nbr list resorces in iccr and update the copied iccrservice in iccj
+added remove selected nbr panel button
 
-need scheme config for server, http or https
+add remove are you sure prompt
 
-icc settings dialog
-
-Add (in seconds) sub label to icc settings dialog
+added add nbr panel button
 
 mechanism to add nbrs to table
 
@@ -259,7 +256,32 @@ mechanism to edit nbrs in table
 
 mechanism to add and remove neighbors
 
+persist nbr changes
+
+enable save nbr only when added, removed, or changed
+
+localize dialg save validation error failure error dialo title
+
+checked in
+
+todo:
+icc settings dialog
+
+query for  iota node info
+
+query for iota nbrs
+
 initial login prompt for api key
+
+Add (in seconds) sub label to icc settings dialog
+
+iccr actions
+
+fix nbr uri parsing if scheme is emptied, it sets scheme to whole ip //1.1.1.1
+
+need scheme prop for  nbr,udp or tcp
+
+need scheme config for server, http or https
 
 checkin prop files or put in another mvn sub module
 
@@ -269,7 +291,7 @@ us: add lang locale and country locale to icc props
 
 questions:
 
-What if ICC is on system with no local iota node, initial prompt to load local?
+If ICC is on system with no local iota node, initial prompt to load local?
 
 ICC Settings: time for icc to refresh nbrs status being 90 seconds is to display the server tab's neighbors table?
 ICC Settings: time for icc to refresh node info is for updating what, the footer and just a health and status check?

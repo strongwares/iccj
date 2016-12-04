@@ -1,6 +1,7 @@
 package org.iotacontrolcenter.ui.proxy;
 
 import org.iotacontrolcenter.dto.ActionResponse;
+import org.iotacontrolcenter.dto.IccrIotaNeighborsPropertyDto;
 import org.iotacontrolcenter.dto.IccrPropertyDto;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
 import org.iotacontrolcenter.ui.proxy.http.HttpProxy;
@@ -41,8 +42,16 @@ iotaNeighborRefreshTime->10
         return resp;
     }
 
+    public IccrIotaNeighborsPropertyDto iccrGetNbrsConfigProperty() throws BadResponseException {
+        return httpProxy.iccrGetNbrsConfigProperty();
+    }
+
     public void iccrSetConfig(Properties props) throws BadResponseException {
         httpProxy.iccrSetConfig(props);
+    }
+
+    public void iccrSetNbrsConfigProperty(IccrIotaNeighborsPropertyDto nbrs) throws BadResponseException {
+        httpProxy.iccrUpdateIotaNbrs(nbrs);
     }
 
     public ActionResponse doIotaAction(String action) throws BadResponseException {

@@ -1,14 +1,21 @@
 package org.iotacontrolcenter.ui.model;
 
 
+import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NeighborModel extends AbstractTableModel {
 
+    private static final int STATUS_COL = 0;
+    private static final int IP_COL = 1;
+    private static final int DESCR_COL = 2;
+
     private String[] columnNames;
-    private Object[][] data;
+    public List<NeighborDto> nbrs = new ArrayList<>();
     private Localizer localizer;
 
     public NeighborModel(Localizer localizer) {
@@ -21,7 +28,6 @@ public class NeighborModel extends AbstractTableModel {
         columnNames = new String[] {localizer.getLocalText("neighborTableColumnTitleStatus"),
                 localizer.getLocalText("neighborTableColumnTitleNeighbor"),
                 localizer.getLocalText("neighborTableColumnTitleDescription") };
-        data = null; //new Object[][]{{}};
     }
 
     public int getColumnCount() {
@@ -29,41 +35,94 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return data == null ? 0 : data.length;
+        return nbrs.size();
     }
 
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
-    public Object getValueAt(int row, int col) {
-        if(data == null || data.length <= row ||
-                data[row] == null || data[row].length <= col) {
-            return null;
+    public NeighborDto getRow(int row) {
+        NeighborDto nbr = null;
+        if(row <  getRowCount()) {
+            nbr = nbrs.get(row);
         }
-        return data[row][col];
+        return nbr;
     }
 
-    public Class getColumnClass(int c) {
-        Object o = getValueAt(0, c);
-        if(o == null) {
+    public Object getValueAt(int row, int col) {
+        NeighborDto nbr = nbrs.get(row);
+        if(nbr == null) {
             return null;
         }
-        return o.getClass();
+        if(col == STATUS_COL) {
+            return nbr.isActive();
+        }
+        else if(col == IP_COL) {
+            return nbr.toUri();
+        }
+        else if(col == DESCR_COL) {
+            return nbr.getDescr();
+        }
+        return null;
+    }
+
+    public Class getColumnClass(int col) {
+        if(col == STATUS_COL) {
+            return Boolean.class;
+        }
+        else if(col == IP_COL) {
+            return String.class;
+        }
+        else if(col == DESCR_COL) {
+            return String.class;
+        }
+        return null;
     }
 
     public boolean isCellEditable(int row, int col) {
         return true;
     }
 
-    public void setValueAt(Object value, int row, int col) {
+    public void addNeighbor(NeighborDto nbr) {
+        if(!nbrs.contains(nbr)) {
+            System.out.println("Adding new neighbor");
+            nbrs.add(nbr);
+        }
+        fireTableDataChanged();
+    }
 
-            System.out.println("Setting value at " + row + "," + col
+    public void removeNeighbor(int row) {
+        if(row <  getRowCount()) {
+            nbrs.remove(row);
+        }
+        fireTableDataChanged();
+    }
+
+    public void setValueAt(Object value, int row, int col) {
+        System.out.println("Setting value at " + row + "," + col
                     + " to " + value
                     + " (an instance of "
                     + value.getClass() + ")");
 
-        data[row][col] = value;
+        NeighborDto nbr = getRow(row);
+        if(nbr == null) {
+            return;
+        }
+
+        try {
+            if (col == STATUS_COL) {
+                nbr.setActive((Boolean) value);
+            } else if (col == IP_COL) {
+                nbr.setUri((String) value);
+            } else if (col == DESCR_COL) {
+                nbr.setDescr((String) value);
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Exception setting  nbr table value:");
+            e.printStackTrace();
+        }
         fireTableCellUpdated(row, col);
     }
 }

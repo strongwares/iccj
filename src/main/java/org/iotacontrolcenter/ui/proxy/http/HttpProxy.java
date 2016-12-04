@@ -4,10 +4,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.iotacontrolcenter.dto.ActionResponse;
-import org.iotacontrolcenter.dto.IccrPropertyDto;
-import org.iotacontrolcenter.dto.IccrPropertyListDto;
-import org.iotacontrolcenter.dto.SimpleResponse;
+import org.iotacontrolcenter.dto.*;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -15,7 +12,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
-import javax.swing.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.ArrayList;
@@ -85,6 +81,94 @@ public class HttpProxy {
         return dto;
     }
 
+    public IccrPropertyDto iccrGetConfigProperty(String key) throws BadResponseException {
+        System.out.println("iccrGetConfigProperty...");
+        IccrPropertyDto dto = null;
+        Response response = null;
+        try {
+            response = proxy.getConfigProperty(key);
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                dto = response.readEntity(IccrPropertyDto.class);
+            }
+            else {
+                throw new BadResponseException("iccrGetConfigPropertyError",
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(BadResponseException bre) {
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("iccrGetConfigProperty exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("iccrGetConfigPropertyError",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return dto;
+    }
+
+    public IccrIotaNeighborsPropertyDto iccrGetNbrsConfigProperty() throws BadResponseException {
+        System.out.println("iccrGetNbrsProperty...");
+        IccrIotaNeighborsPropertyDto dto = null;
+        Response response = null;
+        try {
+            response = proxy.getIotaNbrsConfig();
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                dto = response.readEntity(IccrIotaNeighborsPropertyDto.class);
+            }
+            else {
+                throw new BadResponseException("iccrGetNbrsConfigPropertyError",
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(BadResponseException bre) {
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("iccrGetNbrsProperty exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("iccrGetNbrsConfigPropertyError",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return dto;
+    }
+
     public List<SimpleResponse> iccrSetConfig(Properties props) throws BadResponseException {
         System.out.println("iccrSetConfig...");
 
@@ -129,6 +213,41 @@ public class HttpProxy {
         }
         return dtos;
     }
+
+    public SimpleResponse iccrUpdateIotaNbrs(IccrIotaNeighborsPropertyDto nbrs) throws BadResponseException {
+        System.out.println("iccrUpdateIotaNbrs...");
+
+        Response response = null;
+            SimpleResponse dto = null;
+            try {
+                response = proxy.updateIotaNbrsConfig(nbrs);
+
+                System.out.println("response status: " + response.getStatus());
+
+                dto = response.readEntity(SimpleResponse.class);
+                if(response.getStatus() != HttpStatus.SC_OK) {
+                    throw new BadResponseException("iccrSetNbrsConfigError", dto);
+                }
+            }
+            catch(BadResponseException bre) {
+                throw bre;
+            }
+            catch(Exception e) {
+                System.out.println("iccrUpdateIotaNbrs exception: ");
+                e.printStackTrace();
+
+                throw new BadResponseException("iccrSetNbrsConfigError",
+                        new SimpleResponse(false, e.getLocalizedMessage()));
+            }
+            finally {
+                if(response != null) {
+                    response.close();
+                }
+            }
+
+        return dto;
+    }
+
 
     public ActionResponse doIotaAction(String action)  throws BadResponseException {
         System.out.println("doIotaAction " + action + "...");
