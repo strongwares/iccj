@@ -281,20 +281,38 @@ on api key change, change proxy header
 
 checked in
 
+test update nbrs: if active, remove if not empty, add new
+
+Display the open server dialog after adding a new server config
+
+checked in
+
+> periodic query for iota nbrs
+
 todo:
-query for  iota node info
+periodic query for  iota node info
 
-query for iota nbrs
+doc how to use wget and curl to execute iccr api with header
 
-Add (in seconds) sub label to icc settings dialog
+support https
 
-iccr actions
+doc how to use wget and curl to execute iccr api with https
+
+or a icc-cli, built from iccr components and does agent work and actions directly
+
+need scheme config for server, http or https
 
 fix nbr uri parsing if scheme is emptied, it sets scheme to whole ip //1.1.1.1
 
-need scheme prop for  nbr,udp or tcp
 
-need scheme config for server, http or https
+
+?Add (in seconds) sub label to icc settings dialog
+
+iccr actions
+
+?need scheme prop for  nbr,udp or tcp
+
+
 
 checkin prop files or put in another mvn sub module
 

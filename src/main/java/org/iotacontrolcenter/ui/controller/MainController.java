@@ -282,6 +282,8 @@ public class MainController implements ActionListener {
             return;
         }
 
+        boolean isAdd = cfgServerDialog.isAdd;
+
         Properties newProps = new Properties();
         String ip = cfgServerDialog.serverIpTextField.getText();
         newProps.setProperty(PropertySource.SERVER_IP_PROP, ip);
@@ -361,7 +363,7 @@ public class MainController implements ActionListener {
         }
 
         boolean apiKeyChange = false;
-        if(cfgServerDialog.isAdd) {
+        if(isAdd) {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
         }
         else {
@@ -373,7 +375,7 @@ public class MainController implements ActionListener {
         }
 
         persistCfgServerSettings(newProps, cfgServerDialog.serverProps, cfgServerDialog.isAdd);
-        
+
         if(!cfgServerDialog.isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
             serverTabPanel.serverNameChange(cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
         }
@@ -385,6 +387,10 @@ public class MainController implements ActionListener {
         }
 
         cfgServerDialogClose();
+
+        if(isAdd) {
+            showOpenServerDialog();
+        }
     }
 
     private void persistCfgServerSettings(Properties newProps, Properties prevProps, boolean isAdd) {
