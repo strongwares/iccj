@@ -9,14 +9,20 @@ public class ServerTabPanel extends JTabbedPane {
         super();
     }
 
-    public void serverApiKeyChange(String serverName, String newApiKey) {
+    private Component getPanelByName(String name) {
         Component panel = null;
         for(int i = 0; i < getTabCount(); i++) {
-            if(getTitleAt(i).equals(serverName)) {
+            if(getTitleAt(i).equals(name)) {
                 panel = getComponentAt(i);
                 break;
             }
         }
+        return panel;
+    }
+
+    public void serverApiKeyChange(String serverName, String newApiKey) {
+        Component panel = getPanelByName(serverName);
+
         if(panel == null) {
             throw new IllegalStateException("API Key Change: panel for server name " + serverName + " not found");
         }
@@ -44,6 +50,16 @@ public class ServerTabPanel extends JTabbedPane {
     }
 
     public void removeServerTabByName(String name) {
+        Component panel = getPanelByName(name);
+
+        if(panel == null) {
+            throw new IllegalStateException("Remove server tab: panel for server name " + name + " not found");
+        }
+        ServerPanel serverPanel = ((ServerPanel) panel);
+        serverPanel.ctlr.stopTimers();
+        remove(panel);
+
+        /*
         int toRemove = -1;
         for(int i = 0; i < getTabCount(); i++) {
             if(getTitleAt(i).equals(name)) {
@@ -58,6 +74,7 @@ public class ServerTabPanel extends JTabbedPane {
             // TODO: localization
             throw new IllegalStateException("Remove Server: panel for server name " + name + " not found");
         }
+        */
     }
 
     public void setSelectedTabByName(String name) {

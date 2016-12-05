@@ -215,7 +215,7 @@ public class MainController implements ActionListener {
         openServerDialogClose();
 
         if(UiUtil.promptUserYorN(localizer.getLocalText("deleteServerConfigPromptTitle"),
-                localizer.getLocalText("deleteServerConfigPromptMst"))) {
+                localizer.getLocalText("deleteServerConfigPromptMsg"))) {
             propertySource.removeServerConfigByName(serverName);
         }
 

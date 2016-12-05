@@ -9,6 +9,8 @@ public class Constants {
     public static final String IOTA_ACTION_STATUS = "status";
     public static final String IOTA_ACTION_DELETEDB = "deletedb";
     public static final String IOTA_ACTION_DELETE = "delete";
+    public static final String IOTA_ACTION_NEIGHBORS = "neighbors";
+    public static final String IOTA_ACTION_NODEINFO = "nodeinfo";
 
     public static final String ACTION_STATUS_TRUE = "true";
     //  These must be same as action strings in the action impl classes

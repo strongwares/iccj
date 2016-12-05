@@ -298,10 +298,19 @@ Add server names to error dialogs
 
 checkin
 
-> periodic query for  iota node info
+periodic query for  iota node info
+
+periodic query for iota nbrs
+
+checkin
 
 todo:
-periodic query for iota nbrs
+stop timers on iota stop
+start timers on iota start
+
+display node info
+
+get iccr event log
 
 doc how to use wget and curl to execute iccr api with header
 
