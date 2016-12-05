@@ -207,8 +207,17 @@ public class HttpProxy {
                 System.out.println("iccrSetConfig exception: ");
                 e.printStackTrace();
 
+                Throwable cause = e.getCause();
+                String msg;
+                if(cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                else {
+                    msg = e.getLocalizedMessage();
+                }
+
                 throw new BadResponseException("iccrSetConfigError",
-                        new SimpleResponse(false, e.getLocalizedMessage()));
+                        new SimpleResponse(false, msg));
             }
             finally {
                 if(response != null) {
@@ -241,8 +250,17 @@ public class HttpProxy {
                 System.out.println("iccrUpdateIotaNbrs exception: ");
                 e.printStackTrace();
 
+                Throwable cause = e.getCause();
+                String msg;
+                if(cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                else {
+                    msg = e.getLocalizedMessage();
+                }
+
                 throw new BadResponseException("iccrSetNbrsConfigError",
-                        new SimpleResponse(false, e.getLocalizedMessage()));
+                        new SimpleResponse(false, msg));
             }
             finally {
                 if(response != null) {
@@ -288,8 +306,17 @@ public class HttpProxy {
             System.out.println("iotaAction" + action  + " exception: ");
             e.printStackTrace();
 
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+
             throw new BadResponseException(action + "IotaActionError",
-                    new SimpleResponse(false, e.getLocalizedMessage()));
+                    new SimpleResponse(false, msg));
         }
         finally {
             if(response != null) {

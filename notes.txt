@@ -287,10 +287,21 @@ Display the open server dialog after adding a new server config
 
 checked in
 
-> periodic query for iota nbrs
+On server remove selcted, prompt user to delete server config
+
+Added swingworker thread task to do api calls on bkground thread, then put on awt thread when done
+on open of new server, it will try to connect, and not display tab until answers or timesout
+
+Moved all iota actions off onto worker threads
+
+Add server names to error dialogs
+
+checkin
+
+> periodic query for  iota node info
 
 todo:
-periodic query for  iota node info
+periodic query for iota nbrs
 
 doc how to use wget and curl to execute iccr api with header
 
@@ -312,23 +323,21 @@ iccr actions
 
 ?need scheme prop for  nbr,udp or tcp
 
-
-
 checkin prop files or put in another mvn sub module
 
 do us
 
 us: add lang locale and country locale to icc props
 
-questions:
-ICC is on system with no local iota node, initial prompt to load local?
+us: When the ICC is on system with no local iota node, initial prompt to load local.
 
+questions:
 ICC Settings: time for icc to refresh nbrs status being 90 seconds is to display the server tab's neighbors table?
 ICC Settings: time for icc to refresh node info is for updating what, the footer and just a health and status check?
 
 What is online in footer?
 
-Remove selected is remove from server tab panel as well as delete server configuration?
+Remove selected is remove from server tab panel as well as delete server configuration? Right now it prompts...
 
 
 

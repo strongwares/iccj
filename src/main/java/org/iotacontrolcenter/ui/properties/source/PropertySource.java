@@ -246,6 +246,46 @@ public class PropertySource {
         servers = null;
     }
 
+    public boolean removeServerConfigByName(String serverName) {
+        if(servers == null) {
+            getServers();
+        }
+
+        String serverIds = "";
+        String sep = "";
+
+        String foundId = null;
+        Properties foundProp = null;
+        for(String id : getServerIds()) {
+            Properties props = getServerProperties(id);
+
+            if(props != null && serverName.equals(props.getProperty(SERVER_NAME_PROP))) {
+                foundId = id;
+                foundProp = props;
+            }
+            else {
+                serverIds += sep + id;
+                if(sep.isEmpty()) {
+                    sep = ",";
+                }
+            }
+        }
+
+        if(foundId != null) {
+            removeProperty(SERVERKEYS_NAME_PREFIX_PROP + foundId);
+            removeProperty(SERVERKEYS_IP_PREFIX_PROP + foundId);
+            removeProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + foundId);
+            removeProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + foundId);
+            removeProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + foundId);
+        }
+
+        setProperty(SERVERKEYS_PROP, serverIds);
+
+        storeProperties();
+
+        return foundId != null;
+    }
+
     public Properties getServerPropertiesForServerName(String serverName) {
         if(servers == null) {
             getServers();
@@ -283,6 +323,11 @@ public class PropertySource {
     public void setProperty(String key, Object value) {
         _props.setProperty(key, (String)value);
         propWriter.setProperty(key, value);
+    }
+
+    public void removeProperty(String key) {
+        _props.remove(key);
+        propWriter.clearProperty(key);
     }
 
     public void storeProperties() {

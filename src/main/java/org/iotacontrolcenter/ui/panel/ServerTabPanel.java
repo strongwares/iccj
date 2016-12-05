@@ -59,4 +59,16 @@ public class ServerTabPanel extends JTabbedPane {
             throw new IllegalStateException("Remove Server: panel for server name " + name + " not found");
         }
     }
+
+    public void setSelectedTabByName(String name) {
+        int idxToSelect = -1;
+        for(int i = 0; i < getTabCount(); i++) {
+            if(getTitleAt(i).equals(name)) {
+                idxToSelect = i;
+            }
+        }
+        if(idxToSelect >= 0) {
+            this.setSelectedIndex(idxToSelect);
+        }
+    }
 }

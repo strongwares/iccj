@@ -3,8 +3,8 @@ package org.iotacontrolcenter.ui.controller;
 
 import org.iotacontrolcenter.dto.*;
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.controller.worker.*;
 import org.iotacontrolcenter.ui.dialog.ServerSettingsDialog;
-import org.iotacontrolcenter.ui.model.NeighborModel;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
@@ -17,31 +17,58 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 public class ServerController implements ActionListener, TableModelListener {
 
-    private boolean wasConnected = false;
-    private Localizer localizer;
-    private Properties iccrProps;
-    private PropertySource propertySource;
+    public boolean wasConnected = false;
+    public Localizer localizer;
+    public Properties iccrProps;
+    public boolean isConnected = false;
+    public String name;
+    public IccrIotaNeighborsPropertyDto nbrsDto;
+    public PropertySource propertySource;
     public ServerProxy proxy;
-    private ServerPanel serverPanel;
-    private Properties serverProps;
-    private ServerSettingsDialog serverSettingsDialog;
+    public ServerPanel serverPanel;
+    public Properties serverProps;
+    public ServerSettingsDialog serverSettingsDialog;
 
     public ServerController(Localizer localizer, ServerProxy proxy, Properties serverProps) {
         this.localizer = localizer;
         this.proxy = proxy;
         this.serverProps = serverProps;
+        this.name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
         propertySource = PropertySource.getInstance();
     }
 
     public void serverSetup() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogConnectingToIccr"));
+
+        SwingUtilities.invokeLater(() -> {
+            initialConnect();
+        });
+    }
+
+    private void initialConnect() {
+        SwingWorker worker = getServerSettingProperties();
+
+        worker.addPropertyChangeListener(e -> {
+            if(e.getPropertyName().equals("state")) {
+                SwingWorker.StateValue state = (SwingWorker.StateValue)e.getNewValue();
+                if(state == SwingWorker.StateValue.DONE) {
+                    System.out.println(name + " initialConnect: server settings worker done: isConnected: " +
+                            isConnected);
+                    if (isConnected) {
+                        serverActionGetConfigNbrsList();
+                        serverActionStatusIota();
+                    }
+                }
+            }
+        });
+    }
+
+    /*
+    private void doConnect() {
         boolean isSuccess = connectToServer();
         if(!isSuccess) {
             return;
@@ -53,17 +80,20 @@ public class ServerController implements ActionListener, TableModelListener {
 
         serverActionStatusIota();
     }
+    */
 
-    public boolean connectToServer() {
-        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogConnectingToIccr"));
+    /*
+    private boolean connectToServer() {
         boolean rval = true;
+        dana
         Properties props = getServerSettingProperties();
         rval = props != null;
         logIsConnected(rval);
         return rval;
     }
+    */
 
-    private void logIsConnected(boolean isConnected) {
+    public void logIsConnected(boolean isConnected) {
         if(isConnected) {
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIsConnectedToIccr"));
         }
@@ -84,22 +114,22 @@ public class ServerController implements ActionListener, TableModelListener {
         int col = e.getColumn();
 
         if(changeType == TableModelEvent.DELETE) {
-            System.out.println("Server nbr table change event " + changeType +
+            System.out.println(name + " server nbr table change event " + changeType +
                     ", deleted row: " + row);
         }
         else if(changeType == TableModelEvent.INSERT) {
-            System.out.println("Server nbr table change event " + changeType +
+            System.out.println(name + " Server nbr table change event " + changeType +
                     ", inserted row: " + row);
 
             NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
-            System.out.println("new nbr: " + nbr);
+            System.out.println(name + " new nbr: " + nbr);
         }
         else {
-            System.out.println("Server nbr table change event " + changeType +
+            System.out.println(name + " Server nbr table change event " + changeType +
                     ", row: " + row + ", col: " + col);
 
             NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
-            System.out.println("updated nbr: " + nbr);
+            System.out.println(name + " updated nbr: " + nbr);
         }
 
         serverPanel.neighborPanel.save.setEnabled(true);
@@ -108,7 +138,7 @@ public class ServerController implements ActionListener, TableModelListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        System.out.println("Server controller action: " + action);
+        System.out.println(name + " Server controller action: " + action);
 
         if(action.equals(Constants.SERVER_ACTION_SETTINGS)) {
             showServerSettingsDialog();
@@ -151,7 +181,7 @@ public class ServerController implements ActionListener, TableModelListener {
         }
         else {
             // TODO: localization
-            System.out.println("server controller, unrecognized action: " + action);
+            System.out.println(name + " server controller, unrecognized action: " + action);
             UiUtil.showErrorDialog("Action Error", "Unrecognized action: " + action);
         }
     }
@@ -159,7 +189,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private boolean nbrPanelRemoveSelected() {
 
         int row = serverPanel.neighborPanel.neighborTable.getSelectedRow();
-        System.out.println("nbrPanelRemoveSelected, row: " + row);
+        System.out.println(name + " nbrPanelRemoveSelected, row: " + row);
 
         if(row < 0) {
             UiUtil.showErrorDialog(localizer.getLocalText("dialogNbrErrorTitle"),
@@ -201,7 +231,7 @@ public class ServerController implements ActionListener, TableModelListener {
         return isSuccess;
     }
 
-    private boolean nbrPanelSave() {
+    private void nbrPanelSave() {
         boolean isSuccess = false;
 
 
@@ -217,7 +247,7 @@ public class ServerController implements ActionListener, TableModelListener {
         String errors = "";
         String sep = "";
         for(NeighborDto nbr : serverPanel.neighborPanel.neighborModel.nbrs) {
-            System.out.println("saving nbr: " + nbr);
+            System.out.println(name + " saving nbr: " + nbr);
             if(nbr.getIp() == null || nbr.getIp().isEmpty() ||
                     nbr.getIp().equals("0.0.0.0") ||
                     !UiUtil.isValidIpV4(nbr.getIp())) {
@@ -246,12 +276,17 @@ public class ServerController implements ActionListener, TableModelListener {
 
         if(!errors.isEmpty()) {
             UiUtil.showErrorDialog("neighborSaveErrorTitle", errors);
-            return false;
+            return;
         }
 
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrSetNeighborsList"));
 
+        SetNbrsConfigPropertyWorker worker = new SetNbrsConfigPropertyWorker(localizer, serverPanel,  proxy, this, nbrs);
+        worker.execute();
 
+        //System.out.println(name + " nbrPanelSave returning");
+
+        /*
         try {
             proxy.iccrSetNbrsConfigProperty(nbrs);
         }
@@ -279,7 +314,8 @@ public class ServerController implements ActionListener, TableModelListener {
 
         serverPanel.neighborPanel.save.setEnabled(false);
 
-        return isSuccess;
+        //return isSuccess;
+        */
     }
 
     private boolean serverActionInstallIota() {
@@ -291,7 +327,7 @@ public class ServerController implements ActionListener, TableModelListener {
         return true;
     }
 
-    private boolean doInstallIota() {
+    private void doInstallIota() {
         boolean isSuccess = false;
 
         IccrPropertyListDto actionProps = new IccrPropertyListDto();
@@ -300,6 +336,14 @@ public class ServerController implements ActionListener, TableModelListener {
         actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_FILENAME_PROP,
                 propertySource.getIotaDownloadFilename()));
 
+        InstallIotaWorker worker = new InstallIotaWorker(localizer, serverPanel,  proxy, this,
+                                            Constants.IOTA_ACTION_INSTALL, actionProps);
+        worker.execute();
+
+        //System.out.println(name + " doInstallIota returning");
+
+
+        /*
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_INSTALL, actionProps);
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_INSTALL, resp);
@@ -336,12 +380,20 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
         }
 
-        return isSuccess;
+        //return isSuccess;
+        */
     }
 
-    public boolean serverActionStatusIota() {
-        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStatusIota"));
+    public void serverActionStatusIota() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStatusIota") + "...");
 
+        StatusIotaWorker worker = new StatusIotaWorker(localizer, serverPanel,  proxy, this,
+                Constants.IOTA_ACTION_STATUS, null);
+        worker.execute();
+
+        //System.out.println(name + " serverActionStatusIota returning");
+
+        /*
         boolean isActive = false;
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STATUS, null);
@@ -359,7 +411,7 @@ public class ServerController implements ActionListener, TableModelListener {
         }
         catch(BadResponseException bre) {
 
-            System.out.println("statusIota: bad response: " + bre.errMsgkey +
+            System.out.println(name + " statusIota: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -370,7 +422,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         catch(Exception e) {
-            System.out.println("statusIota exception from proxy: ");
+            System.out.println(name + " statusIota exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("iccrApiException"));
@@ -380,20 +432,26 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
         }
 
-        return isActive;
+        //return isActive;
+        */
     }
 
-    private boolean serverActionStartIota() {
+    private void serverActionStartIota() {
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStartIota"));
 
         SwingUtilities.invokeLater(() -> {
             doStartIota();
         });
-        return true;
     }
 
 
-    private boolean doStartIota() {
+    private void doStartIota() {
+
+        StartIotaWorker worker = new StartIotaWorker(localizer, serverPanel,  proxy, this,
+                Constants.IOTA_ACTION_START, null);
+        worker.execute();
+
+        /*
         boolean isSuccess = false;
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_START, null);
@@ -409,7 +467,7 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         }
         catch(BadResponseException bre) {
-            System.out.println("startIota: bad response: " + bre.errMsgkey +
+            System.out.println(name + " startIota: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -419,7 +477,7 @@ public class ServerController implements ActionListener, TableModelListener {
                     bre.resp.getMsg());
         }
         catch(Exception e) {
-            System.out.println("startIota exception from proxy: ");
+            System.out.println(name + " startIota exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStarted"));
@@ -429,18 +487,23 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
         }
         return isSuccess;
+        */
     }
 
-    private boolean serverActionStopIota() {
+    private void serverActionStopIota() {
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallStopIota"));
 
         SwingUtilities.invokeLater(() -> {
             doStopIota();
         });
-        return true;
     }
 
-    private boolean doStopIota() {
+    private void doStopIota() {
+        StopIotaWorker worker = new StopIotaWorker(localizer, serverPanel,  proxy, this,
+                Constants.IOTA_ACTION_STOP, null);
+        worker.execute();
+
+        /*
         boolean isSuccess = false;
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_STOP, null);
@@ -456,7 +519,7 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         }
         catch(BadResponseException bre) {
-            System.out.println("stopIota: bad response: " + bre.errMsgkey +
+            System.out.println(name + " stopIota: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -467,7 +530,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         catch(Exception e) {
-            System.out.println("stopIota exception from proxy: ");
+            System.out.println(name + " stopIota exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStopped"));
@@ -477,7 +540,8 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
 
         }
-        return isSuccess;
+        //return isSuccess;
+        */
     }
 
     private boolean serverActionStartWallet() {
@@ -509,14 +573,19 @@ public class ServerController implements ActionListener, TableModelListener {
         return isSuccess;
     }
 
-    private boolean serverActionDeleteDb() {
+    private void serverActionDeleteDb() {
         if(!UiUtil.promptUserYorN(localizer.getLocalText("deleteIotaDbPromptTitle"),
                 localizer.getLocalText("deleteIotaDbPromptMsg"))) {
-            return false;
+            return;
         }
 
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallDeleteDb"));
 
+        DeleteIotaDbWorker worker = new DeleteIotaDbWorker(localizer, serverPanel,  proxy, this,
+                Constants.IOTA_ACTION_DELETEDB, null);
+        worker.execute();
+
+        /*
         boolean isSuccess = false;
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETEDB, null);
@@ -532,7 +601,7 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         }
         catch(BadResponseException bre) {
-            System.out.println("deleteIotaDb: bad response: " + bre.errMsgkey +
+            System.out.println(name + " deleteIotaDb: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -543,7 +612,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         catch(Exception e) {
-            System.out.println("deleteIotaDb exception from proxy: ");
+            System.out.println(name + " deleteIotaDb exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogDbNotDeleted"));
@@ -553,17 +622,24 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
 
         }
-        return isSuccess;
+        //return isSuccess;
+        */
     }
 
-    private boolean serverActionDeleteIota() {
+    private void serverActionDeleteIota() {
         if(!UiUtil.promptUserYorN(localizer.getLocalText("deleteIotaPromptTitle"),
                 localizer.getLocalText("deleteIotaPromptMsg"))) {
-            return false;
+            return;
         }
 
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallDeleteIota"));
 
+        DeleteIotaDbWorker worker = new DeleteIotaDbWorker(localizer, serverPanel,  proxy, this,
+                Constants.IOTA_ACTION_DELETE, null);
+        worker.execute();
+
+
+        /*
         boolean isSuccess = false;
         try {
             ActionResponse resp = proxy.doIotaAction(Constants.IOTA_ACTION_DELETE, null);
@@ -579,7 +655,7 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         }
         catch(BadResponseException bre) {
-            System.out.println("deleteIota: bad response: " + bre.errMsgkey +
+            System.out.println(name + " deleteIota: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -590,7 +666,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         catch(Exception e) {
-            System.out.println("deleteIota exception from proxy: ");
+            System.out.println(name + " deleteIota exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotDeleted"));
@@ -600,13 +676,14 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
 
         }
-        return isSuccess;
+        //return isSuccess;
+        */
     }
 
     private void serverSettingsDialogSave() {
         if(serverSettingsDialog == null) {
             // TODO: localization
-            System.out.println("serverSettingsDialogSave: dialog found");
+            System.out.println(name + " serverSettingsDialogSave: dialog found");
             UiUtil.showErrorDialog("Settings Save Fail", "Dialog not found");
             return;
         }
@@ -614,7 +691,7 @@ public class ServerController implements ActionListener, TableModelListener {
         if(serverSettingsDialog.propList == null ||
                 serverSettingsDialog.propList.isEmpty()) {
             // TODO: localization
-            System.out.println("serverSettingsDialogSave: prop list found");
+            System.out.println(name + " serverSettingsDialogSave: prop list found");
             UiUtil.showErrorDialog("Settings Save Fail", "Prop list not found");
             return;
         }
@@ -713,7 +790,7 @@ public class ServerController implements ActionListener, TableModelListener {
             proxy.iccrSetConfig(newProps);
         }
         catch(BadResponseException bre) {
-            System.out.println("serverSettingsDialogSave: bad response: " + bre.errMsgkey +
+            System.out.println(name + " serverSettingsDialogSave: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
@@ -724,7 +801,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         catch(Exception e) {
-            System.out.println("serverSettingsDialogSave exception from proxy: ");
+            System.out.println(name + " serverSettingsDialogSave exception from proxy: ");
             e.printStackTrace();
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("iccrSetConfigError"));
@@ -737,6 +814,13 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void showServerSettingsDialog() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrGetConfig") + "...");
+
+
+        ShowServerSettingsDialogWorker worker = new ShowServerSettingsDialogWorker(localizer, serverPanel, proxy, this);
+        worker.execute();
+
+        /*
         iccrProps = getServerSettingProperties();
 
         if(iccrProps == null) {
@@ -765,10 +849,18 @@ public class ServerController implements ActionListener, TableModelListener {
         });
 
         serverSettingsDialog.setVisible(true);
+        */
     }
 
-    public IccrIotaNeighborsPropertyDto serverActionGetConfigNbrsList() {
+    public void serverActionGetConfigNbrsList() {
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrGetNeighborsList"));
+
+        GetIccrIotaNeighborsWorker worker = new GetIccrIotaNeighborsWorker(localizer, serverPanel, proxy, this);
+        worker.execute();
+
+        //System.out.println(name + " getServerSettingProperties returning");
+
+        /*
         IccrIotaNeighborsPropertyDto dto = null;
         try {
             dto = proxy.iccrGetNbrsConfigProperty();
@@ -796,10 +888,22 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         return dto;
+        */
     }
 
-    private Properties getServerSettingProperties() {
-        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrGetConfig"));
+    private SwingWorker getServerSettingProperties() {
+        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallIccrGetConfig") + "...");
+
+        isConnected = false;
+        iccrProps = null;
+
+        GetIccrConfigWorker worker = new GetIccrConfigWorker(localizer, serverPanel, proxy, this);
+        worker.execute();
+
+        //System.out.println(name + " getServerSettingProperties returning");
+        return worker;
+
+        /*
         Properties iccrProps = null;
         try {
             iccrProps = proxy.iccrGetConfig();
@@ -827,6 +931,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         }
         return iccrProps;
+        */
     }
 
     private void serverSettingsDialogClose() {
@@ -841,7 +946,7 @@ public class ServerController implements ActionListener, TableModelListener {
         String val = null;
         if(ar != null && ar.getProperties() !=  null) {
             for (IccrPropertyDto prop : ar.getProperties()) {
-                System.out.println(prop.getKey() + " -> " + prop.getValue());
+                System.out.println(name + ": " + prop.getKey() + " -> " + prop.getValue());
                 if (prop.getKey().equals(key)) {
                     val = prop.getValue();
                     break;

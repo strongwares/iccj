@@ -213,6 +213,12 @@ public class MainController implements ActionListener {
         serverTabPanel.removeServerTabByName(serverName);
 
         openServerDialogClose();
+
+        if(UiUtil.promptUserYorN(localizer.getLocalText("deleteServerConfigPromptTitle"),
+                localizer.getLocalText("deleteServerConfigPromptMst"))) {
+            propertySource.removeServerConfigByName(serverName);
+        }
+
     }
 
     private void showIccSettingsDialog() {
@@ -444,6 +450,8 @@ public class MainController implements ActionListener {
         ServerPanel server = new ServerPanel(serverProps.getProperty(PropertySource.SERVER_ID_PROP), localizer, ctlr);
         ctlr.setServerPanel(server);
         serverTabPanel.add(name, server);
+
+        serverTabPanel.setSelectedTabByName(name);
 
         SwingUtilities.invokeLater(() -> {
             ctlr.serverSetup();
