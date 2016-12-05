@@ -304,13 +304,25 @@ periodic query for iota nbrs
 
 checkin
 
+---------
+Mon: 12/5/2016
+
+stop/stop timers on iota stop/start
+
+Not show wallet cmd field on new server create dialog, only on edit
+
+Add Run IOTA Refresh checkbox to server action panel
+
+Display ICCR event log in scrollable dialog with text area like console log
+
+ICCR Event log dialog has delete event log button
+
+ICC will do IOTA status check after install iota
+
+checkin
+
 todo:
-stop timers on iota stop
-start timers on iota start
-
 display node info
-
-get iccr event log
 
 doc how to use wget and curl to execute iccr api with header
 

@@ -116,6 +116,10 @@ public class ConfigureServerDialog extends JDialog {
         if(!isAdd && serverProps != null) {
             insertValues();
         }
+        else {
+            walletCmdTextField.setVisible(false);
+            walletCmdLabel.setVisible(false);
+        }
 
         pack();
     }

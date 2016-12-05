@@ -57,4 +57,7 @@ public class Constants {
     public static final String SERVER_ACTION_START_WALLET = "svr-action-start-wallet";
     public static final String SERVER_ACTION_DELETEDB_IOTA = "svr-action-deletedb-iota";
     public static final String SERVER_ACTION_UNINSTALL_IOTA = "svr-action-uninstall-iota";
+    public static final String SERVER_ACTION_ICCR_EVENTLOG = "svr-action-iccr-eventlog";
+    public static final String SERVER_ACTION_CLEAR_ICCR_EVENTLOG = "svr-action-clear-iccr-eventlog";
+    public static final String SERVER_ACTION_ICCR_RUN_IOTA_REFRESH = "svr-action-run-iota-refresh";
 }

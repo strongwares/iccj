@@ -42,6 +42,94 @@ public class HttpProxy {
         headerFilter.setHeader(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_HEADER_NAME_PROP), newApiKey);
     }
 
+    public void deleteIccrEventLog() throws BadResponseException {
+        System.out.println("deleteIccrEventLog...");
+        Response response = null;
+        try {
+            response = proxy.deleteIccrEventLog();
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                SimpleResponse sr = response.readEntity(SimpleResponse.class);
+            }
+            else {
+                throw new BadResponseException("deleteIccrEventLog",
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(BadResponseException bre) {
+            System.out.println("deleteIccrEventLog bad response exception: ");
+            bre.printStackTrace();
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("deleteIccrEventLog exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("deleteIccrEventLog",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+    }
+
+    public List<String> getIccrEventLog() throws BadResponseException {
+        System.out.println("getIccrEventLog...");
+        List<String> log = null;
+        Response response = null;
+        try {
+            response = proxy.getIccrEventLog();
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                log = response.readEntity(List.class);
+            }
+            else {
+                throw new BadResponseException("getIccrEventLog",
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(BadResponseException bre) {
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("getIccrEventLog exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("getIccrEventLogError",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return log;
+    }
+
     public IccrPropertyListDto iccrGetConfig() throws BadResponseException {
         System.out.println("iccrGetConfig...");
         IccrPropertyListDto dto = null;

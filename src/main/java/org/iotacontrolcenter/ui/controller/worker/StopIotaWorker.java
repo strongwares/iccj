@@ -50,6 +50,8 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
+        ctlr.iotaActive = true;
+
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
@@ -75,12 +77,11 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STOP, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
-                isSuccess = false;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStopped"));
             }
             else {
-                isSuccess = true;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsStopped"));
+                ctlr.iotaActive = false;
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

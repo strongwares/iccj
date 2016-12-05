@@ -16,6 +16,8 @@ public class RefreshIotaNodeinfoTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        ctlr.serverActionGetIotaNodeinfo();
+        if(ctlr.iotaActive && ctlr.isConnected) {
+            ctlr.serverActionGetIotaNodeinfo();
+        }
     }
 }

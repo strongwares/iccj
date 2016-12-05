@@ -38,7 +38,6 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
         BadResponseException bre = null;
         Exception exc = null;
         ActionResponse resp = null;
-        boolean isSuccess = false;
 
         if (rval instanceof BadResponseException) {
             bre = (BadResponseException) rval;
@@ -50,6 +49,8 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
             System.out.println(ctlr.name + " " + action + " unexpected return type: " + rval.getClass().getCanonicalName());
             return;
         }
+
+        ctlr.iotaActive = false;
 
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +
@@ -76,11 +77,10 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_START, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
-                isSuccess = false;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStarted"));
             }
             else {
-                isSuccess = true;
+                ctlr.iotaActive = true;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsStarted"));
             }
         } else {

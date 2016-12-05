@@ -14,6 +14,16 @@ import org.iotacontrolcenter.dto.*;
 public interface IccrService {
 
     @GET
+    @Path("/app/eventlog")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response getIccrEventLog();
+
+    @DELETE
+    @Path("/app/eventlog")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response deleteIccrEventLog();
+
+    @GET
     @Path("/app/config")
     @Produces(MediaType.APPLICATION_JSON)
     Response getConfigProperties();

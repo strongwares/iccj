@@ -39,8 +39,6 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
         Exception exc = null;
         ActionResponse resp = null;
 
-        boolean isActive = false;
-
         if (rval instanceof BadResponseException) {
             bre = (BadResponseException) rval;
         } else if (rval instanceof Exception) {
@@ -51,6 +49,8 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             System.out.println(ctlr.name + " " + action + " unexpected return type: " + rval.getClass().getCanonicalName());
             return;
         }
+
+        ctlr.iotaActive = false;
 
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + "  bad response: " + bre.errMsgkey +
@@ -77,12 +77,11 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STATUS, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
-                isActive = false;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotActive"));
             }
             else {
-                isActive = true;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsActive"));
+                ctlr.iotaActive = true;
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

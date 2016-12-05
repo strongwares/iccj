@@ -6,6 +6,7 @@ import org.iotacontrolcenter.dto.IccrPropertyDto;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
 import org.iotacontrolcenter.ui.proxy.http.HttpProxy;
 
+import java.util.List;
 import java.util.Properties;
 
 public class ServerProxy {
@@ -21,6 +22,14 @@ public class ServerProxy {
     public void apiKeyChange(String newApiKey) {
         System.out.println("apiKeyChange: " + newApiKey);
         httpProxy.apiKeyChange(newApiKey);
+    }
+
+    public List<String> getIccrEventLog() throws BadResponseException {
+        return httpProxy.getIccrEventLog();
+    }
+
+    public void deleteIccrEventLog() throws BadResponseException {
+        httpProxy.deleteIccrEventLog();
     }
 
     public Properties iccrGetConfig() throws BadResponseException {

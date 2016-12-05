@@ -351,7 +351,7 @@ public class MainController implements ActionListener {
         }
         if(!isError) {
             // That last line just insured that we have a valid IP
-            if (UiUtil.isLocalhostIp(ip) && (walletCmd == null || walletCmd.isEmpty())) {
+            if (!isAdd && UiUtil.isLocalhostIp(ip) && (walletCmd == null || walletCmd.isEmpty())) {
                 isError = true;
                 errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                         cfgServerDialog.walletCmdTextField.getName();
