@@ -321,6 +321,100 @@ ICC will do IOTA status check after install iota
 
 checkin
 
+delivered 1.0.0
+
+2240  cd target/
+ 2241  ls
+ 2242  cd appassembler/
+ 2243  ls
+ 2244  more repo/
+ 2245  ls conf/
+ 2246  emacs -nw conf/icc.properties 
+ 2247  ls
+ 2248  mkdir ../../dist
+ 2249  mkdir ../../dist/iccj
+ 2250  pwd
+ 2251  ls
+ 2252  cd ..
+ 2253  mv appassembler iccj
+ 2254  ls
+ 2255  man zip
+ 2256  zip -r ~/iccj.zip iccj
+ 2257  ls -la ~/
+ 2258  ls -la ~/iccj.zip ~/iccr.tgz 
+ 2259  history
+ 2260  cd ~/
+ 2261  ls /opt
+ 2262  pwd
+ 2263  cd /opt
+ 2264  ls -la
+ 2265  cd
+ 2266  ls
+ 2267  ls -la
+ 2268  ls -l
+ 2269  mv iccj.zip iccj-0.0.1.zip
+ 2270  mv iccr.tgz iccr-0.0.1.tgz
+
+
+mv appassembler iccj
+zip -r ~/iccj.zip iccj
+
+
+ls -la ~/iccj.zip ~/iccr.tgz 
+-rw-rw-r-- 1 dana dana  5927758 Dec  5 09:44 /home/dana/iccj.zip
+-rw-rw-r-- 1 dana dana 46952474 Dec  5 09:41 /home/dana/iccr.tgz
+
+------
+Tue: 12/6/2016
+
+add changelog.text
+
+Change text of main menu "Open or Add Server" menu item label to "Servers"
+mainMenuOpenOrAddServerLabel=Servers
+
+Change text of main menu Servers -> "Open Server" menu item to "Open or Close Connection"
+mainMenuOpenServerLabel=Open or Close Connection...
+
+Change text of Servers dialog "Remove Selected" to "Close Or Remove Selected"
+buttonLabelRemoveSelected=Close Or Remove Selected
+
+Change text of initial add server message
+initialAddServerMsg=Use the main menu Servers / Add New Server to define a new ICCR server
+
+Remove Wallet command from server configuration
+
+Remove Start Wallet from server action panel.
+
+Changed the Server Start IOTA background color from bright green to dark green
+
+Support IP v6 and DNS hostname for nbr addresses by removing check for IPv4
+
+Support IP v6 and DNS hostname for server addresses by removing check for IPv4
+
+Add AT, IT, and NT columns to nbr table, first 3 columns
+
+Added text neighborTableColumnTitleAT=AT
+
+Added text neighborTableColumnTitleIT=IT
+
+Added text neighborTableColumnTitleNT=NT
+
+Changed fieldLabelRemoteServerIp=Server
+
+Changed fieldLabelServerName=Server Name
+
+Changed neighborTableColumnTitleNeighbor=Neighboring Node Address
+
+Changed neighborTableIpError=Invalid neighbor address
+
+Fixed width of nbr col 1 ...
+
+Fixed exception adding nbr
+
+Fix parsing of new nbr into, just do uri:
+
+Bumped iccj version to 1.0.1-SNAPSHOT
+
 todo:
 display node info
 

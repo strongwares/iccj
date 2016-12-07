@@ -48,7 +48,7 @@ public class PropertySource {
     private static final String SERVERKEYS_IP_PREFIX_PROP = "server.ip.";
     private static final String SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP = "server.iccrPortNumber.";
     private static final String SERVERKEYS_ICCR_API_KEY_PREFIX_PROP = "server.iccrApiKey.";
-    private static final String SERVERKEYS_WALLET_CMD_PREFIX_PROP = "server.walletCommand.";
+    //private static final String SERVERKEYS_WALLET_CMD_PREFIX_PROP = "server.walletCommand.";
 
     public static final String SERVER_ID_PROP = "id";
     public static final String SERVER_IP_PROP = "ip";
@@ -57,7 +57,7 @@ public class PropertySource {
     public static final String SERVER_ICCR_API_KEY_PROP = "iccrApiKey";
     public static final String SERVER_ICCR_API_KEY_HEADER_NAME_PROP = "iccrApiKeyHeaderName";
     public static final String SERVER_ICCR_API_KEY_HEADER_NAME_VAL = "ICCR-API-KEY";
-    public static final String SERVER_WALLET_CMD_PROP = "walletCommand";
+    //public static final String SERVER_WALLET_CMD_PROP = "walletCommand";
 
     private Properties _props;
     private String osName;
@@ -150,7 +150,7 @@ public class PropertySource {
                 serverProps.put(SERVER_ICCR_PORT_NUM_PROP, getString(PropertySource.SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id));
                 serverProps.put(SERVER_ICCR_API_KEY_PROP, getString(PropertySource.SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id));
                 serverProps.put(SERVER_ICCR_API_KEY_HEADER_NAME_PROP, SERVER_ICCR_API_KEY_HEADER_NAME_VAL);
-                serverProps.put(SERVER_WALLET_CMD_PROP, getString(PropertySource.SERVERKEYS_WALLET_CMD_PREFIX_PROP + id));
+                //serverProps.put(SERVER_WALLET_CMD_PROP, getString(PropertySource.SERVERKEYS_WALLET_CMD_PREFIX_PROP + id));
 
                 servers.put(id, serverProps);
 
@@ -223,7 +223,8 @@ public class PropertySource {
         setProperty(SERVERKEYS_IP_PREFIX_PROP + id, newProps.getProperty(SERVER_IP_PROP));
         setProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_PORT_NUM_PROP));
         setProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_API_KEY_PROP));
-        setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
+
+        //setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
 
         storeProperties();
 
@@ -238,7 +239,8 @@ public class PropertySource {
         setProperty(SERVERKEYS_IP_PREFIX_PROP + id, newProps.getProperty(SERVER_IP_PROP));
         setProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_PORT_NUM_PROP));
         setProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + id, newProps.getProperty(SERVER_ICCR_API_KEY_PROP));
-        setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
+
+        //setProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + id, newProps.getProperty(SERVER_WALLET_CMD_PROP));
 
         storeProperties();
 
@@ -276,7 +278,8 @@ public class PropertySource {
             removeProperty(SERVERKEYS_IP_PREFIX_PROP + foundId);
             removeProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + foundId);
             removeProperty(SERVERKEYS_ICCR_API_KEY_PREFIX_PROP + foundId);
-            removeProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + foundId);
+
+            //removeProperty(SERVERKEYS_WALLET_CMD_PREFIX_PROP + foundId);
         }
 
         setProperty(SERVERKEYS_PROP, serverIds);

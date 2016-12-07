@@ -79,6 +79,7 @@ public class ConfigureServerDialog extends JDialog {
         serverName.setLabelFor(serverNameTextField);
         panel.add(serverNameTextField);
 
+        /*
         walletCmdLabel = new JLabel(localizer.getLocalText("fieldLabelServerWalletCommand") + ":", JLabel.TRAILING);
         panel.add(walletCmdLabel);
         walletCmdTextField = new JTextField(10);
@@ -86,9 +87,10 @@ public class ConfigureServerDialog extends JDialog {
         walletCmdTextField.setToolTipText(localizer.getLocalText("fieldLabelServerWalletCommandTooltip"));
         walletCmdLabel.setLabelFor(walletCmdTextField);
         panel.add(walletCmdTextField);
+        */
 
         SpringUtilities.makeCompactGrid(panel,
-                5, 2, //rows, cols
+                4, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -116,10 +118,12 @@ public class ConfigureServerDialog extends JDialog {
         if(!isAdd && serverProps != null) {
             insertValues();
         }
+        /*
         else {
             walletCmdTextField.setVisible(false);
             walletCmdLabel.setVisible(false);
         }
+        */
 
         pack();
     }
@@ -129,8 +133,9 @@ public class ConfigureServerDialog extends JDialog {
         iccrPortTextField.setText(serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP));
         iccrPwdTextField.setText(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
         serverNameTextField.setText(serverProps.getProperty(PropertySource.SERVER_NAME_PROP));
-        walletCmdTextField.setText(serverProps.getProperty(PropertySource.SERVER_WALLET_CMD_PROP));
+        //walletCmdTextField.setText(serverProps.getProperty(PropertySource.SERVER_WALLET_CMD_PROP));
 
+        /*
         if(UiUtil.isLocalhostIp(serverProps.getProperty(PropertySource.SERVER_IP_PROP))) {
             walletCmdTextField.setVisible(true);
             walletCmdLabel.setVisible(true);
@@ -139,5 +144,6 @@ public class ConfigureServerDialog extends JDialog {
             walletCmdTextField.setVisible(false);
             walletCmdLabel.setVisible(false);
         }
+        */
     }
 }

@@ -27,7 +27,7 @@ public class UiUtil {
         JOptionPane.showMessageDialog(Main.mainFrame,  msg, title,  JOptionPane.ERROR_MESSAGE);
     }
 
-    public static boolean isValidIpV4(String ip) {
+    public static boolean disValidIpV4(String ip) {
         if(ip == null || ip.isEmpty()) {
             return false;
         }

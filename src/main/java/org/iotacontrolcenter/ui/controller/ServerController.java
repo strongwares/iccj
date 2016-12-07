@@ -347,11 +347,19 @@ public class ServerController implements ActionListener, TableModelListener {
         NeighborDto nbr = new NeighborDto();
         nbr.setActive(true);
         nbr.setKey(propertySource.getNowDateTimestamp());
+        String uri = "udp://0.0.0.0";
+        /*
         nbr.setScheme("udp");
         nbr.setIp("0.0.0.0");
         if(iccrProps !=  null && !iccrProps.getProperty("iotaPortNumber").isEmpty()) {
             nbr.setPort(Integer.valueOf(iccrProps.getProperty("iotaPortNumber")));
         }
+        */
+
+        if(iccrProps !=  null && !iccrProps.getProperty("iotaPortNumber").isEmpty()) {
+            uri += ":" + iccrProps.getProperty("iotaPortNumber");
+        }
+        nbr.setUri(uri);
 
         serverPanel.neighborPanel.neighborModel.addNeighbor(nbr);
 
@@ -376,14 +384,15 @@ public class ServerController implements ActionListener, TableModelListener {
         String sep = "";
         for(NeighborDto nbr : serverPanel.neighborPanel.neighborModel.nbrs) {
             System.out.println(name + " saving nbr: " + nbr);
-            if(nbr.getIp() == null || nbr.getIp().isEmpty() ||
-                    nbr.getIp().equals("0.0.0.0") ||
-                    !UiUtil.isValidIpV4(nbr.getIp())) {
+            if(nbr.getUri() == null || nbr.getUri().isEmpty()) {
+                // nbr.getIp().equals("0.0.0.0") ) {
+                //!UiUtil.isValidIpV4(nbr.getIp())) {
                 errors += sep + localizer.getLocalText("neighborTableIpError");
                 if(sep.isEmpty()) {
                     sep = "\n";
                 }
             }
+            /*
             if(nbr.getScheme() == null || nbr.getScheme().isEmpty()) {
                 errors += sep + localizer.getLocalText("neighborTableSchemeError");
                 if(sep.isEmpty()) {
@@ -396,6 +405,7 @@ public class ServerController implements ActionListener, TableModelListener {
                     sep = "\n";
                 }
             }
+            */
             if(nbr.getDescr() == null) {
                 nbr.setDescr("");
             }

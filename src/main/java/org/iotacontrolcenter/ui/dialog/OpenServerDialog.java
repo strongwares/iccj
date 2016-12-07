@@ -48,7 +48,7 @@ public class OpenServerDialog extends JDialog  {
         serverList = new JList<>(serverListModel);
 
         for(String id : propertySource.getServerIds()) {
-            System.out.println("adding server id" + id);
+            System.out.println("adding server id " + id);
             serverListModel.addElement(propertySource.getServerName(id));
         }
 

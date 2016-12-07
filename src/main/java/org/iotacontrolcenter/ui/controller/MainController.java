@@ -303,13 +303,15 @@ public class MainController implements ActionListener {
         String name = cfgServerDialog.serverNameTextField.getText();
         newProps.setProperty(PropertySource.SERVER_NAME_PROP, name);
 
+        /*
         String walletCmd = cfgServerDialog.walletCmdTextField.getText();
         newProps.setProperty(PropertySource.SERVER_WALLET_CMD_PROP, walletCmd);
+        */
 
         String errors = "";
         String sep = "";
         boolean isError = false;
-        if(ip == null || ip.isEmpty() || !UiUtil.isValidIpV4(ip)) {
+        if(ip == null || ip.isEmpty()) { // || !UiUtil.isValidIpV4(ip)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.serverIpTextField.getName();
@@ -349,6 +351,8 @@ public class MainController implements ActionListener {
                 sep = "\n";
             }
         }
+        // Not doing wallet command for now
+        /*
         if(!isError) {
             // That last line just insured that we have a valid IP
             if (!isAdd && UiUtil.isLocalhostIp(ip) && (walletCmd == null || walletCmd.isEmpty())) {
@@ -360,6 +364,7 @@ public class MainController implements ActionListener {
                 }
             }
         }
+        */
         if(isError) {
             UiUtil.showErrorDialog(
                     action.equals(Constants.DIALOG_CONFIG_ADD_SERVER_SAVE) ? "Add Server Save Error" :

@@ -1,0 +1,56 @@
+Version 1.0.0
+
+Delivered Monday 12/5/2016
+-----------------------------
+Version 1.0.1
+
+ICC:
+
+Change text of main menu "Open or Add Server" menu item label to "Servers"
+mainMenuOpenOrAddServerLabel=Servers
+
+Change text of main menu Servers -> "Open Server" menu item to "Open or Close Connection"
+mainMenuOpenServerLabel=Open or Close Connection...
+
+Change text of Servers dialog "Remove Selected" to "Close Or Remove Selected"
+buttonLabelRemoveSelected=Close Or Remove Selected
+
+Change text of initial add server message
+initialAddServerMsg=Use the main menu Servers / Add New Server to define a new ICCR server
+
+Remove Wallet command from server configuration
+
+Remove Start Wallet from server action panel.
+
+Changed the Server Start IOTA background color from bright green to dark green
+
+Support IP v6 and DNS hostname for nbr addresses by removing check for IPv4
+
+Support IP v6 and DNS hostname for server addresses by removing check for IPv4
+
+Added non editable AT, IT, and NT columns to server neighbor table
+
+Added text neighborTableColumnTitleAT=AT
+
+Added text neighborTableColumnTitleIT=IT
+
+Added text neighborTableColumnTitleNT=NT
+
+Changed fieldLabelRemoteServerIp=Server
+
+Changed
+fieldLabelRemoteServerIpTooltip=IP address or hostname of the server (or localhost for Local server)
+
+Changed
+fieldLabelServerName=Server Name
+
+Changed
+neighborTableColumnTitleNeighbor=Neighboring Node Address
+
+Changed
+neighborTableIpError=Invalid neighbor address
+
+
+
+
+

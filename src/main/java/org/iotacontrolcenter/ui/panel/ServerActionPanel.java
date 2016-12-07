@@ -54,7 +54,7 @@ public class ServerActionPanel extends JPanel {
 
         startIota = new JButton(localizer.getLocalText("buttonLabelStartIota"));
         startIota.setToolTipText(localizer.getLocalText("buttonLabelStartIotaTooltip"));
-        startIota.setBackground(Color.green);
+        startIota.setBackground(new Color(0, 100, 0));
         startIota.setForeground(Color.white);
         startIota.setAlignmentX(Component.CENTER_ALIGNMENT);
         startIota.setActionCommand(Constants.SERVER_ACTION_START_IOTA);
