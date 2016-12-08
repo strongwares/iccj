@@ -32,6 +32,10 @@ public class ServerProxy {
         httpProxy.deleteIccrEventLog();
     }
 
+    public List<String> getIotaLog() throws BadResponseException {
+        return httpProxy.getIotaLog();
+    }
+
     public Properties iccrGetConfig() throws BadResponseException {
         Properties resp = new Properties();
 

@@ -17,6 +17,7 @@ public class ServerActionPanel extends JPanel {
     private JButton eventLog;
     private JButton installIota;
     private JPanel internalPanel;
+    private JButton iotaLog;
     private Localizer localizer;
     private JCheckBox runRefresh;
     private JButton settings;
@@ -111,9 +112,16 @@ public class ServerActionPanel extends JPanel {
         eventLog.addActionListener(ctlr);
         internalPanel.add(eventLog);
 
+        iotaLog = new JButton(localizer.getLocalText("buttonLabelIotaLog") + "...");
+        iotaLog.setToolTipText(localizer.getLocalText("buttonLabelILogTooltip"));
+        iotaLog.setAlignmentX(Component.CENTER_ALIGNMENT);
+        iotaLog.setActionCommand(Constants.SERVER_ACTION_IOTA_LOG);
+        iotaLog.addActionListener(ctlr);
+        internalPanel.add(iotaLog);
+
 
         SpringUtilities.makeCompactGrid(internalPanel,
-                9, 1, //rows, cols
+                10, 1, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 

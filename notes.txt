@@ -415,12 +415,25 @@ Fix parsing of new nbr into, just do uri:
 
 Bumped iccj version to 1.0.1-SNAPSHOT
 
+Show IOTA log
+
+checked in
+
+> use gson to create iota  node info response
+> Display node info in footer
+
+> use gson to create iota  nbr response
+> set nbr data in table
+
 todo:
-display node info
+Support https
+Finish change log
+Make release of 1.0.1
+Make patch
+Upload to g drive
+Msg Pascal
 
 doc how to use wget and curl to execute iccr api with header
-
-support https
 
 doc how to use wget and curl to execute iccr api with https
 

@@ -60,4 +60,5 @@ public class Constants {
     public static final String SERVER_ACTION_ICCR_EVENTLOG = "svr-action-iccr-eventlog";
     public static final String SERVER_ACTION_CLEAR_ICCR_EVENTLOG = "svr-action-clear-iccr-eventlog";
     public static final String SERVER_ACTION_ICCR_RUN_IOTA_REFRESH = "svr-action-run-iota-refresh";
+    public static final String SERVER_ACTION_IOTA_LOG = "svr-action-iota-log";
 }

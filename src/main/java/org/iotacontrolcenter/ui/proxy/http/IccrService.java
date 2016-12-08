@@ -71,4 +71,9 @@ public interface IccrService {
     @Path("/iota/nodeinfo")
     @Produces(MediaType.APPLICATION_JSON)
     Response getIotaNodeInfo();
+
+    @GET
+    @Path("/iota/log")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response getIotaLog();
 }

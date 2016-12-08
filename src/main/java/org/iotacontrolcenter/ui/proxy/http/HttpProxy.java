@@ -130,6 +130,50 @@ public class HttpProxy {
         return log;
     }
 
+    public List<String> getIotaLog() throws BadResponseException {
+        System.out.println("getIotaLog...");
+        List<String> log = null;
+        Response response = null;
+        try {
+            response = proxy.getIotaLog();
+
+            System.out.println("response status: " + response.getStatus());
+
+            if(response.getStatus() == HttpStatus.SC_OK) {
+                log = response.readEntity(List.class);
+            }
+            else {
+                throw new BadResponseException("getIotaLog",
+                        response.readEntity(SimpleResponse.class));
+            }
+
+        }
+        catch(BadResponseException bre) {
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("getIotaLog exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+            throw new BadResponseException("getIotaLogError",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return log;
+    }
+
     public IccrPropertyListDto iccrGetConfig() throws BadResponseException {
         System.out.println("iccrGetConfig...");
         IccrPropertyListDto dto = null;

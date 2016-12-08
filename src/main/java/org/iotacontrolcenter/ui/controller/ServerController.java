@@ -5,6 +5,7 @@ import org.iotacontrolcenter.dto.*;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.worker.*;
 import org.iotacontrolcenter.ui.dialog.IccrEventLogDialog;
+import org.iotacontrolcenter.ui.dialog.IotaLogDialog;
 import org.iotacontrolcenter.ui.dialog.ServerSettingsDialog;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
@@ -214,6 +215,9 @@ public class ServerController implements ActionListener, TableModelListener {
         else if(action.equals(Constants.SERVER_ACTION_ICCR_RUN_IOTA_REFRESH)) {
             toggleIotaRefresh();
         }
+        else if(action.equals(Constants.SERVER_ACTION_IOTA_LOG)) {
+            getIotaLog();
+        }
         else {
             // TODO: localization
             System.out.println(name + " server controller, unrecognized action: " + action);
@@ -272,7 +276,8 @@ public class ServerController implements ActionListener, TableModelListener {
         try {
             List<String> log = proxy.getIccrEventLog();
 
-            IccrEventLogDialog dialog = new IccrEventLogDialog(localizer, "ICCR Event Log", this);
+            IccrEventLogDialog dialog = new IccrEventLogDialog(localizer,
+                    localizer.getLocalText("dialogTitleIccrEventLog"), this);
 
             for(String s : log) {
                 s = s.replaceAll(",","   ");
@@ -312,7 +317,55 @@ public class ServerController implements ActionListener, TableModelListener {
             serverPanel.addConsoleLogLine(e.getLocalizedMessage());
             */
         }
+    }
 
+    private void getIotaLog() {
+        System.out.println(name + " getIotaLog");
+
+        try {
+            List<String> log = proxy.getIotaLog();
+
+            IotaLogDialog dialog = new IotaLogDialog(localizer,
+                    localizer.getLocalText("dialogTitleIotaLog"), this);
+
+            for(String s : log) {
+                //s = s.replaceAll(",","   ");
+                dialog.logText.append(s + "\n");
+            }
+
+            dialog.setLocationRelativeTo(serverPanel);
+
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    super.windowClosed(e);
+                    //ctlr.serverSettingsDialog = null;
+                }
+            });
+
+            dialog.setVisible(true);
+        }
+        catch(BadResponseException bre) {
+            System.out.println("getIotaLog: bad response: " + bre.errMsgkey +
+                    ", " + bre.resp.getMsg());
+            /*
+            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
+                    bre.resp.getMsg());
+            */
+
+            serverPanel.addConsoleLogLine(bre.resp.getMsg());
+        }
+        catch(Exception e) {
+            System.out.println("getIotaLog exception from proxy: ");
+            e.printStackTrace();
+
+            /*
+            UiUtil.showErrorDialog(localizer.getLocalText("installIotaError"),
+                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
+
+            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
+            */
+        }
     }
 
     private boolean nbrPanelRemoveSelected() {

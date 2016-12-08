@@ -50,7 +50,21 @@ neighborTableColumnTitleNeighbor=Neighboring Node Address
 Changed
 neighborTableIpError=Invalid neighbor address
 
+Added IOTA Log server action button that displays IOTA application log line in a popup window
 
+Added
+buttonLabelIotatLog=IOTA Log
 
+Added
+buttonLabelIotaLogTooltip=Get IOTA application log
 
+Added
+dialogTitleIccrEventLog=ICCR Event Log
+
+Added
+dialogTitleIotaLog=IOTA Log
+
+Changed default IOTA download file name in icc.properties
+iotaDownloadLink=http://188.138.57.93
+iotaDownloadFilename=IRI-1.1.1.1.jar
 
