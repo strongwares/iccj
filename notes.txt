@@ -419,13 +419,25 @@ Show IOTA log
 
 checked in
 
-> use gson to create iota  node info response
-> Display node info in footer
+Show nbr metrics in nbr table
+use gson to create iota  nbr response
+set nbr data in table
 
-> use gson to create iota  nbr response
-> set nbr data in table
+checkin
 
 todo:
+set footer online
+
+Discovery of existing IOTA nodes:
+if not in table: add?
+
+button to clear console log?
+
+Display node info in footer
+use gson to create iota  node info response
+
+don't enable nbr save changes until they add/remove/edit?
+
 Support https
 Finish change log
 Make release of 1.0.1

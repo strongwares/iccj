@@ -11,7 +11,7 @@ import java.awt.*;
 public class ServerPanel extends JPanel {
 
     public ServerController ctlr;
-    private FooterPanel footerPanel;
+    public FooterPanel footerPanel;
     private String id;
     private JPanel internalPanel;
     private Localizer localizer;

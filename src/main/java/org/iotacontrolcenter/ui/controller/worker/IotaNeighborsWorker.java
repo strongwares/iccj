@@ -1,8 +1,12 @@
 package org.iotacontrolcenter.ui.controller.worker;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.iotacontrolcenter.dto.ActionResponse;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.IotaGetNeighborsResponseDto;
+import org.iotacontrolcenter.dto.IotaGetNodeInfoResponseDto;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
@@ -76,6 +80,7 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_GET_NBRS, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
+
                 serverPanel.addConsoleLogLine(localizer.getLocalText("getIotaNeighborError") +
                         ": " + resp.getMsg());
 
@@ -83,10 +88,22 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
                         resp.getMsg());
             }
             else {
-                serverPanel.addConsoleLogLine("iotaNeighbors: " + resp.getContent());
+                //serverPanel.addConsoleLogLine("iotaNeighbors: " + resp.getContent());
 
                 System.out.println(ctlr.name + " " + action + " success, response content: " +
                         resp.getContent());
+
+                IotaGetNeighborsResponseDto dto = null;
+                try {
+                    Gson gson = new GsonBuilder().create();
+                    dto = gson.fromJson(resp.getContent(), IotaGetNeighborsResponseDto.class);
+
+                    serverPanel.neighborPanel.neighborModel.updateNbrInfo(dto);
+                }
+                catch(Exception e) {
+                    System.out.println(action + ", exception mapping json response: " + e);
+                }
+
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

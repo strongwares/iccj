@@ -1,8 +1,11 @@
 package org.iotacontrolcenter.ui.controller.worker;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.iotacontrolcenter.dto.ActionResponse;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.IotaGetNodeInfoResponseDto;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
@@ -84,6 +87,16 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
             }
             else {
                 serverPanel.addConsoleLogLine("iotaNodeInfo: " + resp.getContent());
+
+                IotaGetNodeInfoResponseDto dto = null;
+                try {
+                    Gson gson = new GsonBuilder().create();
+                    dto = gson.fromJson(resp.getContent(), IotaGetNodeInfoResponseDto.class);
+                    serverPanel.footerPanel.dataUpdate(dto);
+                }
+                catch(Exception e) {
+                    System.out.println(action + ", exception mapping json response: " + e);
+                }
 
                 System.out.println(ctlr.name + " " + action + " success, response content: " +
                         resp.getContent());

@@ -1,6 +1,8 @@
 package org.iotacontrolcenter.ui.model;
 
 
+import org.iotacontrolcenter.dto.IotaGetNeighborsResponseDto;
+import org.iotacontrolcenter.dto.IotaNeighborDto;
 import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
@@ -35,6 +37,32 @@ public class NeighborModel extends AbstractTableModel {
                 localizer.getLocalText("neighborTableColumnTitleStatus"),
                 localizer.getLocalText("neighborTableColumnTitleNeighbor"),
                 localizer.getLocalText("neighborTableColumnTitleDescription") };
+    }
+
+    public void updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
+        if(nbrInfo ==  null || nbrInfo.getNeighbors() == null) {
+            for(IotaNeighborDto nbr :  nbrInfo.getNeighbors()) {
+                boolean found = updateNbrRow(nbr);
+                if(!found) {
+                    System.out.println("failed to find table row for " + nbr);
+                }
+            }
+        }
+    }
+
+    private boolean updateNbrRow(IotaNeighborDto nbr) {
+        boolean found = false;
+        for(NeighborDto n : nbrs) {
+            if(n.getUri().contains(nbr.getAddress())) {
+                found = true;
+                n.setNumAt(nbr.getNumberOfAllTransactions());
+                n.setNumIt(nbr.getNumberOfInvalidTransactions());
+                n.setNumNt(nbr.getNumberOfNewTransactions());
+                fireTableDataChanged();
+                break;
+            }
+        }
+        return found;
     }
 
     public int getColumnCount() {
