@@ -68,3 +68,8 @@ Changed default IOTA download file name in icc.properties
 iotaDownloadLink=http://188.138.57.93
 iotaDownloadFilename=IRI-1.1.1.1.jar
 
+Added support for updating the neighbor table AT, IT, and NT columns with metrics from the IOTA getNeighbor command response.
+
+Added support for updating the ICC UI footers with metrics from the IOTA getNodeInfo command response.
+
+Added self signed key store.
