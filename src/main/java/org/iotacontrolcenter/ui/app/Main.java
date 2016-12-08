@@ -9,12 +9,20 @@ import javax.swing.*;
 public class Main {
 
     public static MainFrame mainFrame;
+    public static boolean doSsl = true;
     static MainController mainController;
 
     public Main() {
     }
 
     public static void main(String[] args) {
+        if(args != null && args.length > 0) {
+            System.out.println("args length: " + args.length + ", args[0]: " + args[0]);
+            if(args[0] != null && args[0].equals("nossl")) {
+                doSsl = false;
+            }
+        }
+
         SwingUtilities.invokeLater(() -> createAndShowGui());
     }
 

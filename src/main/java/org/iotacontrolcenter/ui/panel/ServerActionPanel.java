@@ -113,7 +113,7 @@ public class ServerActionPanel extends JPanel {
         internalPanel.add(eventLog);
 
         iotaLog = new JButton(localizer.getLocalText("buttonLabelIotaLog") + "...");
-        iotaLog.setToolTipText(localizer.getLocalText("buttonLabelILogTooltip"));
+        iotaLog.setToolTipText(localizer.getLocalText("buttonLabelIotaLogTooltip"));
         iotaLog.setAlignmentX(Component.CENTER_ALIGNMENT);
         iotaLog.setActionCommand(Constants.SERVER_ACTION_IOTA_LOG);
         iotaLog.addActionListener(ctlr);

@@ -1,10 +1,15 @@
 package org.iotacontrolcenter.ui.proxy.http;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContexts;
 import org.iotacontrolcenter.dto.*;
+import org.iotacontrolcenter.ui.app.Main;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -12,9 +17,13 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -459,7 +468,8 @@ public class HttpProxy {
     }
 
     private String buildPath() {
-        String serverUrl = "http://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
+        String scheme = Main.doSsl ? "https" : "http";
+        String serverUrl = scheme + "://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
                 ":" + serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
 
         return serverUrl;
@@ -468,8 +478,39 @@ public class HttpProxy {
     private void setUp() {
         path = buildPath();
 
+        SSLConnectionSocketFactory sslsf = null;
+
+        try {
+            // Trust own CA and all self-signed certs
+            //FileInputStream fis = new FileInputStream()
+            //InputStream is = this.getClass().getResourceAsStream("/iccj-ks.jks"));
+
+
+            File ksFile = new File(this.getClass().getResource("/iccj-ks.jks").toURI());
+
+            SSLContext sslcontext = SSLContexts.custom()
+                    .loadTrustMaterial(ksFile, "secret".toCharArray(),
+                            new TrustSelfSignedStrategy())
+                    .build();
+            // Allow TLSv1 protocol only
+            sslsf = new SSLConnectionSocketFactory(
+                    sslcontext,
+                    new String[]{"TLSv1"},
+                    null,
+                    SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+        }
+        catch(Exception e) {
+            System.out.println("SSL context exception: ");
+            e.printStackTrace();
+        }
+
+        boolean doSsl = Main.doSsl && sslsf != null;
+
         connectionManager = new PoolingHttpClientConnectionManager();
-        CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
+        CloseableHttpClient httpClient = doSsl  ?
+                HttpClients.custom().setConnectionManager(connectionManager).setSSLSocketFactory(sslsf).build() :
+                HttpClients.custom().setConnectionManager(connectionManager).build();
+
         connectionManager.setMaxTotal(MAX_TOTAL_CONN);
         connectionManager.setDefaultMaxPerRoute(MAX_TOTAL_CONN_PER_ROUTE);
         engine = new ApacheHttpClient4Engine(httpClient);
