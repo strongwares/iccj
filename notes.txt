@@ -435,7 +435,34 @@ support nossl on commandline
 
 checked in
 
-need https port config, iccr-ctl is doing port+1
+mkdir /opt/icc/bin
+mkdir /opt/icc/conf
+mkdir /opt/icc/repo
+
+new deploy-iccj.bash script: pass binonly on cmd line to only deploy jar
+
+Change Servers -> Open close to Manage
+mainMenuOpenServerLabel=Manage...
+
+Change Open Server dialog title to Manage Servers
+dialogTitleOpenServer=Manage Servers
+
+When ssl, do port + 1
+
+https fails
+setting up https: fails to connect on http
+
+set this:
+-Djavax.net.debug=ssl
+-Djavax.net.ssl.keyStoreType=pkcs12
+-Djavax.net.ssl.keyStore=client.p12
+-Djavax.net.ssl.keyStorePassword=whatever
+-Djavax.net.ssl.trustStoreType=jks
+-Djavax.net.ssl.trustStore=client-truststore.jks
+-Djavax.net.ssl.trustStorePassword=whatever
+
+-Djavax.net.ssl.keyStore=clientsidestore.jks
+-Djavax.net.ssl.trustStore=serversidestore.jks
 
 todo:
 validate that no scheme is on sever address  property

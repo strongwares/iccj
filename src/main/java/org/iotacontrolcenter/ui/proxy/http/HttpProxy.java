@@ -2,8 +2,14 @@ package org.iotacontrolcenter.ui.proxy.http;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -17,13 +23,17 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.*;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -468,9 +478,13 @@ public class HttpProxy {
     }
 
     private String buildPath() {
+        int portNum = Integer.valueOf(serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP));
         String scheme = Main.doSsl ? "https" : "http";
+        int port = Main.doSsl ?  portNum + 1 : portNum;
         String serverUrl = scheme + "://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
-                ":" + serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
+                ":" + String.valueOf(port);
+
+        System.out.println("new server address: " + serverUrl);
 
         return serverUrl;
     }
@@ -480,24 +494,60 @@ public class HttpProxy {
 
         SSLConnectionSocketFactory sslsf = null;
 
+        //HostnameVerifier allHostsValid = null;
+
         try {
+            // My own identity:
+            //KeyStore ks = KeyStore.getInstance("jks");
+            //ks.load(this.getClass().getResourceAsStream("/iccj-ks.jks"), "secret".toCharArray());
+
             // Trust own CA and all self-signed certs
+
             //FileInputStream fis = new FileInputStream()
-            //InputStream is = this.getClass().getResourceAsStream("/iccj-ks.jks"));
+            //InputStream is = this.getClass().getResourceAsStream("/iccj-ts.jks"));
 
+            // A trust store:
+            //File tsFile = new File(this.getClass().getResource("/iccj-ts.jks").toURI());
 
-            File ksFile = new File(this.getClass().getResource("/iccj-ks.jks").toURI());
+            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+                public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+                public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+            } };
 
-            SSLContext sslcontext = SSLContexts.custom()
-                    .loadTrustMaterial(ksFile, "secret".toCharArray(),
-                            new TrustSelfSignedStrategy())
+            /*
+            SSLContext dsslContext = SSLContext.getInstance("SSL");
+            dsslContext.init(
+                    null, trustAllCerts, new SecureRandom()
+            );
+            */
+
+            SSLContext sslContext = SSLContexts.custom()
+                    .loadTrustMaterial(new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                            return true;
+                        }
+                    })
+                    .setSecureRandom(new SecureRandom())
                     .build();
-            // Allow TLSv1 protocol only
+
+            /*
+            allHostsValid = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            */
+
+            // Allow TLSv1 protocol only with all trusting hostname verifier
             sslsf = new SSLConnectionSocketFactory(
-                    sslcontext,
+                    sslContext,
                     new String[]{"TLSv1"},
                     null,
-                    SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+                    NoopHostnameVerifier.INSTANCE);
+
         }
         catch(Exception e) {
             System.out.println("SSL context exception: ");
@@ -506,9 +556,16 @@ public class HttpProxy {
 
         boolean doSsl = Main.doSsl && sslsf != null;
 
-        connectionManager = new PoolingHttpClientConnectionManager();
+        final Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", new PlainConnectionSocketFactory())
+                .register("https", sslsf)
+                .build();
+
+        connectionManager = new PoolingHttpClientConnectionManager(registry);
+
         CloseableHttpClient httpClient = doSsl  ?
-                HttpClients.custom().setConnectionManager(connectionManager).setSSLSocketFactory(sslsf).build() :
+                HttpClients.custom().setConnectionManager(connectionManager)
+                        .setSSLSocketFactory(sslsf).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build() :
                 HttpClients.custom().setConnectionManager(connectionManager).build();
 
         connectionManager.setMaxTotal(MAX_TOTAL_CONN);
