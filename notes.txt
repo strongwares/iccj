@@ -447,13 +447,31 @@ mainMenuOpenServerLabel=Manage...
 Change Open Server dialog title to Manage Servers
 dialogTitleOpenServer=Manage Servers
 
-When ssl, do port + 1
-
 fixed https
 
 verified nbr info updates table
 
 checked in
+
+Fix nbr metrics finding nbr in table
+
+Use single port for http or https
+
+Release checklist:
+
+Update maven artifact versions
+mvn clean install build
+clean deployed dir
+run deploy script
+zip icc at at the /opt level
+save off zip archive
+
+Create a install-icc script:
+cd /opt
+sudo unzip
+ask for user
+ask for group
+chown -R
 
 todo:
 validate that no scheme is on server address  property

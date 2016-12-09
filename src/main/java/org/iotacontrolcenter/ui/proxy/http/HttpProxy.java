@@ -480,7 +480,8 @@ public class HttpProxy {
     private String buildPath() {
         int portNum = Integer.valueOf(serverProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP));
         String scheme = Main.doSsl ? "https" : "http";
-        int port = Main.doSsl ?  portNum + 1 : portNum;
+        //int port = Main.doSsl ?  portNum + 1 : portNum;
+        int port = portNum;
         String serverUrl = scheme + "://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
                 ":" + String.valueOf(port);
 

@@ -136,6 +136,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
     @Override
     public void tableChanged(TableModelEvent e) {
+        /*
         int changeType = e.getType();
         int row = e.getFirstRow();
         int col = e.getColumn();
@@ -158,6 +159,7 @@ public class ServerController implements ActionListener, TableModelListener {
             NeighborDto nbr = serverPanel.neighborPanel.neighborModel.getRow(row);
             System.out.println(name + " updated nbr: " + nbr);
         }
+        */
 
         serverPanel.neighborPanel.save.setEnabled(true);
     }

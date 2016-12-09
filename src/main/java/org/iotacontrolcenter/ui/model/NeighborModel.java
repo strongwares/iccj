@@ -5,6 +5,7 @@ import org.iotacontrolcenter.dto.IotaGetNeighborsResponseDto;
 import org.iotacontrolcenter.dto.IotaNeighborDto;
 import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -40,27 +41,32 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
-        //System.out.println("updating nbrInfo from: " + nbrInfo);
+        System.out.println("updating nbrInfo from: " + nbrInfo);
+        boolean found = true;
         if(nbrInfo !=  null && nbrInfo.getNeighbors() != null) {
-            for(IotaNeighborDto nbr :  nbrInfo.getNeighbors()) {
-                boolean found = updateNbrRow(nbr);
-                if(!found) {
-                    System.out.println("failed to find table row for " + nbr);
+            for(IotaNeighborDto iotaNbr :  nbrInfo.getNeighbors()) {
+                if(!updateNbrRow(iotaNbr)) {
+                    System.out.println("failed to find table row for iotaNbr " + iotaNbr);
+                }
+                else {
+                    found = true;
                 }
             }
         }
+        if(found) {
+            fireTableDataChanged();
+        }
     }
 
-    private boolean updateNbrRow(IotaNeighborDto nbr) {
+    private boolean updateNbrRow(IotaNeighborDto iotaNbr) {
         boolean found = false;
         for(NeighborDto n : nbrs) {
-            if(n.getUri().contains(nbr.getAddress())) {
-                //System.out.println("updating nbr in model with: " + nbr);
+            if(UiUtil.isSameNbr(n, iotaNbr)) {
+                //System.out.println("updating nbr in model with: " + iotaNbr);
                 found = true;
-                n.setNumAt(nbr.getNumberOfAllTransactions());
-                n.setNumIt(nbr.getNumberOfInvalidTransactions());
-                n.setNumNt(nbr.getNumberOfNewTransactions());
-                fireTableDataChanged();
+                n.setNumAt(iotaNbr.getNumberOfAllTransactions());
+                n.setNumIt(iotaNbr.getNumberOfInvalidTransactions());
+                n.setNumNt(iotaNbr.getNumberOfNewTransactions());
                 break;
             }
         }
@@ -134,10 +140,12 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void addNeighbor(NeighborDto nbr) {
-
+        // testing
+        /*
         nbr.setNumNt(1);
         nbr.setNumAt(2);
         nbr.setNumIt(3);
+        */
         if(!nbrs.contains(nbr)) {
             nbrs.add(nbr);
         }
