@@ -40,7 +40,8 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
-        if(nbrInfo ==  null || nbrInfo.getNeighbors() == null) {
+        //System.out.println("updating nbrInfo from: " + nbrInfo);
+        if(nbrInfo !=  null && nbrInfo.getNeighbors() != null) {
             for(IotaNeighborDto nbr :  nbrInfo.getNeighbors()) {
                 boolean found = updateNbrRow(nbr);
                 if(!found) {
@@ -54,6 +55,7 @@ public class NeighborModel extends AbstractTableModel {
         boolean found = false;
         for(NeighborDto n : nbrs) {
             if(n.getUri().contains(nbr.getAddress())) {
+                //System.out.println("updating nbr in model with: " + nbr);
                 found = true;
                 n.setNumAt(nbr.getNumberOfAllTransactions());
                 n.setNumIt(nbr.getNumberOfInvalidTransactions());
@@ -103,7 +105,7 @@ public class NeighborModel extends AbstractTableModel {
             return nbr.getNumAt();
         }
         else if(col == IT_COL) {
-            return nbr.getNumAt();
+            return nbr.getNumIt();
         }
         else if(col == NT_COL) {
             return nbr.getNumNt();
@@ -132,9 +134,11 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void addNeighbor(NeighborDto nbr) {
-        System.out.println("addNeighbor: " + nbr);
+
+        nbr.setNumNt(1);
+        nbr.setNumAt(2);
+        nbr.setNumIt(3);
         if(!nbrs.contains(nbr)) {
-            System.out.println("Adding new neighbor");
             nbrs.add(nbr);
         }
         fireTableDataChanged();

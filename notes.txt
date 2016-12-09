@@ -449,23 +449,14 @@ dialogTitleOpenServer=Manage Servers
 
 When ssl, do port + 1
 
-https fails
-setting up https: fails to connect on http
+fixed https
 
-set this:
--Djavax.net.debug=ssl
--Djavax.net.ssl.keyStoreType=pkcs12
--Djavax.net.ssl.keyStore=client.p12
--Djavax.net.ssl.keyStorePassword=whatever
--Djavax.net.ssl.trustStoreType=jks
--Djavax.net.ssl.trustStore=client-truststore.jks
--Djavax.net.ssl.trustStorePassword=whatever
+verified nbr info updates table
 
--Djavax.net.ssl.keyStore=clientsidestore.jks
--Djavax.net.ssl.trustStore=serversidestore.jks
+checked in
 
 todo:
-validate that no scheme is on sever address  property
+validate that no scheme is on server address  property
 
 set footer online
 

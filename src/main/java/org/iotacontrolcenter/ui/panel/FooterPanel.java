@@ -30,7 +30,7 @@ public class FooterPanel extends JPanel {
     public void dataUpdate(IotaGetNodeInfoResponseDto nodeInfo) {
         milestonesLabel.setText(milestonesBase + nodeInfo.getLatestMilestoneIndex());
         solidMilestonesLabel.setText(solidMilestonesBase + nodeInfo.getLatestSolidSubtangleMilestoneIndex());
-        seenTransactionsLabel.setText(seenTransactionsBase + nodeInfo.getTransactionsToRequest());
+        //seenTransactionsLabel.setText(seenTransactionsBase + nodeInfo.getTransactionsToRequest());
     }
 
     private void init() {

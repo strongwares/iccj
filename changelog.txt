@@ -72,12 +72,15 @@ Added support for updating the neighbor table AT, IT, and NT columns with metric
 
 Added support for updating the ICC UI footers with metrics from the IOTA getNodeInfo command response.
 
-Added self signed key store.
+Added self signed key store and trust store: icc-ks.jks and icc-ts.jks
 
 Support for HTTPS port is default port + 1 (i.e. 14267)
+
+HTTPS can be disabled by passing nossl on commandline when launching icc
 
 Change Servers -> Open close to Manage
 mainMenuOpenServerLabel=Manage...
 
 Change Open Server dialog title to Manage Servers
 dialogTitleOpenServer=Manage Servers
+
