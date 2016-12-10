@@ -38,6 +38,7 @@ public class PropertySource {
 
     public static final String REFRESH_NBRS_PROP = "refreshNeighborsTime";
     public static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
+    public static final String RUN_IOTA_REFRESH_PROP = "runIotaRefresh";
     public static final String IOTA_DLD_LINK_PROP = "iotaDownloadLink";
     public static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
     public static final String WALLET_START_PROP = "iotaDownloadFilename";
@@ -118,6 +119,15 @@ public class PropertySource {
 
     public String getWalletStartCmd() {
         return getString(WALLET_START_PROP);
+    }
+
+    public boolean getRunIotaRefresh() {
+        try {
+            return getBoolean(RUN_IOTA_REFRESH_PROP);
+        }
+        catch(Exception e) {
+            return Boolean.TRUE;
+        }
     }
 
     public String getRefreshNbrsTime() {

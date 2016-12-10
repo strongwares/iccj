@@ -125,6 +125,16 @@ public class MainController implements ActionListener {
         else if(action.equals(Constants.DIALOG_OPEN_SERVER_CANCEL)) {
             openServerDialogClose();
         }
+        // No, change to run refresh will be activated on the icc dialog save
+        /*
+        else if(action.equals(Constants.SERVER_ACTION_ICCR_RUN_IOTA_REFRESH)) {
+            toggleIotaRefresh();
+        }
+        */
+    }
+
+    public void enableIotaRefresh(boolean enable) {
+        serverTabPanel.enableIotaRefresh(enable);
     }
 
     public void setServerTabPanel(ServerTabPanel serverTabPanel) {
@@ -144,6 +154,7 @@ public class MainController implements ActionListener {
         String nodeInfoRefresh = iccSettingsDialog.nodeInfoRefreshTimeTextField.getText();
         String iotaDldLink = iccSettingsDialog.iotaDownloadLinkTextField.getText();
         String iotaDldFile = iccSettingsDialog.iotaDownloadFileTextField.getText();
+        boolean runRefresh = iccSettingsDialog.runRefresh.isSelected();
 
         String errors = "";
         String sep = "";
@@ -187,14 +198,23 @@ public class MainController implements ActionListener {
             return false;
         }
 
+        boolean refreshChanged = !nbrRefresh.equals(propertySource.getRefreshNbrsTime()) ||
+                !nodeInfoRefresh.equals(propertySource.getRefreshNodeInfoTime()) ||
+                runRefresh != propertySource.getRunIotaRefresh();
         propertySource.setProperty(PropertySource.REFRESH_NBRS_PROP, nbrRefresh);
         propertySource.setProperty(PropertySource.REFRESH_NODEINFO_PROP, nodeInfoRefresh);
         propertySource.setProperty(PropertySource.IOTA_DLD_LINK_PROP, iotaDldLink);
         propertySource.setProperty(PropertySource.IOTA_DLD_FILENAME_PROP, iotaDldFile);
+        propertySource.setProperty(PropertySource.RUN_IOTA_REFRESH_PROP,  String.valueOf(runRefresh).toLowerCase());
 
         propertySource.storeProperties();
 
         iccSettingsDialogClose();
+
+        if(refreshChanged) {
+            System.out.println("Changed IOTA refresh settings");
+            serverTabPanel.updateIotaRefresh();
+        }
 
         return true;
     }

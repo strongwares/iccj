@@ -90,8 +90,7 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
             else {
                 //serverPanel.addConsoleLogLine("iotaNeighbors: " + resp.getContent());
 
-                System.out.println(ctlr.name + " " + action + " success, response content: " +
-                        resp.getContent());
+                System.out.println(ctlr.name + " " + action + ": " + resp.getContent());
 
                 IotaGetNeighborsResponseDto dto = null;
                 try {

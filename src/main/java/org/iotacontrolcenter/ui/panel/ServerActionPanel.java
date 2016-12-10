@@ -19,7 +19,6 @@ public class ServerActionPanel extends JPanel {
     private JPanel internalPanel;
     private JButton iotaLog;
     private Localizer localizer;
-    private JCheckBox runRefresh;
     private JButton settings;
     private JButton startIota;
     private JButton startWallet;
@@ -98,13 +97,6 @@ public class ServerActionPanel extends JPanel {
         deleteIota.addActionListener(ctlr);
         internalPanel.add(deleteIota);
 
-        runRefresh = new JCheckBox(localizer.getLocalText("buttonLabelRunIotaRefresh"));
-        runRefresh.setToolTipText(localizer.getLocalText("buttonLabelRunIotaRefreshTooltip"));
-        runRefresh.setAlignmentX(Component.CENTER_ALIGNMENT);
-        runRefresh.setActionCommand(Constants.SERVER_ACTION_ICCR_RUN_IOTA_REFRESH);
-        runRefresh.addActionListener(ctlr);
-        internalPanel.add(runRefresh);
-
         eventLog = new JButton(localizer.getLocalText("buttonLabelIccrEventLog") + "...");
         eventLog.setToolTipText(localizer.getLocalText("buttonLabelIccrEventLogTooltip"));
         eventLog.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -119,9 +111,8 @@ public class ServerActionPanel extends JPanel {
         iotaLog.addActionListener(ctlr);
         internalPanel.add(iotaLog);
 
-
         SpringUtilities.makeCompactGrid(internalPanel,
-                10, 1, //rows, cols
+                9, 1, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 

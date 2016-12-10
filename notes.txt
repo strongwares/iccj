@@ -511,26 +511,45 @@ neighborTableColumnTitleStatusTooltip=When checked, the neighbor is active and w
 neighborTableColumnTitleNeighborTooltip=Address (DNS name or IPv4 or IPv6 address) of a neighbor to be added to IOTA
 neighborTableColumnTitleDescriptionTooltip=Optional description of the IOTA neighbor
 
+Fixed neighbor table ipv6 comparison.
+
+Checked in
+
+Moved Run IOTA refresh into icc settings window, default to on
+
+Changed 
+buttonLabelRunIotaRefresh=Run IOTA Neighbor and NodeInfo Refresh
+
+Fixed changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
+
+New icc property: runIotaRefresh
+
+checked in
 
 Feedback:
-1) Move Run IOTA refresh into icc settings window, default to on
+d 1) Move Run IOTA refresh into icc settings window, default to on
 d 2) Provide tooltip for AT, IT, NT
 d 3) Make AT, IT, NT, and IP columns be resizable 
 
 Fixes:
-4) Changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
+d 4) Changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
 d 5) IPv6 IOTA nbrs metrics are not updated in ICC nbr table.
+
 6) Automatic refresh of IPs to IRI
 7) Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
 8) Implement "Seen Transactions" metric in ICC UI footer
 
 Also:
-9) Implement Online checkbox in ICC UI footer
+9) Implement Online status in ICC UI footer
 10) Add ICC app icon instead of default java coffee cup
+
 d 11) Adjusted initial ICC open sequence
 d 12) Change Neighbor table Status column header to be Active instead of Status
 
 todo:
+Add dto for IotaNodeInfo:
+{"appName": "IRI", "appVersion": "1.1.1.1", "jreAvailableProcessors": 8, "jreFreeMemory": 91999048, "jreMaxMemory": 7436500992, "jreTotalMemory": 216006656, "latestMilestone": "MYCIGBUNWHBZNJEDVERPCXA9AOGU9TUZPCNEYCGCCOXDRN9PODOPVWFLJDEZDDZUQ9BSFASUNRB999999", "latestMilestoneIndex": 8765, "latestSolidSubtangleMilestone": "MYCIGBUNWHBZNJEDVERPCXA9AOGU9TUZPCNEYCGCCOXDRN9PODOPVWFLJDEZDDZUQ9BSFASUNRB999999", "latestSolidSubtangleMilestoneIndex": 8765, "neighbors": 7, "packetsQueueSize": 0, "time": 1481405742423, "tips": 852, "transactionsToRequest": 0, "duration": 3}
+
 For seen transaction metric in footer:
 The transactions data in IRI log:
 Confirmed transactions = 24970

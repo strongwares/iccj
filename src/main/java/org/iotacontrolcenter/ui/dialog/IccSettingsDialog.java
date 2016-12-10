@@ -22,6 +22,7 @@ public class IccSettingsDialog extends JDialog {
     public JTextField iotaDownloadFileTextField;
     public JPanel panel;
     private PropertySource propertySource;
+    public JCheckBox runRefresh;
     public JButton save;
 
 
@@ -74,8 +75,17 @@ public class IccSettingsDialog extends JDialog {
         iotaDownloadFile.setLabelFor(iotaDownloadFileTextField);
         panel.add(iotaDownloadFileTextField);
 
+        JLabel runRefreshLabel = new JLabel(localizer.getLocalText("buttonLabelRunIotaRefresh") + ":");
+        panel.add(runRefreshLabel);
+        runRefresh = new JCheckBox(null, null, true);
+        runRefresh.setToolTipText(localizer.getLocalText("buttonLabelRunIotaRefreshTooltip"));
+        runRefresh.setAlignmentX(Component.CENTER_ALIGNMENT);
+        runRefresh.setActionCommand(Constants.SERVER_ACTION_ICCR_RUN_IOTA_REFRESH);
+        runRefresh.addActionListener(ctlr);
+        panel.add(runRefresh);
+
         SpringUtilities.makeCompactGrid(panel,
-                4, 2, //rows, cols
+                5, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -110,5 +120,6 @@ public class IccSettingsDialog extends JDialog {
         nodeInfoRefreshTimeTextField.setText(propertySource.getString(PropertySource.REFRESH_NODEINFO_PROP));
         iotaDownloadLinkTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_LINK_PROP));
         iotaDownloadFileTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_FILENAME_PROP));
+        runRefresh.setSelected(propertySource.getRunIotaRefresh());
     }
 }

@@ -103,3 +103,8 @@ neighborTableColumnTitleNTTooltip=New transactions received
 neighborTableColumnTitleStatusTooltip=When checked, the neighbor is active and will be added to IOTA
 neighborTableColumnTitleNeighborTooltip=Address (DNS name or IPv4 or IPv6 address) of a neighbor to be added to IOTA
 neighborTableColumnTitleDescriptionTooltip=Optional description of the IOTA neighbor
+
+Moved Run IOTA refresh into icc settings window, default to on
+
+Changed 
+buttonLabelRunIotaRefresh=Run IOTA Neighbor and NodeInfo Refresh

@@ -28,7 +28,6 @@ import java.util.Properties;
 
 public class ServerController implements ActionListener, TableModelListener {
 
-    public boolean doIotaRefresh = false;
     public Localizer localizer;
     public boolean iotaActive = false;
     public Properties iccrProps;
@@ -86,16 +85,24 @@ public class ServerController implements ActionListener, TableModelListener {
         }
         this.isConnected = connected;
 
-        if(!isConnected && doIotaRefresh) {
+        if(!isConnected && propertySource.getRunIotaRefresh()) {
             stopTimers();
         }
-        else if(!wasConnected && doIotaRefresh) {
+        else if(!wasConnected && propertySource.getRunIotaRefresh()) {
+            startTimers();
+        }
+    }
+
+    public void updateIotaRefresh() {
+        stopTimers();
+
+        if(propertySource.getRunIotaRefresh()) {
             startTimers();
         }
     }
 
     public void stopTimers() {
-        System.out.println(name + " stopTimers");
+        //System.out.println(name + " stopTimers");
         if(iotaNeighborRefreshTimer != null) {
             iotaNeighborRefreshTimer.cancel();
             iotaNeighborRefreshTimer = null;
@@ -107,23 +114,25 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void startTimers() {
-        System.out.println(name + " startTimers");
-
         try {
-            iotaNodeinfoRefreshTimer = new java.util.Timer();
-            iotaNodeinfoRefreshTimer.schedule(new RefreshIotaNodeinfoTimerTask(this),
-                    0,
-                    propertySource.getInteger(PropertySource.REFRESH_NODEINFO_PROP) * 1000);
+            if(iotaNodeinfoRefreshTimer == null) {
+                iotaNodeinfoRefreshTimer = new java.util.Timer();
+                iotaNodeinfoRefreshTimer.schedule(new RefreshIotaNodeinfoTimerTask(this),
+                        1000,
+                        propertySource.getInteger(PropertySource.REFRESH_NODEINFO_PROP) * 1000);
+            }
         }
         catch(Exception e) {
             System.out.println(name + " startTimers iota nodeinfo refresh exception: " + e);
         }
 
         try {
-            iotaNeighborRefreshTimer = new java.util.Timer();
-            iotaNeighborRefreshTimer.schedule(new RefreshIotaNeighborTimerTask(this),
-                    0,
-                    propertySource.getInteger(PropertySource.REFRESH_NBRS_PROP) * 1000);
+            if(iotaNeighborRefreshTimer == null) {
+                iotaNeighborRefreshTimer = new java.util.Timer();
+                iotaNeighborRefreshTimer.schedule(new RefreshIotaNeighborTimerTask(this),
+                        5000,
+                        propertySource.getInteger(PropertySource.REFRESH_NBRS_PROP) * 1000);
+            }
         }
         catch(Exception e) {
             System.out.println(name + " startTimers iota nbrs refresh exception: " + e);
@@ -214,9 +223,6 @@ public class ServerController implements ActionListener, TableModelListener {
         else if(action.equals(Constants.SERVER_ACTION_CLEAR_ICCR_EVENTLOG)) {
             deleteIccrEventLog();
         }
-        else if(action.equals(Constants.SERVER_ACTION_ICCR_RUN_IOTA_REFRESH)) {
-            toggleIotaRefresh();
-        }
         else if(action.equals(Constants.SERVER_ACTION_IOTA_LOG)) {
             getIotaLog();
         }
@@ -227,24 +233,17 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
-    public void toggleIotaRefresh() {
-        System.out.println(name + " toggleIotaRefresh");
-
-        if(!doIotaRefresh) {
-            doIotaRefresh = true;
+    public void enableIotaRefresh(boolean enable) {
+        if(!enable) {
             stopTimers();
-            startTimers();
         }
         else {
-            doIotaRefresh = false;
-            stopTimers();
+            startTimers();
         }
 
     }
 
     public void deleteIccrEventLog() {
-        System.out.println(name + " deleteIccrEventLog");
-
         try {
             proxy.deleteIccrEventLog();
         }

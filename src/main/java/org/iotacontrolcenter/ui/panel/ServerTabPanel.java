@@ -9,6 +9,18 @@ public class ServerTabPanel extends JTabbedPane {
         super();
     }
 
+    public void enableIotaRefresh(boolean enable) {
+        for(int i = 0; i < getTabCount(); i++) {
+            ((ServerPanel) getComponentAt(i)).ctlr.enableIotaRefresh(enable);
+        }
+    }
+
+    public void updateIotaRefresh() {
+        for(int i = 0; i < getTabCount(); i++) {
+            ((ServerPanel)getComponentAt(i)).ctlr.updateIotaRefresh();
+        }
+    }
+
     private Component getPanelByName(String name) {
         Component panel = null;
         for(int i = 0; i < getTabCount(); i++) {

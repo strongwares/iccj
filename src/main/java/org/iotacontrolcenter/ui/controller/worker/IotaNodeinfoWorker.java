@@ -86,12 +86,20 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
                         resp.getMsg());
             }
             else {
-                serverPanel.addConsoleLogLine("iotaNodeInfo: " + resp.getContent());
+                // This writes the whole long string into the ICCR console log:
+                //serverPanel.addConsoleLogLine("iotaNodeInfo: " + resp.getContent());
+
+                System.out.println(ctlr.name + " " + action + ": " + resp.getContent());
 
                 IotaGetNodeInfoResponseDto dto = null;
                 try {
                     Gson gson = new GsonBuilder().create();
                     dto = gson.fromJson(resp.getContent(), IotaGetNodeInfoResponseDto.class);
+
+                    // This could write more selective data points into that log:
+                    serverPanel.addConsoleLogLine("iotaNodeInfo tips: " +
+                            dto.getTips());
+
                     serverPanel.footerPanel.dataUpdate(dto);
                 }
                 catch(Exception e) {
