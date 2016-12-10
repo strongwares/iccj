@@ -4,6 +4,8 @@ Delivered Monday 12/5/2016
 -----------------------------
 Version 1.0.1
 
+Delivered Friday 12/9/2016
+
 ICC:
 
 Change text of main menu "Open or Add Server" menu item label to "Servers"
@@ -84,3 +86,20 @@ mainMenuOpenServerLabel=Manage...
 Change Open Server dialog title to Manage Servers
 dialogTitleOpenServer=Manage Servers
 
+---------------------------
+Version 1.0.2
+
+Adjusted initial ICC open sequence:
+* if no servers defined, then show this message: initialAddServerMsg=Use the main menu Servers / Add New Server to define a new ICCR server
+* if server(s) are defined, then automatically show the manage servers dialog (dialogTitleOpenServer=Manage Servers)
+
+Change Neighbor table Status column header to be Active instead of Status
+neighborTableColumnTitleStatus=Active
+
+Added Neighbor Table column tool tip localized text:
+neighborTableColumnTitleATTooltip=All transactions received
+neighborTableColumnTitleITTooltip=Invalid transactions received
+neighborTableColumnTitleNTTooltip=New transactions received
+neighborTableColumnTitleStatusTooltip=When checked, the neighbor is active and will be added to IOTA
+neighborTableColumnTitleNeighborTooltip=Address (DNS name or IPv4 or IPv6 address) of a neighbor to be added to IOTA
+neighborTableColumnTitleDescriptionTooltip=Optional description of the IOTA neighbor

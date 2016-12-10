@@ -136,6 +136,10 @@ public class PropertySource {
         return getList(SERVERKEYS_PROP);
     }
 
+    public int getNumServers() {
+        return getServerIds().size();
+    }
+
     public Map<String, Properties> getServers() {
         if(servers == null) {
             System.out.println("servers is null, new map");

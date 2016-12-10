@@ -452,19 +452,107 @@ fixed https
 verified nbr info updates table
 
 checked in
+----------------
+Fri: 12/9/2016
 
 Fix nbr metrics finding nbr in table
 
 Use single port for http or https
 
+checked in
+
 Release checklist:
 
-Update maven artifact versions
-mvn clean install build
+mvn clean install
 clean deployed dir
+   /opt$ sudo mv icc icc-pre-1.0.1
+
+mkdir new icc dir:
+      sudo mkdir icc
+      /opt$ sudo chown dana:dana icc
+      mkdir /opt/icc/repo
+      mkdir /opt/icc/bin
+      mkdir /opt/icc/conf
+
 run deploy script
-zip icc at at the /opt level
-save off zip archive
+    iccj$ ./deploy-iccj.bash
+
+zip icc at at the /opt level:
+    /opt$ mkdir ~/projects/dist
+    /opt$ zip -r ~/projects/dist/iccj-1.0.1.zip icc
+
+test:
+    /opt$ sudo mv icc icc-1.0.1-dist
+    /opt$ sudo unzip ~/projects/dist/iccj-1.0.1.zip
+    /opt$ sudo chown -R dana:dana icc
+
+upload zip archive:
+
+upload change log:
+       ~/projects/iccj$ cp changelog.txt ~/projects/dist/iccj-1.0.1-changelog.txt
+
+-----------------
+Sat: 12/10/2016
+
+bump artifact version to 1.0.2-SNAPSHOT
+
+Adjusted initial ICC open sequence:
+* if no servers defined, then show this message: initialAddServerMsg=Use the main menu Servers / Add New Server to define a new ICCR server
+* if server(s) are defined, then automatically show the manage servers dialog (dialogTitleOpenServer=Manage Servers)
+
+Change Neighbor table Status column header to be Active instead of Status
+neighborTableColumnTitleStatus=Active
+
+Added Neighbor Table column tool tip localized text:
+neighborTableColumnTitleATTooltip=All transactions received
+neighborTableColumnTitleITTooltip=Invalid transactions received
+neighborTableColumnTitleNTTooltip=New transactions received
+neighborTableColumnTitleStatusTooltip=When checked, the neighbor is active and will be added to IOTA
+neighborTableColumnTitleNeighborTooltip=Address (DNS name or IPv4 or IPv6 address) of a neighbor to be added to IOTA
+neighborTableColumnTitleDescriptionTooltip=Optional description of the IOTA neighbor
+
+
+Feedback:
+1) Move Run IOTA refresh into icc settings window, default to on
+d 2) Provide tooltip for AT, IT, NT
+d 3) Make AT, IT, NT, and IP columns be resizable 
+
+Fixes:
+4) Changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
+d 5) IPv6 IOTA nbrs metrics are not updated in ICC nbr table.
+6) Automatic refresh of IPs to IRI
+7) Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
+8) Implement "Seen Transactions" metric in ICC UI footer
+
+Also:
+9) Implement Online checkbox in ICC UI footer
+10) Add ICC app icon instead of default java coffee cup
+d 11) Adjusted initial ICC open sequence
+d 12) Change Neighbor table Status column header to be Active instead of Status
+
+todo:
+For seen transaction metric in footer:
+The transactions data in IRI log:
+Confirmed transactions = 24970
+6 tails need to be analyzed
+31 extra transactions approved
+Confirmed transactions = 25001
+36 tails need to be analyzed
+2 extra transactions approved
+Transactions to request = 0 / 26743 (829 ms / 0%)
+and:
+Confirmed transactions = 24738
+21 tails need to be analyzed
+52 extra transactions approved
+Confirmed transactions = 24790
+35 tails need to be analyzed
+1 extra transactions approved
+
+Add nbr tbl col sorting
+
+Add auto tail of IRI log with longpoll feed to icc when iri log is open
+
+IOTA log takes a long time to load if it is really big
 
 Create a install-icc script:
 cd /opt
@@ -473,7 +561,9 @@ ask for user
 ask for group
 chown -R
 
-todo:
+
+
+
 validate that no scheme is on server address  property
 
 set footer online

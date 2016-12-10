@@ -33,6 +33,7 @@ public class MainController implements ActionListener {
     }
 
     public void initialPrompts() {
+        /*
         Properties props = propertySource.getLocalServerProperties();
 
         if(props == null) {
@@ -46,6 +47,14 @@ public class MainController implements ActionListener {
             if (addLocal) {
                 addServerTabPanel(props);
             }
+        }
+        */
+        if(propertySource.getNumServers() == 0) {
+            UiUtil.showInfoDialog(localizer.getLocalText("initialAddServerTitle"),
+                    localizer.getLocalText("initialAddServerMsg"));
+        }
+        else {
+            showOpenServerDialog();
         }
     }
 

@@ -37,7 +37,7 @@ public class NeighborPanel extends JPanel {
         neighborModel = new NeighborModel(localizer);
         neighborModel.addTableModelListener(ctlr);
 
-        neighborTable = new NeighborTable(neighborModel, ctlr);
+        neighborTable = new NeighborTable(localizer, neighborModel, ctlr);
         neighborTable.setPreferredScrollableViewportSize(new Dimension(500, 450));
         neighborTable.setFillsViewportHeight(true);
 

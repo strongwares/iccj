@@ -5,6 +5,8 @@ import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.app.Main;
 
 import javax.swing.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
 public class UiUtil {
@@ -16,15 +18,59 @@ public class UiUtil {
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
+    public static boolean isPotentialIpv6(String ip) {
+        return ip != null && (ip.startsWith("[") && ip.endsWith("]")) ||
+                ip.matches("^.*:.*:.*:.*:.*$");
+    }
+
+    public static boolean isSameIpv6(String ip1, String ip2) {
+        //[2a01:4f8:190:32cc::2]
+        // and
+        // 2a01:4f8:190:32cc:0:0:0:2
+        //System.out.println("isSameIpv6(" + ip1 + ", " + ip2 + ")");
+
+        if(ip1 == null || ip2 == null || ip1.isEmpty() | ip2.isEmpty()) {
+            return false;
+        }
+        ip1 = ip1.toLowerCase();
+        ip2 = ip2.toLowerCase();
+
+        ip1 = ip1.replace("[","");
+        ip1 = ip1.replace("]","");
+        ip2 = ip2.replace("[","");
+        ip2 = ip2.replace("]","");
+
+        String normalIp1 = null;
+        String normalIp2 = null;
+        try {
+            normalIp1 = InetAddress.getByName(ip1).toString().substring(1);
+        }
+        catch(UnknownHostException e) {
+        }
+        try {
+            normalIp2 = InetAddress.getByName(ip2).toString().substring(1);
+        }
+        catch(UnknownHostException e) {
+        }
+        //System.out.println("normalIp1: " + normalIp1);
+        //System.out.println("normalIp2: " + normalIp2);
+        return normalIp1 != null && normalIp2 != null && normalIp1.equals(normalIp2);
+    }
+
     public static boolean isSameNbr(NeighborDto nbr, IotaNeighborDto iotaNbr) {
-        // The problem: iota nbr address is something like this:
-        //         fred.com/93.188.173.198:14265
-        //  or
-        //         /10.0.0.0:14265
         // The nbr uri is something like this:
         //         udp://fred.com:14265
         //  or
         //         udp://10.0.0.0:14265
+        //  or
+        //         udp://[2a01:4f8:190:32cc::2]:14265
+
+        // The problem: iota nbr address is something like this:
+        //         fred.com/93.188.173.198:14265
+        //  or
+        //         /10.0.0.0:14265
+        //  or iv ipv6:
+        //         /2a01:4f8:190:32cc:0:0:0:2:14265
         String nbrUri = nbr.getUri();
         int addrSepIdx = nbrUri.indexOf("://");
         int portIdx = nbrUri.lastIndexOf(":");
@@ -35,6 +81,11 @@ public class UiUtil {
             addrSepIdx += 3;
         }
         String nbrHost = nbrUri.substring(addrSepIdx, portIdx);
+
+        boolean nbrIsIpv6 = isPotentialIpv6(nbrHost);
+
+        //System.out.println("nbrHost: isIpv6: " + isIpv6 + ": " + nbrHost);
+
         String nbrPort = nbrUri.substring(portIdx);
 
         String iotaUri = iotaNbr.getAddress();
@@ -47,7 +98,10 @@ public class UiUtil {
             return false;
         }
         String iotaAddr1 = iotaUri.substring(0, addrSepIdx);
+        boolean iotaAddr1IsIpv6 = isPotentialIpv6(iotaAddr1);
+
         String iotaAddr2 = iotaUri.substring(addrSepIdx+1, portIdx);
+        boolean iotaAddr2IsIpv6 = isPotentialIpv6(iotaAddr2);
 
         boolean same = false;
         if(nbrPort != null) {
@@ -68,9 +122,14 @@ public class UiUtil {
             System.out.println("not same nbr,  port differs");
             return same;
         }
-        same = nbrHost.equalsIgnoreCase(iotaAddr1) ||
-                nbrHost.equalsIgnoreCase(iotaAddr2);
 
+        // Compare iota addr2 first, addr1 is usually empty
+        if(nbrIsIpv6 && (iotaAddr1IsIpv6 || iotaAddr2IsIpv6)) {
+            same = isSameIpv6(nbrHost, iotaAddr2) || isSameIpv6(nbrHost, iotaAddr1);
+        }
+        else {
+            same = nbrHost.equalsIgnoreCase(iotaAddr2) || nbrHost.equalsIgnoreCase(iotaAddr1);
+        }
         return same;
 
     }
