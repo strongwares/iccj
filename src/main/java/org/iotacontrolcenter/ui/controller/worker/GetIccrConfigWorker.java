@@ -65,7 +65,7 @@ public class GetIccrConfigWorker extends ObjectAbstractApiWorker {
             return;
         }
 
-        ctlr.logIsConnected(bre == null && exc == null);
+        ctlr.setConnected(bre == null && exc == null);
 
         if (bre != null) {
             System.out.println(ctlr.name + " GetIccrConfigWorker done: bad response: " + bre.errMsgkey +

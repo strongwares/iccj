@@ -38,7 +38,6 @@ public class DeleteIotaWorker extends ActionResponseAbstractApiWorker {
         BadResponseException bre = null;
         Exception exc = null;
         ActionResponse resp = null;
-        boolean isSuccess = false;
 
         if (rval instanceof BadResponseException) {
             bre = (BadResponseException) rval;
@@ -50,6 +49,8 @@ public class DeleteIotaWorker extends ActionResponseAbstractApiWorker {
             System.out.println(ctlr.name + " " + action + " unexpected return type: " + rval.getClass().getCanonicalName());
             return;
         }
+
+        ctlr.setConnected(bre == null && exc == null);
 
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +
@@ -76,11 +77,9 @@ public class DeleteIotaWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_DELETE, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
-                isSuccess = false;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotDeleted"));
             }
             else {
-                isSuccess = true;
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsDeleted"));
             }
         } else {

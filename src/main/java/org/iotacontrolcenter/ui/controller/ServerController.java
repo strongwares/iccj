@@ -23,12 +23,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class ServerController implements ActionListener, TableModelListener {
 
     public Localizer localizer;
+    private List<PropertyChangeListener> listeners = new ArrayList<>();
     public boolean iotaActive = false;
     public Properties iccrProps;
     public java.util.Timer iotaNeighborRefreshTimer;
@@ -51,6 +55,29 @@ public class ServerController implements ActionListener, TableModelListener {
         propertySource = PropertySource.getInstance();
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        if(!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if(listeners.contains(listener)) {
+            listeners.remove(listener);
+        }
+    }
+
+    private void firePropertyChange(String prop, Object prev, Object cur) {
+        PropertyChangeEvent e = new PropertyChangeEvent(this, prop, prev, cur);
+        for(PropertyChangeListener l : listeners) {
+            try {
+                l.propertyChange(e);
+            }
+            catch(Exception exc) {
+            }
+        }
+    }
+
     public void serverSetup() {
         serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogConnectingToIccr"));
 
@@ -70,26 +97,38 @@ public class ServerController implements ActionListener, TableModelListener {
                         serverActionGetConfigNbrsList();
                         serverActionStatusIota();
                     }
+                    if(propertySource.getRunIotaRefresh()) {
+                        startTimers();
+                    }
                 }
             }
         });
     }
 
-    public void logIsConnected(boolean connected) {
+    public void setConnected(boolean connected) {
         boolean wasConnected = this.isConnected;
-        if(connected) {
-            serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIsConnectedToIccr"));
-        }
-        else {
-            serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogNotConnectedToIccr"));
-        }
+        boolean changed = wasConnected != connected;
         this.isConnected = connected;
 
-        if(!isConnected && propertySource.getRunIotaRefresh()) {
-            stopTimers();
-        }
-        else if(!wasConnected && propertySource.getRunIotaRefresh()) {
-            startTimers();
+        if(changed) {
+            System.out.println(this.name + " connect state changed, isConnected: " + connected);
+            if (connected) {
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIsConnectedToIccr"));
+            }
+            else {
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogNotConnectedToIccr"));
+            }
+
+            /*
+            if (!isConnected && propertySource.getRunIotaRefresh()) {
+                stopTimers();
+            }
+            else if (!wasConnected && propertySource.getRunIotaRefresh()) {
+                startTimers();
+            }
+            */
+
+            firePropertyChange(Constants.IS_CONNECTED_EVENT, wasConnected, connected);
         }
     }
 
@@ -102,7 +141,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void stopTimers() {
-        //System.out.println(name + " stopTimers");
+        System.out.println(name + " stopTimers");
         if(iotaNeighborRefreshTimer != null) {
             iotaNeighborRefreshTimer.cancel();
             iotaNeighborRefreshTimer = null;
@@ -114,6 +153,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void startTimers() {
+        System.out.println(name + " startTimers");
         try {
             if(iotaNodeinfoRefreshTimer == null) {
                 iotaNodeinfoRefreshTimer = new java.util.Timer();
@@ -511,15 +551,14 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void serverActionGetIotaNeighbors() {
-        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallRefreshIotaNeighbors") + "...");
-
+        //serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallRefreshIotaNeighbors") + "...");
         IotaNeighborsWorker worker = new IotaNeighborsWorker(localizer, serverPanel,  proxy, this,
                 Constants.IOTA_ACTION_NEIGHBORS, null);
         worker.execute();
     }
 
     public void serverActionGetIotaNodeinfo() {
-        serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallRefreshIotaNodeinfo") + "...");
+        //serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogApiCallRefreshIotaNodeinfo") + "...");
 
         IotaNodeinfoWorker worker = new IotaNodeinfoWorker(localizer, serverPanel,  proxy, this,
                 Constants.IOTA_ACTION_NODEINFO, null);

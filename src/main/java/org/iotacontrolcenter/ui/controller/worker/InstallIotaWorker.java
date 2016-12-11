@@ -54,6 +54,8 @@ public class InstallIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
+        ctlr.setConnected(bre == null && exc == null);
+
         if (bre != null) {
             System.out.println(ctlr.name + " InstallIotaWorker: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());

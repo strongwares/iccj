@@ -5,11 +5,11 @@ import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 public class ServerConsoleLogPanel extends JPanel {
 
-    //public JList<String> consoleText;
     private ServerController ctlr;
     private Localizer localizer;
     public JTextArea consoleText;
@@ -39,6 +39,9 @@ public class ServerConsoleLogPanel extends JPanel {
         consoleText.setBackground(Color.black);
         consoleText.setForeground(Color.yellow);
         consoleText.setEditable(false);
+
+        DefaultCaret caret = (DefaultCaret)consoleText.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         /*
         JPanel p2 = new JPanel();

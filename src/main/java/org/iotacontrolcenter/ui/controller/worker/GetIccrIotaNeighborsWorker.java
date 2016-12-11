@@ -67,6 +67,8 @@ public class GetIccrIotaNeighborsWorker extends ObjectAbstractApiWorker {
             return;
         }
 
+        ctlr.setConnected(bre == null && exc == null);
+
         if (bre != null) {
             System.out.println("GetIccrIotaNeighborsWorker: done: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());

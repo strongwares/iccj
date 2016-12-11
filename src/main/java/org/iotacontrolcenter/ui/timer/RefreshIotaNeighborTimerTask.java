@@ -15,8 +15,6 @@ public class RefreshIotaNeighborTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        if(ctlr.iotaActive && ctlr.isConnected) {
-            ctlr.serverActionGetIotaNeighbors();
-        }
+        ctlr.serverActionGetIotaNeighbors();
     }
 }

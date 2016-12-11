@@ -6,6 +6,7 @@ import org.iotacontrolcenter.ui.app.Main;
 
 import javax.swing.*;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
@@ -17,6 +18,23 @@ public class UiUtil {
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
                     "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
+    public static ImageIcon loadIcon(String imgFileName) {
+        try {
+            URL imgUrl = Main.mainFrame.getClass().getResource("/" + imgFileName);
+            if (imgUrl != null){
+                return new ImageIcon(imgUrl);
+            }
+            else {
+                System.out.println("for image " + imgFileName +", generated url is null");
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Exception loading icon from file " + imgFileName +
+                    ": " + e.getLocalizedMessage());
+        }
+        return null;
+    }
 
     public static boolean isPotentialIpv6(String ip) {
         return ip != null && (ip.startsWith("[") && ip.endsWith("]")) ||

@@ -3,8 +3,10 @@ package org.iotacontrolcenter.ui.app;
 import org.iotacontrolcenter.ui.controller.MainController;
 import org.iotacontrolcenter.ui.panel.MainFrame;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class Main {
 
@@ -46,6 +48,15 @@ public class Main {
 
         mainController = new MainController();
         mainFrame = new MainFrame(mainController);
+
+        ImageIcon myAppImage = UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_APP);
+        if(myAppImage != null) {
+            mainFrame.setIconImage(myAppImage.getImage());
+        }
+        else {
+            System.out.println("app icon is null");
+        }
+
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();
         mainFrame.setTitle(Localizer.getInstance().getLocalText("mainWindowTitle"));

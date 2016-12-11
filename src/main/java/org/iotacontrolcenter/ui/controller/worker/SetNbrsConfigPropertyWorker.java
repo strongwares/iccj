@@ -65,6 +65,8 @@ public class SetNbrsConfigPropertyWorker extends ObjectAbstractApiWorker {
             }
         }
 
+        ctlr.setConnected(bre == null && exc == null);
+
         if(rval != null && bre != null) {
             System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
@@ -86,7 +88,7 @@ public class SetNbrsConfigPropertyWorker extends ObjectAbstractApiWorker {
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
         }
         else if(rval == null) {
-            System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker no exceptions");
+            //System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker no exceptions");
             serverPanel.neighborPanel.save.setEnabled(false);
         }
     }

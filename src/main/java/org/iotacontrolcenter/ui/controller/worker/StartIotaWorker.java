@@ -52,6 +52,8 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
 
         ctlr.iotaActive = false;
 
+        ctlr.setConnected(bre == null && exc == null);
+
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());

@@ -55,6 +55,8 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
+        ctlr.setConnected(bre == null && exc == null);
+
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + "  bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
@@ -62,8 +64,8 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
-                    bre.resp.getMsg());
+            //UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
+            //        bre.resp.getMsg());
         }
         else if (exc != null) {
             System.out.println(ctlr.name + " " + action + "  exception from proxy: ");
@@ -72,8 +74,8 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText("iccrApiException"));
             serverPanel.addConsoleLogLine(exc.getLocalizedMessage());
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("getIotaNeighborError"),
-                    localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
+            //UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("getIotaNeighborError"),
+            //        localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
         }
         else if (resp != null) {

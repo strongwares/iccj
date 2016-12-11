@@ -526,6 +526,19 @@ New icc property: runIotaRefresh
 
 checked in
 
+Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
+
+Add ICC app icon instead of default java coffee cup
+mv ~/Downloads/shutterstock_54542947.jpg src/main/config/iccj-app-icon.jpg
+
+Added app icon in the conf directory:   iccj-app-icon
+
+Implement Online status in ICC UI footer, online just reflects success of last request made to ICCR
+
+Added offLineIconImage.gif and onLineIconImage.png to src/main/config as files offline-icon and online-icon
+
+checkin
+
 Feedback:
 d 1) Move Run IOTA refresh into icc settings window, default to on
 d 2) Provide tooltip for AT, IT, NT
@@ -536,19 +549,22 @@ d 4) Changes to "Time for ICC to Refresh" don't take effect unless enabling run 
 d 5) IPv6 IOTA nbrs metrics are not updated in ICC nbr table.
 
 6) Automatic refresh of IPs to IRI
-7) Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
+
+d 7) Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
+
 8) Implement "Seen Transactions" metric in ICC UI footer
 
 Also:
-9) Implement Online status in ICC UI footer
-10) Add ICC app icon instead of default java coffee cup
+d 9) Implement Online status in ICC UI footer
+d 10) Add ICC app icon instead of default java coffee cup
 
 d 11) Adjusted initial ICC open sequence
 d 12) Change Neighbor table Status column header to be Active instead of Status
 
 todo:
-Add dto for IotaNodeInfo:
-{"appName": "IRI", "appVersion": "1.1.1.1", "jreAvailableProcessors": 8, "jreFreeMemory": 91999048, "jreMaxMemory": 7436500992, "jreTotalMemory": 216006656, "latestMilestone": "MYCIGBUNWHBZNJEDVERPCXA9AOGU9TUZPCNEYCGCCOXDRN9PODOPVWFLJDEZDDZUQ9BSFASUNRB999999", "latestMilestoneIndex": 8765, "latestSolidSubtangleMilestone": "MYCIGBUNWHBZNJEDVERPCXA9AOGU9TUZPCNEYCGCCOXDRN9PODOPVWFLJDEZDDZUQ9BSFASUNRB999999", "latestSolidSubtangleMilestoneIndex": 8765, "neighbors": 7, "packetsQueueSize": 0, "time": 1481405742423, "tips": 852, "transactionsToRequest": 0, "duration": 3}
+Add prog or load spinner for long runnning opertions: install iota, load iota log
+
+Disable server action buttons while loading, then renable
 
 For seen transaction metric in footer:
 The transactions data in IRI log:

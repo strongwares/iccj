@@ -108,3 +108,15 @@ Moved Run IOTA refresh into icc settings window, default to on
 
 Changed 
 buttonLabelRunIotaRefresh=Run IOTA Neighbor and NodeInfo Refresh
+
+Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically.
+
+Added ICC application icon image file, located in the conf directory:   iccj-app-icon
+
+Fixed problem that changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
+
+There is a new icc.properties file property that specifies the initial default value: runIotaRefresh=true
+
+Added offLineIconImage.gif and onLineIconImage.png to conf directory
+
+Added support for Online status indicator server panel footer

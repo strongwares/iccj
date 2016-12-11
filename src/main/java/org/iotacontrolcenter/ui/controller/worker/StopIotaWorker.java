@@ -50,7 +50,9 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
-        ctlr.iotaActive = true;
+        //ctlr.iotaActive = true;
+
+        ctlr.setConnected(bre == null && exc == null);
 
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +

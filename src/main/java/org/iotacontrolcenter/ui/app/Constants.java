@@ -2,6 +2,12 @@ package org.iotacontrolcenter.ui.app;
 
 public class Constants {
 
+    public static final String IMAGE_ICON_FILENAME_MAIN_APP = "iccj-app-icon";
+    public static final String IMAGE_ICON_FILENAME_SERVER_ONLINE = "online-icon";
+    public static final String IMAGE_ICON_FILENAME_SERVER_OFFLINE = "offline-icon";
+
+    public static final String IS_CONNECTED_EVENT = "IS-CONNECTED-EVENT";
+
     public static final String IOTA_ACTION_INSTALL = "install";
     public static final String IOTA_ACTION_START = "start";
     public static final String IOTA_ACTION_STOP = "stop";
