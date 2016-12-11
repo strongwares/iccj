@@ -178,10 +178,20 @@ public class UiUtil {
         return ipV4Pattern.matcher(ip).matches();
     }
 
-    public static boolean isValidPositiveNumber(String port) {
+    public static boolean isValidPositiveNumber(String num) {
         try {
-            Integer num = Integer.parseInt(port);
-            return num > 0;
+            Integer i = Integer.parseInt(num);
+            return i > 0;
+        }
+        catch(Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidNumber(String num) {
+        try {
+            Integer i = Integer.parseInt(num);
+            return true;
         }
         catch(Exception e) {
             return false;

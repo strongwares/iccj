@@ -120,3 +120,7 @@ There is a new icc.properties file property that specifies the initial default v
 Added offLineIconImage.gif and onLineIconImage.png to conf directory
 
 Added support for Online status indicator server panel footer
+
+Changed 
+fieldLabelNeighborRefreshTimeTooltip=Time in seconds refresh IOTA neighbors status (set to 0 or -1 to disable automatic IOTA neighbor refresh)
+

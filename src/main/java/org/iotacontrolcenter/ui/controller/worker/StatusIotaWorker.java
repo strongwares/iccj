@@ -50,7 +50,7 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
-        ctlr.iotaActive = false;
+        //ctlr.iotaActive = false;
 
         ctlr.setConnected(bre == null && exc == null);
 
@@ -60,6 +60,8 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
 
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
+
+            ctlr.setIotaActive(false);
 
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
                     bre.resp.getMsg());
@@ -71,6 +73,8 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText("iccrApiException"));
             serverPanel.addConsoleLogLine(exc.getLocalizedMessage());
 
+            ctlr.setIotaActive(false);
+
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("statusIotaError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
@@ -79,11 +83,12 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STATUS, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
+                ctlr.setIotaActive(false);
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotActive"));
             }
             else {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsActive"));
-                ctlr.iotaActive = true;
+                ctlr.setIotaActive(true);
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

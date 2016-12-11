@@ -83,7 +83,7 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             }
             else {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsStopped"));
-                ctlr.iotaActive = false;
+                ctlr.setIotaActive(false);
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

@@ -528,6 +528,9 @@ checked in
 
 Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
 
+----------
+Sun: 12/11/2016
+
 Add ICC app icon instead of default java coffee cup
 mv ~/Downloads/shutterstock_54542947.jpg src/main/config/iccj-app-icon.jpg
 
@@ -536,6 +539,18 @@ Added app icon in the conf directory:   iccj-app-icon
 Implement Online status in ICC UI footer, online just reflects success of last request made to ICCR
 
 Added offLineIconImage.gif and onLineIconImage.png to src/main/config as files offline-icon and online-icon
+
+checkin
+
+fieldLabelNeighborRefreshTimeTooltip=Time in seconds refresh IOTA neighbors status (set to 0 or -1 to disable automatic IOTA neighbor refresh)
+
+checkin
+
+The "Online" status should indicate the status if the IRI on the remote connection is running or not.
+
+Added tooltips for label
+serverFooterIotaOnlineTooltip=IOTA is running on this server
+serverFooterIotaOfflineTooltip=IOTA is not running on this server
 
 checkin
 
@@ -548,7 +563,7 @@ Fixes:
 d 4) Changes to "Time for ICC to Refresh" don't take effect unless enabling run iota refresh
 d 5) IPv6 IOTA nbrs metrics are not updated in ICC nbr table.
 
-6) Automatic refresh of IPs to IRI
+d 6) Automatic refresh of IPs to IRI
 
 d 7) Add auto-scroll to ICCJ console log, new log output causes scroll to bottom automatically
 
@@ -565,6 +580,9 @@ todo:
 Add prog or load spinner for long runnning opertions: install iota, load iota log
 
 Disable server action buttons while loading, then renable
+
+Add ICCR Connection  indicator
+
 
 For seen transaction metric in footer:
 The transactions data in IRI log:

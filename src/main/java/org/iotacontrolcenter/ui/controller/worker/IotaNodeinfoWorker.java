@@ -98,8 +98,8 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
                     dto = gson.fromJson(resp.getContent(), IotaGetNodeInfoResponseDto.class);
 
                     // This could write more selective data points into that log:
-                    serverPanel.addConsoleLogLine("iotaNodeInfo tips: " +
-                            dto.getTips());
+                    //serverPanel.addConsoleLogLine("iotaNodeInfo tips: " +
+                    //        dto.getTips());
 
                     serverPanel.footerPanel.dataUpdate(dto);
                 }

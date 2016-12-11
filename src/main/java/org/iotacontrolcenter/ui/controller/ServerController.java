@@ -33,7 +33,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
     public Localizer localizer;
     private List<PropertyChangeListener> listeners = new ArrayList<>();
-    public boolean iotaActive = false;
+    private boolean iotaActive = false;
     public Properties iccrProps;
     public java.util.Timer iotaNeighborRefreshTimer;
     public java.util.Timer iotaNodeinfoRefreshTimer;
@@ -105,6 +105,14 @@ public class ServerController implements ActionListener, TableModelListener {
         });
     }
 
+    public void setIotaActive(boolean active) {
+        boolean wasActive = this.iotaActive;
+        boolean changed = wasActive != active;
+        this.iotaActive = active;
+
+        firePropertyChange(Constants.IS_CONNECTED_EVENT, wasActive, active);
+    }
+
     public void setConnected(boolean connected) {
         boolean wasConnected = this.isConnected;
         boolean changed = wasConnected != connected;
@@ -118,17 +126,6 @@ public class ServerController implements ActionListener, TableModelListener {
             else {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogNotConnectedToIccr"));
             }
-
-            /*
-            if (!isConnected && propertySource.getRunIotaRefresh()) {
-                stopTimers();
-            }
-            else if (!wasConnected && propertySource.getRunIotaRefresh()) {
-                startTimers();
-            }
-            */
-
-            firePropertyChange(Constants.IS_CONNECTED_EVENT, wasConnected, connected);
         }
     }
 
@@ -733,7 +730,7 @@ public class ServerController implements ActionListener, TableModelListener {
                 sep = "\n";
             }
         }
-        if(iotaNeighborRefreshTime == null || iotaNeighborRefreshTime.isEmpty() || !UiUtil.isValidPositiveNumber(iotaNeighborRefreshTime)) {
+        if(iotaNeighborRefreshTime == null || iotaNeighborRefreshTime.isEmpty() || !UiUtil.isValidNumber(iotaNeighborRefreshTime)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     serverSettingsDialog.nbrRefreshTextField.getName();

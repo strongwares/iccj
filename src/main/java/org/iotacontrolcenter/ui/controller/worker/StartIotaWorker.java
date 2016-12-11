@@ -50,7 +50,7 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
-        ctlr.iotaActive = false;
+        //ctlr.setIotaActive(false);
 
         ctlr.setConnected(bre == null && exc == null);
 
@@ -61,6 +61,8 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
 
+            ctlr.setIotaActive(false);
+
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
                     bre.resp.getMsg());
         }
@@ -70,6 +72,8 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
 
             serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStarted"));
             serverPanel.addConsoleLogLine(exc.getLocalizedMessage());
+
+            ctlr.setIotaActive(false);
 
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("startIotaError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
@@ -82,7 +86,7 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStarted"));
             }
             else {
-                ctlr.iotaActive = true;
+                ctlr.setIotaActive(true);
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsStarted"));
             }
         } else {

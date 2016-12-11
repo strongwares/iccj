@@ -51,9 +51,11 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
 
     private void setIsConnected(boolean isConnected) {
         if(isConnected) {
+            onLineLabel.setToolTipText(localizer.getLocalText("serverFooterIotaOnlineTooltip"));
             onLineLabel.setIcon(getOnlineIcon());
         }
         else {
+            onLineLabel.setToolTipText(localizer.getLocalText("serverFooterIotaOfflineTooltip"));
             onLineLabel.setIcon(getOfflineIcon());
         }
     }
