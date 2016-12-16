@@ -98,8 +98,10 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
 
         add(Box.createHorizontalGlue());
 
+        /*
         seenTransactionsBase = localizer.getLocalText("labelTextFooterSeenTransactions") + ": ";
         seenTransactionsLabel = new JLabel(seenTransactionsBase);
         add(seenTransactionsLabel);
+        */
     }
 }

@@ -599,11 +599,13 @@ Make iccj settings dialog wider
 
 checked in
 
-todo:
 A real minor thing, and only if its no extra work. Maybe the disconnect status icon can made a bit smaller?
 
 The "Seen Transaction:" metrics are not that important. So if its not that easy to implement you can remove it and we will continue without
 
+checked in
+
+todo:
 I have noticed a bad bug in the neighbor list handling. Unfortunately I haven't yet found the cause for it to occur.
 
 On some of me servers, where the ICCR is running the neighbors list gets messed up over time. I noticed that I suddenly had double entries and missing entries of neighbors in the ICCJ.
