@@ -576,13 +576,52 @@ d 10) Add ICC app icon instead of default java coffee cup
 d 11) Adjusted initial ICC open sequence
 d 12) Change Neighbor table Status column header to be Active instead of Status
 
+checkin
+------
+Thu: 12/15/2016
+
+Bumped version to 1.0.3-SNAPSHOT: ~/bin/changeMavenVersion.bash
+
+Can the "IOTA client download link" and the " IOTA Client Download Filename" be merged into one entry? I think it might be a bit confusing for people when they want to update the download source to devide the link into two separate entries. That would be great.
+
+icc.properties:
+Dropped iotaDownloadFilename
+Changed iotaDownloadLink=http://188.138.57.93/IRI-1.1.1.1.jar
+
+Messages:
+Dropped fieldLabelIotaDownloadFilename and fieldLabelIotaDownloadFilenameTooltip
+
+Changed:
+fieldLabelIotaDownloadLink=IOTA Client Download Link
+fieldLabelIotaDownloadLinkTooltip=URL of location and IRI version to download new IOTA application library
+
+Make iccj settings dialog wider
+
+checked in
+
 todo:
-Add prog or load spinner for long runnning opertions: install iota, load iota log
+A real minor thing, and only if its no extra work. Maybe the disconnect status icon can made a bit smaller?
+
+The "Seen Transaction:" metrics are not that important. So if its not that easy to implement you can remove it and we will continue without
+
+I have noticed a bad bug in the neighbor list handling. Unfortunately I haven't yet found the cause for it to occur.
+
+On some of me servers, where the ICCR is running the neighbors list gets messed up over time. I noticed that I suddenly had double entries and missing entries of neighbors in the ICCJ.
+When looking at the ICCR.properties file I saw that there where some Neighbor IDs that collided (have the same value), but at the same time seem to have overwritten other IDs, causing double neighbor entries and the missing of other neighbor entries.
+I have attached a screenshot of the problem.
+
+Also I noticed, that when I delete a neighbor, only the IDs behind the "iotaNeighbors=" setting in the ICCR.properties file get deleted. The actual info of the neighbor (iotaNeighbor.key, iotaNeighbor.uri, iotaNeighbor.descr and iotaNeighbor.active) are not getting removed.
+Maybe that has something to do with the Bug?
+
+Fix nbr add and save changes button to not enable until actual nbr is valid
+
+Add prog or load spinner for long runnning operations: install iota, load iota log
 
 Disable server action buttons while loading, then renable
 
 Add ICCR Connection  indicator
 
+not necessary: increase font size
 
 For seen transaction metric in footer:
 The transactions data in IRI log:

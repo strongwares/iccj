@@ -153,8 +153,7 @@ public class MainController implements ActionListener {
         String nbrRefresh = iccSettingsDialog.nbrRefreshTimeTextField.getText();
         String nodeInfoRefresh = iccSettingsDialog.nodeInfoRefreshTimeTextField.getText();
         String iotaDldLink = iccSettingsDialog.iotaDownloadLinkTextField.getText();
-        String iotaDldFile = iccSettingsDialog.iotaDownloadFileTextField.getText();
-        boolean runRefresh = iccSettingsDialog.runRefresh.isSelected();
+                boolean runRefresh = iccSettingsDialog.runRefresh.isSelected();
 
         String errors = "";
         String sep = "";
@@ -184,14 +183,6 @@ public class MainController implements ActionListener {
                 sep = "\n";
             }
         }
-        if(iotaDldFile == null || iotaDldFile.isEmpty()) {
-            isError = true;
-            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
-                    iccSettingsDialog.iotaDownloadFileTextField.getName();
-            if(sep.isEmpty()) {
-                sep = "\n";
-            }
-        }
 
         if(isError) {
             UiUtil.showErrorDialog(localizer.getLocalText("dialogSaveIccErrorTitle"), errors);
@@ -204,7 +195,6 @@ public class MainController implements ActionListener {
         propertySource.setProperty(PropertySource.REFRESH_NBRS_PROP, nbrRefresh);
         propertySource.setProperty(PropertySource.REFRESH_NODEINFO_PROP, nodeInfoRefresh);
         propertySource.setProperty(PropertySource.IOTA_DLD_LINK_PROP, iotaDldLink);
-        propertySource.setProperty(PropertySource.IOTA_DLD_FILENAME_PROP, iotaDldFile);
         propertySource.setProperty(PropertySource.RUN_IOTA_REFRESH_PROP,  String.valueOf(runRefresh).toLowerCase());
 
         propertySource.storeProperties();

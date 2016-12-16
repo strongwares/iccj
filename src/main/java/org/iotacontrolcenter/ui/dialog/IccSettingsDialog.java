@@ -19,7 +19,6 @@ public class IccSettingsDialog extends JDialog {
     public JTextField nbrRefreshTimeTextField;
     public JTextField nodeInfoRefreshTimeTextField;
     public JTextField iotaDownloadLinkTextField;
-    public JTextField iotaDownloadFileTextField;
     public JPanel panel;
     private PropertySource propertySource;
     public JCheckBox runRefresh;
@@ -61,19 +60,11 @@ public class IccSettingsDialog extends JDialog {
 
         JLabel iotaDownloadLink = new JLabel(localizer.getLocalText("fieldLabelIotaDownloadLink") + ":", JLabel.TRAILING);
         panel.add(iotaDownloadLink);
-        iotaDownloadLinkTextField = new JTextField(5);
+        iotaDownloadLinkTextField = new JTextField(20);
         iotaDownloadLinkTextField.setName(localizer.getLocalText("fieldLabelIotaDownloadLink"));
         iotaDownloadLinkTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaDownloadLinkTooltip"));
         iotaDownloadLink.setLabelFor(iotaDownloadLinkTextField);
         panel.add(iotaDownloadLinkTextField);
-
-        JLabel iotaDownloadFile = new JLabel(localizer.getLocalText("fieldLabelIotaDownloadFile") + ":", JLabel.TRAILING);
-        panel.add(iotaDownloadFile);
-        iotaDownloadFileTextField = new JTextField(5);
-        iotaDownloadFileTextField.setName(localizer.getLocalText("fieldLabelIotaDownloadFile"));
-        iotaDownloadFileTextField.setToolTipText(localizer.getLocalText("fieldLabelIotaDownloadFileTooltip"));
-        iotaDownloadFile.setLabelFor(iotaDownloadFileTextField);
-        panel.add(iotaDownloadFileTextField);
 
         JLabel runRefreshLabel = new JLabel(localizer.getLocalText("buttonLabelRunIotaRefresh") + ":");
         panel.add(runRefreshLabel);
@@ -85,7 +76,7 @@ public class IccSettingsDialog extends JDialog {
         panel.add(runRefresh);
 
         SpringUtilities.makeCompactGrid(panel,
-                5, 2, //rows, cols
+                4, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -119,7 +110,6 @@ public class IccSettingsDialog extends JDialog {
         nbrRefreshTimeTextField.setText(propertySource.getString(PropertySource.REFRESH_NBRS_PROP));
         nodeInfoRefreshTimeTextField.setText(propertySource.getString(PropertySource.REFRESH_NODEINFO_PROP));
         iotaDownloadLinkTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_LINK_PROP));
-        iotaDownloadFileTextField.setText(propertySource.getString(PropertySource.IOTA_DLD_FILENAME_PROP));
         runRefresh.setSelected(propertySource.getRunIotaRefresh());
     }
 }

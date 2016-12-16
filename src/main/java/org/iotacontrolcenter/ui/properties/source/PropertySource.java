@@ -40,8 +40,8 @@ public class PropertySource {
     public static final String REFRESH_NODEINFO_PROP = "refreshNodeInfoTime";
     public static final String RUN_IOTA_REFRESH_PROP = "runIotaRefresh";
     public static final String IOTA_DLD_LINK_PROP = "iotaDownloadLink";
-    public static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
-    public static final String WALLET_START_PROP = "iotaDownloadFilename";
+    //public static final String IOTA_DLD_FILENAME_PROP = "iotaDownloadFilename";
+    //public static final String WALLET_START_PROP = "iotaDownloadFilename";
     public static final String SERVERKEYS_PROP = "serverKeys";
 
     private static final String SERVER_LOCAL_KEY_VAL="local";
@@ -109,17 +109,21 @@ public class PropertySource {
         return getString(ICCR_PORT_DEFAULT_PROP);
     }
 
+    /*
     public String getIotaDownloadFilename() {
         return getString(IOTA_DLD_FILENAME_PROP);
     }
+    */
 
     public String getIotaDownloadLink() {
         return getString(IOTA_DLD_LINK_PROP);
     }
 
+    /*
     public String getWalletStartCmd() {
         return getString(WALLET_START_PROP);
     }
+    */
 
     public boolean getRunIotaRefresh() {
         try {

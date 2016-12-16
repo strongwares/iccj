@@ -529,8 +529,6 @@ public class ServerController implements ActionListener, TableModelListener {
         IccrPropertyListDto actionProps = new IccrPropertyListDto();
         actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_LINK_PROP,
                 propertySource.getIotaDownloadLink()));
-        actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_FILENAME_PROP,
-                propertySource.getIotaDownloadFilename()));
 
         InstallIotaWorker worker = new InstallIotaWorker(localizer, serverPanel,  proxy, this,
                                             Constants.IOTA_ACTION_INSTALL, actionProps);

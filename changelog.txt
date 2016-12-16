@@ -124,3 +124,9 @@ Added support for Online status indicator server panel footer
 Changed 
 fieldLabelNeighborRefreshTimeTooltip=Time in seconds refresh IOTA neighbors status (set to 0 or -1 to disable automatic IOTA neighbor refresh)
 
+
+---------------------------
+Version 1.0.3
+
+
+
