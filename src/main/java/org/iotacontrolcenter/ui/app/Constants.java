@@ -5,6 +5,14 @@ public class Constants {
     public static final String IMAGE_ICON_FILENAME_MAIN_APP = "iccj-app-icon";
     public static final String IMAGE_ICON_FILENAME_SERVER_ONLINE = "online-icon";
     public static final String IMAGE_ICON_FILENAME_SERVER_OFFLINE = "offline-icon";
+    public static final String IMAGE_ICON_FILENAME_PLAY_PRESSED = "playPressed.png";
+    public static final String IMAGE_ICON_FILENAME_PLAY_UNPRESSED = "playUnPressed.png";
+    public static final String IMAGE_ICON_FILENAME_PAUSE_PRESSED = "pausePressed.png";
+    public static final String IMAGE_ICON_FILENAME_PAUSE_UNPRESSED = "pauseUnPressed.png";
+    public static final String IMAGE_ICON_FILENAME_GREEN_ADD = "greenAdd.png";
+    public static final String IMAGE_ICON_FILENAME_LEFT_ARROW = "leftArrow.png";
+    public static final String IMAGE_ICON_FILENAME_RIGHT_ARROW = "rightArrow.png";
+    public static final String IMAGE_ICON_FILENAME_BLUE_LOADING = "blueLoading.gif";
 
     public static final String IS_CONNECTED_EVENT = "IS-CONNECTED-EVENT";
 
@@ -54,6 +62,12 @@ public class Constants {
     public static final String NEIGHBOR_PANEL_REMOVE_SELECTED = "nbr-panel-remove-selected";
     public static final String NEIGHBOR_PANEL_ADD_NEW = "nbr-panel-add-new";
 
+    public static final String DIALOG_IOTA_LOG_HEAD = "dialog-iota-log-head";
+    public static final String DIALOG_IOTA_LOG_TAIL = "dialog-iota-log-tail";
+    public static final String DIALOG_IOTA_LOG_HEAD_MORE = "dialog-iota-log-head-more";
+    public static final String DIALOG_IOTA_LOG_TAIL_PLAY = "dialog-iota-log-tail-play";
+    public static final String DIALOG_IOTA_LOG_TAIL_PAUSE = "dialog-iota-log-tail-pause";
+
 
     public static final String SERVER_ACTION_SETTINGS = "svr-action-settings";
     public static final String SERVER_ACTION_INSTALL_IOTA = "svr-action-install-iota";
@@ -67,4 +81,8 @@ public class Constants {
     public static final String SERVER_ACTION_CLEAR_ICCR_EVENTLOG = "svr-action-clear-iccr-eventlog";
     public static final String SERVER_ACTION_ICCR_RUN_IOTA_REFRESH = "svr-action-run-iota-refresh";
     public static final String SERVER_ACTION_IOTA_LOG = "svr-action-iota-log";
+
+    public static final String IOTA_LOG_QP_DIRECTION_TAIL = "tail";
+    public static final String IOTA_LOG_QP_DIRECTION_HEAD = "head";
+    public static final Long IOTA_LOG_QP_NUMLINES_DEFAULT = 500L;
 }

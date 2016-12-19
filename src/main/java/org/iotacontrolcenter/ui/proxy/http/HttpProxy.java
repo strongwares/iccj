@@ -149,17 +149,17 @@ public class HttpProxy {
         return log;
     }
 
-    public List<String> getIotaLog() throws BadResponseException {
-        System.out.println("getIotaLog...");
-        List<String> log = null;
+    public LogLinesResponse getIotaLog(String fileDirection, Long numLines, Long lastFileLength, Long lastFilePosition) throws BadResponseException {
+        System.out.println("getIotaLog(" + fileDirection + ", " + numLines + ", " + lastFilePosition);
+        LogLinesResponse llr = null;
         Response response = null;
         try {
-            response = proxy.getIotaLog();
+            response = proxy.getIotaLog(fileDirection, numLines, lastFileLength, lastFilePosition);
 
             System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
-                log = response.readEntity(List.class);
+                llr = response.readEntity(LogLinesResponse.class);
             }
             else {
                 throw new BadResponseException("getIotaLog",
@@ -190,7 +190,7 @@ public class HttpProxy {
                 response.close();
             }
         }
-        return log;
+        return llr;
     }
 
     public IccrPropertyListDto iccrGetConfig() throws BadResponseException {

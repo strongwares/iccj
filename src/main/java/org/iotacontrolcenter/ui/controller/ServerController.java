@@ -12,6 +12,7 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.iotacontrolcenter.ui.proxy.ServerProxy;
+import org.iotacontrolcenter.ui.timer.RefreshIotaLogTailTimerTask;
 import org.iotacontrolcenter.ui.timer.RefreshIotaNeighborTimerTask;
 import org.iotacontrolcenter.ui.timer.RefreshIotaNodeinfoTimerTask;
 import org.iotacontrolcenter.ui.util.UiUtil;
@@ -35,8 +36,10 @@ public class ServerController implements ActionListener, TableModelListener {
     private List<PropertyChangeListener> listeners = new ArrayList<>();
     private boolean iotaActive = false;
     public Properties iccrProps;
+    public IotaLogDialog iotaLogDialog;
     public java.util.Timer iotaNeighborRefreshTimer;
     public java.util.Timer iotaNodeinfoRefreshTimer;
+    public java.util.Timer iotaLogRefreshTimer;
     public boolean isConnected = false;
     public String name;
     public IccrIotaNeighborsPropertyDto nbrsDto;
@@ -86,6 +89,11 @@ public class ServerController implements ActionListener, TableModelListener {
         });
     }
 
+    public void serverTeardown() {
+        stopRefreshTimers();
+        stopIotaLogTimer();
+    }
+
     private void initialConnect() {
         SwingWorker worker = getServerSettingProperties();
 
@@ -98,7 +106,7 @@ public class ServerController implements ActionListener, TableModelListener {
                         serverActionStatusIota();
                     }
                     if(propertySource.getRunIotaRefresh()) {
-                        startTimers();
+                        startRefreshTimers();
                     }
                 }
             }
@@ -130,15 +138,14 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void updateIotaRefresh() {
-        stopTimers();
+        stopRefreshTimers();
 
         if(propertySource.getRunIotaRefresh()) {
-            startTimers();
+            startRefreshTimers();
         }
     }
 
-    public void stopTimers() {
-        System.out.println(name + " stopTimers");
+    public void stopRefreshTimers() {
         if(iotaNeighborRefreshTimer != null) {
             iotaNeighborRefreshTimer.cancel();
             iotaNeighborRefreshTimer = null;
@@ -149,8 +156,31 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
-    public void startTimers() {
-        System.out.println(name + " startTimers");
+    public void stopIotaLogTimer() {
+        System.out.println(this.name + ", stopIotaLogTimer");
+        if(iotaLogRefreshTimer != null) {
+            iotaLogRefreshTimer.cancel();
+            iotaLogRefreshTimer = null;
+        }
+    }
+
+    public void startIotaLogTimer() {
+        System.out.println(this.name + ", startIotaLogTimer");
+        try {
+            if(iotaLogRefreshTimer == null) {
+                iotaLogRefreshTimer = new java.util.Timer();
+                iotaLogRefreshTimer.schedule(new RefreshIotaLogTailTimerTask(this),
+                        2000,
+                        5000);
+            }
+        }
+        catch(Exception e) {
+            System.out.println(name + " startTimers iota nbrs refresh exception: " + e);
+        }
+    }
+
+    public void startRefreshTimers() {
+        System.out.println(name + " startRefreshTimers");
         try {
             if(iotaNodeinfoRefreshTimer == null) {
                 iotaNodeinfoRefreshTimer = new java.util.Timer();
@@ -261,7 +291,22 @@ public class ServerController implements ActionListener, TableModelListener {
             deleteIccrEventLog();
         }
         else if(action.equals(Constants.SERVER_ACTION_IOTA_LOG)) {
-            getIotaLog();
+             openIotaLogDialog();
+        }
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_HEAD)) {
+            onIotaLogHead();
+        }
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_HEAD_MORE)) {
+            onIotaLogHeadMore();
+        }
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_TAIL)) {
+            onIotaLogTail();
+        }
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_TAIL_PLAY)) {
+            onIotaLogTailPlay();
+        }
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_TAIL_PAUSE)) {
+            onIotaLogTailPause();
         }
         else {
             // TODO: localization
@@ -272,10 +317,10 @@ public class ServerController implements ActionListener, TableModelListener {
 
     public void enableIotaRefresh(boolean enable) {
         if(!enable) {
-            stopTimers();
+            stopRefreshTimers();
         }
         else {
-            startTimers();
+            startRefreshTimers();
         }
 
     }
@@ -357,53 +402,163 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
-    private void getIotaLog() {
-        System.out.println(name + " getIotaLog");
+    public void getIotaLogUpdate(String fileDirection) {
+        System.out.println(name + " getIotaLogUpdate");
 
+        if(iotaLogDialog == null) {
+            return;
+        }
+
+        LogLinesResponse resp = null;
         try {
-            List<String> log = proxy.getIotaLog();
+            resp = proxy.getIotaLog(fileDirection,
+                    Constants.IOTA_LOG_QP_NUMLINES_DEFAULT,
+                    iotaLogDialog.refreshLastFileSize,
+                    iotaLogDialog.refreshLastFilePosition);
 
-            IotaLogDialog dialog = new IotaLogDialog(localizer,
-                    localizer.getLocalText("dialogTitleIotaLog"), this);
-
-            for(String s : log) {
-                //s = s.replaceAll(",","   ");
-                dialog.logText.append(s + "\n");
-            }
-
-            dialog.setLocationRelativeTo(serverPanel);
-
-            dialog.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    super.windowClosed(e);
-                    //ctlr.serverSettingsDialog = null;
+            if (resp.isSuccess()) {
+                for (String s : resp.getLines()) {
+                    iotaLogDialog.logText.append(s + "\n");
                 }
-            });
-
-            dialog.setVisible(true);
+                iotaLogDialog.refreshLastFilePosition =  resp.getLastFilePosition();
+                iotaLogDialog.refreshLastFileSize =  resp.getLastFileSize();
+            }
+            else {
+                System.out.println("getIotaLogTailUpdate: bad response: " + resp.getMsg());
+                serverPanel.addConsoleLogLine(resp.getMsg());
+            }
         }
         catch(BadResponseException bre) {
-            System.out.println("getIotaLog: bad response: " + bre.errMsgkey +
+            System.out.println("getIotaLogUpdate: bad response: " + bre.errMsgkey +
                     ", " + bre.resp.getMsg());
-            /*
-            UiUtil.showErrorDialog(localizer.getLocalText(bre.errMsgkey),
-                    bre.resp.getMsg());
-            */
-
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
         }
         catch(Exception e) {
-            System.out.println("getIotaLog exception from proxy: ");
+            System.out.println("getIotaLogUpdate exception from proxy: ");
             e.printStackTrace();
-
-            /*
-            UiUtil.showErrorDialog(localizer.getLocalText("installIotaError"),
-                    localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
-
-            serverPanel.addConsoleLogLine(e.getLocalizedMessage());
-            */
         }
+    }
+
+    private void openIotaLogDialog() {
+        System.out.println(name + " openIotaLogDialog");
+
+        startIotaLogTimer();
+
+        AbstractSwingWorker worker = new AbstractSwingWorker(this) {
+            @Override
+            public Void runIt() {
+                iotaLogDialog = new IotaLogDialog(localizer,
+                        localizer.getLocalText("dialogTitleIotaLog"), ctlr);
+                iotaLogDialog.setLocationRelativeTo(serverPanel);
+
+                iotaLogDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        super.windowClosed(e);
+                        stopIotaLogTimer();
+                        iotaLogDialog = null;
+                    }
+                });
+                iotaLogDialog.setVisible(true);
+                return null;
+            }
+        };
+        worker.execute();
+    }
+
+    private void onIotaLogHead() {
+        System.out.println(name + " onIotaLogHead");
+        if(iotaLogDialog == null) {
+            System.out.println(name + " onIotaLogHead, dialog not found");
+            return;
+        }
+
+        iotaLogDialog.logText.setText("");
+        iotaLogDialog.headAdd.setEnabled(true);
+
+        iotaLogDialog.tail.setSelected(false);
+        iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_UNPRESSED));
+        iotaLogDialog.tailPlay.setEnabled(false);
+
+        iotaLogDialog.tailPause.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PAUSE_UNPRESSED));
+        iotaLogDialog.tailPause.setEnabled(false);
+
+        iotaLogDialog.refreshLastFileSize = null;
+        iotaLogDialog.refreshLastFilePosition = null;
+
+        doIotaLogHead();
+    }
+
+    // Tail clicked when in head
+    private void onIotaLogTail() {
+        System.out.println(name + " onIotaLogTail");
+        if(iotaLogDialog == null) {
+            System.out.println(name + " onIotaLogTail, dialog not found");
+            return;
+        }
+        iotaLogDialog.logText.setText("");
+
+        iotaLogDialog.head.setSelected(false);
+        iotaLogDialog.headAdd.setEnabled(false);
+
+        iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_PRESSED));
+        iotaLogDialog.tailPlay.setEnabled(true);
+        iotaLogDialog.tailPlay.setSelected(true);
+
+        iotaLogDialog.tailPause.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PAUSE_UNPRESSED));
+        iotaLogDialog.tailPause.setEnabled(true);
+        iotaLogDialog.tailPause.setSelected(false);
+
+        iotaLogDialog.refreshLastFileSize = null;
+        iotaLogDialog.refreshLastFilePosition = null;
+
+        startIotaLogTimer();
+    }
+
+    private void onIotaLogHeadMore() {
+        System.out.println(name + " onIotaLogHeadMore");
+        if(iotaLogDialog == null) {
+            System.out.println(name + " onIotaLogHead, dialog not found");
+            return;
+        }
+        doIotaLogHeadMore();
+    }
+
+    // Play clicked when already in play
+    private void onIotaLogTailPlay() {
+        System.out.println(name + " onIotaLogTailPlay");
+        if(iotaLogDialog == null) {
+            System.out.println(name + " onIotaLogHead, dialog not found");
+            return;
+        }
+        if(iotaLogDialog.tailPlay.isSelected()) {
+            return;
+        }
+        iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_PRESSED));
+        iotaLogDialog.tailPlay.setSelected(true);
+
+        iotaLogDialog.tailPause.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PAUSE_UNPRESSED));
+        iotaLogDialog.tailPause.setSelected(false);
+
+        startIotaLogTimer();
+    }
+
+    private void onIotaLogTailPause() {
+        System.out.println(name + " onIotaLogTailPause");
+        if(iotaLogDialog == null) {
+            System.out.println(name + " onIotaLogHead, dialog not found");
+            return;
+        }
+        if(iotaLogDialog.tailPause.isSelected()) {
+            return;
+        }
+        iotaLogDialog.tailPause.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PAUSE_PRESSED));
+        iotaLogDialog.tailPause.setSelected(true);
+
+        iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_UNPRESSED));
+        iotaLogDialog.tailPlay.setSelected(false);
+
+        doIotaLogTailPause();
     }
 
     private boolean nbrPanelRemoveSelected() {
@@ -430,6 +585,44 @@ public class ServerController implements ActionListener, TableModelListener {
         serverPanel.neighborPanel.save.setEnabled(true);
 
         return true;
+    }
+
+    private void doIotaLogHead() {
+        System.out.println(this.name + ", doIotaLogHead");
+        stopIotaLogTimer();
+
+        AbstractSwingWorker worker = new AbstractSwingWorker(this) {
+            @Override
+            public Void runIt() {
+                ctlr.getIotaLogUpdate(Constants.IOTA_LOG_QP_DIRECTION_HEAD);
+                return null;
+            }
+        };
+        worker.execute();
+    }
+
+    private void doIotaLogHeadMore() {
+        System.out.println(this.name + ", doIotaLogHeadMore");
+
+        AbstractSwingWorker worker = new AbstractSwingWorker(this) {
+            @Override
+            public Void runIt() {
+                ctlr.getIotaLogUpdate(Constants.IOTA_LOG_QP_DIRECTION_HEAD);
+                return null;
+            }
+        };
+        worker.execute();
+    }
+
+    private void startIotaLogTailPlay() {
+        System.out.println(this.name + ", doIotaLogTailPlay");
+
+        startIotaLogTai
+    }
+
+    private void doIotaLogTailPause() {
+        System.out.println(this.name + ", doIotaLogTailPause");
+        stopIotaLogTimer();
     }
 
     private boolean nbrPanelAddNew() {

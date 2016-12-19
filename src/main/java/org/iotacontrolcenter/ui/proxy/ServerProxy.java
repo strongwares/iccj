@@ -1,9 +1,6 @@
 package org.iotacontrolcenter.ui.proxy;
 
-import org.iotacontrolcenter.dto.ActionResponse;
-import org.iotacontrolcenter.dto.IccrIotaNeighborsPropertyDto;
-import org.iotacontrolcenter.dto.IccrPropertyDto;
-import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.*;
 import org.iotacontrolcenter.ui.proxy.http.HttpProxy;
 
 import java.util.List;
@@ -32,8 +29,8 @@ public class ServerProxy {
         httpProxy.deleteIccrEventLog();
     }
 
-    public List<String> getIotaLog() throws BadResponseException {
-        return httpProxy.getIotaLog();
+    public LogLinesResponse getIotaLog(String fileDirection, Long numLines, Long lastFileLength, Long lastFilePosition) throws BadResponseException {
+        return httpProxy.getIotaLog(fileDirection, numLines, lastFileLength, lastFilePosition);
     }
 
     public Properties iccrGetConfig() throws BadResponseException {

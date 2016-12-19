@@ -68,7 +68,7 @@ public class ServerTabPanel extends JTabbedPane {
             throw new IllegalStateException("Remove server tab: panel for server name " + name + " not found");
         }
         ServerPanel serverPanel = ((ServerPanel) panel);
-        serverPanel.ctlr.stopTimers();
+        serverPanel.ctlr.serverTeardown();
         remove(panel);
 
         /*

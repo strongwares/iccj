@@ -47,9 +47,16 @@ public class OpenServerDialog extends JDialog  {
         serverListModel = new DefaultListModel<>();
         serverList = new JList<>(serverListModel);
 
+        int idToSelect = -1;
         for(String id : propertySource.getServerIds()) {
             System.out.println("adding server id " + id);
+            if(idToSelect < 0) {
+                idToSelect++;
+            }
             serverListModel.addElement(propertySource.getServerName(id));
+        }
+        if(idToSelect >= 0) {
+            serverList.setSelectedIndex(idToSelect);
         }
 
         serverPanel = new JScrollPane(serverList);
@@ -71,6 +78,10 @@ public class OpenServerDialog extends JDialog  {
         openServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_OPEN);
         openServer.addActionListener(ctlr);
         serverActionPanel.add(openServer);
+
+        if(idToSelect >= 0) {
+            getRootPane().setDefaultButton(openServer);
+        }
 
         editServer = new JButton(localizer.getLocalText("buttonLabelEdit"));
         editServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_EDIT);

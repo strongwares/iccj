@@ -21,9 +21,12 @@ public abstract class ActionResponseAbstractApiWorker extends SwingWorker<Object
     public ServerPanel serverPanel;
     public ServerProxy proxy;
 
-    public ActionResponseAbstractApiWorker(Localizer localizer, ServerPanel serverPanel, ServerProxy proxy,
+    public ActionResponseAbstractApiWorker(Localizer localizer,
+                                           ServerPanel serverPanel,
+                                           ServerProxy proxy,
                                            ServerController ctlr,
-                                           String action, IccrPropertyListDto actionProps) {
+                                           String action,
+                                           IccrPropertyListDto actionProps) {
         super();
         this.localizer = localizer;
         this.serverPanel = serverPanel;

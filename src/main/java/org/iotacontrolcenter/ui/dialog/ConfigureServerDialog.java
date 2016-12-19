@@ -113,6 +113,8 @@ public class ConfigureServerDialog extends JDialog {
         save.addActionListener(ctlr);
         buttonPanel.add(save);
 
+        getRootPane().setDefaultButton(save);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
         if(!isAdd && serverProps != null) {
