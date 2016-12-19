@@ -293,14 +293,11 @@ public class ServerController implements ActionListener, TableModelListener {
         else if(action.equals(Constants.SERVER_ACTION_IOTA_LOG)) {
              openIotaLogDialog();
         }
-        else if(action.equals(Constants.DIALOG_IOTA_LOG_HEAD)) {
-            onIotaLogHead();
+        else if(action.equals(Constants.DIALOG_IOTA_LOG_DIRECTION_CHOOSER)) {
+            onIotaLogDirectionChooser();
         }
         else if(action.equals(Constants.DIALOG_IOTA_LOG_HEAD_MORE)) {
             onIotaLogHeadMore();
-        }
-        else if(action.equals(Constants.DIALOG_IOTA_LOG_TAIL)) {
-            onIotaLogTail();
         }
         else if(action.equals(Constants.DIALOG_IOTA_LOG_TAIL_PLAY)) {
             onIotaLogTailPlay();
@@ -466,6 +463,20 @@ public class ServerController implements ActionListener, TableModelListener {
         worker.execute();
     }
 
+    private void onIotaLogDirectionChooser() {
+        String choice = (String)iotaLogDialog.dirChooser.getSelectedItem();
+        if(iotaLogDialog.headChoice.equals(choice)) {
+            onIotaLogHead();
+        }
+        else if(iotaLogDialog.tailChoice.equals(choice)) {
+            onIotaLogTail();
+        }
+        else {
+            System.out.println("Unrecognized choice: " + choice);
+        }
+    }
+
+    // Head selected when in tail
     private void onIotaLogHead() {
         System.out.println(name + " onIotaLogHead");
         if(iotaLogDialog == null) {
@@ -476,7 +487,7 @@ public class ServerController implements ActionListener, TableModelListener {
         iotaLogDialog.logText.setText("");
         iotaLogDialog.headAdd.setEnabled(true);
 
-        iotaLogDialog.tail.setSelected(false);
+        //iotaLogDialog.tail.setSelected(false);
         iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_UNPRESSED));
         iotaLogDialog.tailPlay.setEnabled(false);
 
@@ -489,7 +500,7 @@ public class ServerController implements ActionListener, TableModelListener {
         doIotaLogHead();
     }
 
-    // Tail clicked when in head
+    // Tail selected when in head
     private void onIotaLogTail() {
         System.out.println(name + " onIotaLogTail");
         if(iotaLogDialog == null) {
@@ -498,7 +509,7 @@ public class ServerController implements ActionListener, TableModelListener {
         }
         iotaLogDialog.logText.setText("");
 
-        iotaLogDialog.head.setSelected(false);
+        //iotaLogDialog.head.setSelected(false);
         iotaLogDialog.headAdd.setEnabled(false);
 
         iotaLogDialog.tailPlay.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_PLAY_PRESSED));
@@ -521,7 +532,15 @@ public class ServerController implements ActionListener, TableModelListener {
             System.out.println(name + " onIotaLogHead, dialog not found");
             return;
         }
-        doIotaLogHeadMore();
+
+        AbstractSwingWorker worker = new AbstractSwingWorker(this) {
+            @Override
+            public Void runIt() {
+                ctlr.doIotaLogHeadMore();
+                return null;
+            }
+        };
+        worker.execute();
     }
 
     // Play clicked when already in play
@@ -612,12 +631,6 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         };
         worker.execute();
-    }
-
-    private void startIotaLogTailPlay() {
-        System.out.println(this.name + ", doIotaLogTailPlay");
-
-        startIotaLogTai
     }
 
     private void doIotaLogTailPause() {

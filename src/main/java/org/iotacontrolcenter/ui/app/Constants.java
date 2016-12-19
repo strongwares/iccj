@@ -62,8 +62,7 @@ public class Constants {
     public static final String NEIGHBOR_PANEL_REMOVE_SELECTED = "nbr-panel-remove-selected";
     public static final String NEIGHBOR_PANEL_ADD_NEW = "nbr-panel-add-new";
 
-    public static final String DIALOG_IOTA_LOG_HEAD = "dialog-iota-log-head";
-    public static final String DIALOG_IOTA_LOG_TAIL = "dialog-iota-log-tail";
+    public static final String DIALOG_IOTA_LOG_DIRECTION_CHOOSER = "dialog-iota-log-dir-chooser";
     public static final String DIALOG_IOTA_LOG_HEAD_MORE = "dialog-iota-log-head-more";
     public static final String DIALOG_IOTA_LOG_TAIL_PLAY = "dialog-iota-log-tail-play";
     public static final String DIALOG_IOTA_LOG_TAIL_PAUSE = "dialog-iota-log-tail-pause";

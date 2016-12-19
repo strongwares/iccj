@@ -605,6 +605,75 @@ The "Seen Transaction:" metrics are not that important. So if its not that easy 
 
 checked in
 
+
+Fix IRI log loading:
+
+New button control bar on IOTA Log dialog
+
+new control bar:
+icons:
+x    up
+x    down
+d    playPressed
+d    pausePressed
+d    pauseUnpressed
+
+d head  more   tail play pause
+      +           >    ||
+
+d head checkbox button
+when head:
+     play button is more
+
+d tail checkbox button
+when tail:
+     play button is play
+     when playing change to pause
+     when paused change to play
+
+d query params:
+      fileDirection=head or tail
+      lastFilePosition=0 or last value from server
+      numLines=500
+
+d response obj:
+      support new LogLinesResponse
+
+if head => stop timer
+if head more => get next 500
+repeated query:
+      if tail and play => timer
+      if pause top timer
+
+
+
+New message text:
+dialogIotaLogDirectionTooltip=Select the direction (head or tail) to show IOTA log file lines
+dialogIotaLogTail=Tail
+dialogIotaLogHead=Head
+dialogIotaLogTailTooltip=Show IOTA log lines from the tail of the IOTA log file
+dialogIotaLogHeadTooltip=Show IOTA log lines from the head of the IOTA log file
+dialogIotaLogTailPlayTooltip=Play: automatically refresh and display new IOTA log lines
+dialogIotaLogTailPauseTooltip=Pause: pause refreshing new IOTA log lines
+dialogIotaLogHeadMoreTooltip=Display another chunk of IOTA log lines from the head of the IOTA log file
+
+
+
+fix:
+d- on first open, doesn't start tail timer: open dialog in worker bkground
+d- on tail play, repeatedly returns and adds same block
+d- on head, doesn't get anything
+d- on head more, doesn't get anything
+d- on switch to tail, clear prev positions
+d- have tail timer start faster
+
+checked in
+
+Do head add on swing worker
+Use combo box chooser between head and tail
+
+checked in
+
 todo:
 I have noticed a bad bug in the neighbor list handling. Unfortunately I haven't yet found the cause for it to occur.
 
