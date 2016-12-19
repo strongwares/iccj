@@ -6,6 +6,7 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -47,6 +48,9 @@ public class IotaLogDialog extends JDialog {
         logText.setBackground(Color.black);
         logText.setForeground(Color.yellow);
         logText.setEditable(false);
+
+        DefaultCaret caret = (DefaultCaret)logText.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         JScrollPane scrollPane = new JScrollPane(logText);
         scrollPane.getVerticalScrollBar().setUnitIncrement(50);

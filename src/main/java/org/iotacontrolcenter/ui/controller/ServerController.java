@@ -216,15 +216,22 @@ public class ServerController implements ActionListener, TableModelListener {
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        /*
         int changeType = e.getType();
         int row = e.getFirstRow();
         int col = e.getColumn();
 
+        boolean enableSave = false;
+
         if(changeType == TableModelEvent.DELETE) {
             System.out.println(name + " server nbr table change event " + changeType +
                     ", deleted row: " + row);
+            enableSave = true;
         }
+        else if(col >= 3) {
+            // Only enabling save when user editable column has been changed
+            enableSave = true;
+        }
+        /*
         else if(changeType == TableModelEvent.INSERT) {
             System.out.println(name + " Server nbr table change event " + changeType +
                     ", inserted row: " + row);
@@ -240,8 +247,9 @@ public class ServerController implements ActionListener, TableModelListener {
             System.out.println(name + " updated nbr: " + nbr);
         }
         */
-
-        serverPanel.neighborPanel.save.setEnabled(true);
+        if(enableSave) {
+            serverPanel.neighborPanel.save.setEnabled(true);
+        }
     }
 
     @Override
@@ -654,13 +662,6 @@ public class ServerController implements ActionListener, TableModelListener {
         nbr.setActive(true);
         nbr.setKey(propertySource.getNowDateTimestamp());
         String uri = "udp://0.0.0.0";
-        /*
-        nbr.setScheme("udp");
-        nbr.setIp("0.0.0.0");
-        if(iccrProps !=  null && !iccrProps.getProperty("iotaPortNumber").isEmpty()) {
-            nbr.setPort(Integer.valueOf(iccrProps.getProperty("iotaPortNumber")));
-        }
-        */
 
         if(iccrProps !=  null && !iccrProps.getProperty("iotaPortNumber").isEmpty()) {
             uri += ":" + iccrProps.getProperty("iotaPortNumber");
@@ -676,42 +677,47 @@ public class ServerController implements ActionListener, TableModelListener {
 
     private void nbrPanelSave() {
         boolean isSuccess = false;
-
-        /*
-        if(nbrToAdd.isEmpty() && nbrToRemove.isEmpty()) {
-            UiUtil.showErrorDialog(localizer.getLocalText("dialogNbrNoChangesTitle"),
-                    localizer.getLocalText("dialogNbrErrorNothingToSaveMsg"));
-            return false;
-        }
-        */
         IccrIotaNeighborsPropertyDto nbrs = new IccrIotaNeighborsPropertyDto();
+
+        Properties seenNbrs = new Properties();
 
         String errors = "";
         String sep = "";
+        String id;
+        String uri;
         for(NeighborDto nbr : serverPanel.neighborPanel.neighborModel.nbrs) {
             System.out.println(name + " saving nbr: " + nbr);
-            if(nbr.getUri() == null || nbr.getUri().isEmpty()) {
-                // nbr.getIp().equals("0.0.0.0") ) {
-                //!UiUtil.isValidIpV4(nbr.getIp())) {
+
+            id = nbr.getKey();
+            uri = nbr.getUri();
+
+            if(uri == null || uri.isEmpty()) {
                 errors += sep + localizer.getLocalText("neighborTableIpError");
                 if(sep.isEmpty()) {
                     sep = "\n";
                 }
+                continue;
             }
-            /*
-            if(nbr.getScheme() == null || nbr.getScheme().isEmpty()) {
-                errors += sep + localizer.getLocalText("neighborTableSchemeError");
+
+            if(seenNbrs.containsKey(id)) {
+                System.out.println("skipping neighbor already seen ID: " + nbr);
+                errors += sep + localizer.getLocalText("neighborTableDuplicateNbrIdError");
                 if(sep.isEmpty()) {
                     sep = "\n";
                 }
+                continue;
             }
-            if(nbr.getPort() <= 0) {
-                errors += sep + localizer.getLocalText("neighborTablePortError");
+            seenNbrs.setProperty(id, "true");
+            if(seenNbrs.containsKey(uri)) {
+                System.out.println("skipping neighbor already seen URI: " + nbr);
+                errors += sep + localizer.getLocalText("neighborTableDuplicateNbrError");
                 if(sep.isEmpty()) {
                     sep = "\n";
                 }
+                continue;
             }
-            */
+            seenNbrs.setProperty(uri, "true");
+
             if(nbr.getDescr() == null) {
                 nbr.setDescr("");
             }
@@ -719,7 +725,7 @@ public class ServerController implements ActionListener, TableModelListener {
         };
 
         if(!errors.isEmpty()) {
-            UiUtil.showErrorDialog("neighborSaveErrorTitle", errors);
+            UiUtil.showErrorDialog(localizer.getLocalText("neighborSaveErrorTitle"), errors);
             return;
         }
 

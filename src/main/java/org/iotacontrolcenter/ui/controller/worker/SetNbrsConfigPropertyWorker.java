@@ -22,8 +22,6 @@ public class SetNbrsConfigPropertyWorker extends ObjectAbstractApiWorker {
 
     @Override
     public Object doInBackground() {
-        System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker do...");
-
         try {
             proxy.iccrSetNbrsConfigProperty(nbrs);
         }
@@ -38,14 +36,12 @@ public class SetNbrsConfigPropertyWorker extends ObjectAbstractApiWorker {
 
     @Override
     protected void done() {
-        System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker done");
-
         Object rval = null;
         try {
             rval = get();
         }
         catch(Exception e) {
-            System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker done: exception from get: ");
+            System.out.println(ctlr.name + " SetNbrsConfigPropertyWorker done,  exception: ");
             e.printStackTrace();
         }
 

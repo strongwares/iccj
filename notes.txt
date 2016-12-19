@@ -605,6 +605,8 @@ The "Seen Transaction:" metrics are not that important. So if its not that easy 
 
 checked in
 
+-------
+Sun: 12/18/2016
 
 Fix IRI log loading:
 
@@ -657,6 +659,8 @@ dialogIotaLogTailPlayTooltip=Play: automatically refresh and display new lines f
 dialogIotaLogTailPauseTooltip=Pause: pause refreshing new IOTA log lines
 dialogIotaLogHeadMoreTooltip=Display more IOTA log lines from the head of the IOTA log file
 serverFooterIccrNotConnectedTooltip=Not connected to ICCR, IOTA status is unknown
+neighborTableDuplicateNbrIdError=That neighbor ID already exists
+neighborTableDuplicateNbrError=That neighbor already exists
 
 
 fix:
@@ -680,22 +684,18 @@ Removed Start Wallet server action button.
 
 checked in
 
+Added error checking for duplicate neighbor ID values.
+Added error checking for duplicate neighbor URI values.
+
+Fixed neighbor table add, remove, and save operation to enable save button.
+
+Add load spinner for long runnning install iota operation.
+
+Released version 1.0.3
+
+checked in
+
 todo:
-I have noticed a bad bug in the neighbor list handling. Unfortunately I haven't yet found the cause for it to occur.
-
-On some of me servers, where the ICCR is running the neighbors list gets messed up over time. I noticed that I suddenly had double entries and missing entries of neighbors in the ICCJ.
-When looking at the ICCR.properties file I saw that there where some Neighbor IDs that collided (have the same value), but at the same time seem to have overwritten other IDs, causing double neighbor entries and the missing of other neighbor entries.
-I have attached a screenshot of the problem.
-
-Also I noticed, that when I delete a neighbor, only the IDs behind the "iotaNeighbors=" setting in the ICCR.properties file get deleted. The actual info of the neighbor (iotaNeighbor.key, iotaNeighbor.uri, iotaNeighbor.descr and iotaNeighbor.active) are not getting removed.
-Maybe that has something to do with the Bug?
-
-Add prog or load spinner for long runnning operations: install iota
-
-Disable server action buttons while loading, then renable
-
-Fix nbr add and save changes button to not enable until actual nbr is valid
-
 not necessary: increase font size
 
 For seen transaction metric in footer:
@@ -717,10 +717,6 @@ Confirmed transactions = 24790
 
 Add nbr tbl col sorting
 
-Add auto tail of IRI log with longpoll feed to icc when iri log is open
-
-IOTA log takes a long time to load if it is really big
-
 Create a install-icc script:
 cd /opt
 sudo unzip
@@ -728,26 +724,12 @@ ask for user
 ask for group
 chown -R
 
-
-
-
 validate that no scheme is on server address  property
-
-set footer online
 
 Discovery of existing IOTA nodes:
 if not in table: add?
 
 button to clear console log?
-
-don't enable nbr save changes until they add/remove/edit?
-
-
-Finish change log
-Make release of 1.0.1
-Make patch
-Upload to g drive
-Msg Pascal
 
 doc how to use wget and curl to execute iccr api with header
 

@@ -5,6 +5,7 @@ import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.dialog.SpringUtilities;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ public class ServerActionPanel extends JPanel {
     private JButton deleteIotaDb;
     private JButton deleteIota;
     private JButton eventLog;
-    private JButton installIota;
+    public JButton installIota;
     private JPanel internalPanel;
     private JButton iotaLog;
     private Localizer localizer;
@@ -120,5 +121,15 @@ public class ServerActionPanel extends JPanel {
 
         add(internalPanel);
         add(Box.createVerticalGlue());
+    }
+
+    public void setDownloadActive(boolean isActive) {
+        installIota.setEnabled(!isActive);
+        if(isActive) {
+            installIota.setIcon(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_BLUE_LOADING));
+        }
+        else {
+            installIota.setIcon(null);
+        }
     }
 }

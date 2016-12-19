@@ -19,8 +19,16 @@ public class InstallIotaWorker extends ActionResponseAbstractApiWorker {
     }
 
     @Override
+    public Object doInBackground() {
+        ctlr.serverPanel.serverActionPanel.setDownloadActive(true);
+        return super.doInBackground();
+    }
+
+    @Override
     protected void done() {
         System.out.println(ctlr.name + " InstallIotaWorker done");
+
+        ctlr.serverPanel.serverActionPanel.setDownloadActive(false);
 
         Object rval = null;
         try {

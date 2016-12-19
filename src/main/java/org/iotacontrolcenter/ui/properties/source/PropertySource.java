@@ -63,7 +63,7 @@ public class PropertySource {
     private Properties _props;
     private String osName;
     private PropertiesConfiguration propWriter;
-    private DateTimeFormatter ymdhmsFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private DateTimeFormatter ymdhmsFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
     private Map<String, Properties> servers;
 
     private PropertySource() {
