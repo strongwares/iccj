@@ -653,10 +653,10 @@ dialogIotaLogTail=Tail
 dialogIotaLogHead=Head
 dialogIotaLogTailTooltip=Show IOTA log lines from the tail of the IOTA log file
 dialogIotaLogHeadTooltip=Show IOTA log lines from the head of the IOTA log file
-dialogIotaLogTailPlayTooltip=Play: automatically refresh and display new IOTA log lines
+dialogIotaLogTailPlayTooltip=Play: automatically refresh and display new lines from the tail of the IOTA log 
 dialogIotaLogTailPauseTooltip=Pause: pause refreshing new IOTA log lines
-dialogIotaLogHeadMoreTooltip=Display another chunk of IOTA log lines from the head of the IOTA log file
-
+dialogIotaLogHeadMoreTooltip=Display more IOTA log lines from the head of the IOTA log file
+serverFooterIccrNotConnectedTooltip=Not connected to ICCR, IOTA status is unknown
 
 
 fix:
@@ -674,6 +674,12 @@ Use combo box chooser between head and tail
 
 checked in
 
+Added question mark icon to indicate status when not connected to ICCR
+
+Removed Start Wallet server action button.
+
+checked in
+
 todo:
 I have noticed a bad bug in the neighbor list handling. Unfortunately I haven't yet found the cause for it to occur.
 
@@ -684,13 +690,11 @@ I have attached a screenshot of the problem.
 Also I noticed, that when I delete a neighbor, only the IDs behind the "iotaNeighbors=" setting in the ICCR.properties file get deleted. The actual info of the neighbor (iotaNeighbor.key, iotaNeighbor.uri, iotaNeighbor.descr and iotaNeighbor.active) are not getting removed.
 Maybe that has something to do with the Bug?
 
-Fix nbr add and save changes button to not enable until actual nbr is valid
-
-Add prog or load spinner for long runnning operations: install iota, load iota log
+Add prog or load spinner for long runnning operations: install iota
 
 Disable server action buttons while loading, then renable
 
-Add ICCR Connection  indicator
+Fix nbr add and save changes button to not enable until actual nbr is valid
 
 not necessary: increase font size
 

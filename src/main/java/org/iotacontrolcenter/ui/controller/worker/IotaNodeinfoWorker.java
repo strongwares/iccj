@@ -23,7 +23,7 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
 
     @Override
     protected void done() {
-        System.out.println(ctlr.name + " " + action + " done");
+        //System.out.println(ctlr.name + " " + action + " done");
 
         Object rval = null;
         try {
@@ -62,6 +62,8 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
 
+            ctlr.setIotaActiveUnknown();
+
             //UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
             //        bre.resp.getMsg());
         }
@@ -75,6 +77,7 @@ public class IotaNodeinfoWorker extends ActionResponseAbstractApiWorker {
             //UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("getIotaNodeinfoError"),
             //        localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
+            ctlr.setIotaActiveUnknown();
         }
         else if (resp != null) {
             String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_GET_NODEINFO, resp);

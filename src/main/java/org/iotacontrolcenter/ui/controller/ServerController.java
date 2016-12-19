@@ -103,7 +103,7 @@ public class ServerController implements ActionListener, TableModelListener {
                 if(state == SwingWorker.StateValue.DONE) {
                     if (isConnected) {
                         serverActionGetConfigNbrsList();
-                        serverActionStatusIota();
+                        //serverActionStatusIota();
                     }
                     if(propertySource.getRunIotaRefresh()) {
                         startRefreshTimers();
@@ -115,10 +115,13 @@ public class ServerController implements ActionListener, TableModelListener {
 
     public void setIotaActive(boolean active) {
         boolean wasActive = this.iotaActive;
-        boolean changed = wasActive != active;
         this.iotaActive = active;
-
         firePropertyChange(Constants.IS_CONNECTED_EVENT, wasActive, active);
+    }
+
+    public void setIotaActiveUnknown() {
+        this.iotaActive = false;
+        firePropertyChange(Constants.IS_CONNECTED_UNKNOWN_EVENT, false, true);
     }
 
     public void setConnected(boolean connected) {
@@ -130,6 +133,7 @@ public class ServerController implements ActionListener, TableModelListener {
             System.out.println(this.name + " connect state changed, isConnected: " + connected);
             if (connected) {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIsConnectedToIccr"));
+                serverActionStatusIota();
             }
             else {
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogNotConnectedToIccr"));
@@ -438,6 +442,11 @@ public class ServerController implements ActionListener, TableModelListener {
 
     private void openIotaLogDialog() {
         System.out.println(name + " openIotaLogDialog");
+
+        if(iotaLogDialog != null) {
+            iotaLogDialog.toFront();
+            return;
+        }
 
         startIotaLogTimer();
 

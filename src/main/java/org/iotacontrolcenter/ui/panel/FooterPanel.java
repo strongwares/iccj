@@ -18,6 +18,7 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
     private Localizer localizer;
     private ImageIcon offLineIcon;
     private ImageIcon onLineIcon;
+    private ImageIcon unknownIcon;
     public JLabel onLineLabel;
     public String milestonesBase;
     public JLabel milestonesLabel;
@@ -41,12 +42,20 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
         if(e.getPropertyName().equals(Constants.IS_CONNECTED_EVENT)) {
             setIsConnected((Boolean)e.getNewValue());
         }
+        else if(e.getPropertyName().equals(Constants.IS_CONNECTED_UNKNOWN_EVENT)) {
+            setConnectionUnknown();
+        }
     }
 
     public void dataUpdate(IotaGetNodeInfoResponseDto nodeInfo) {
         milestonesLabel.setText(milestonesBase + nodeInfo.getLatestMilestoneIndex());
         solidMilestonesLabel.setText(solidMilestonesBase + nodeInfo.getLatestSolidSubtangleMilestoneIndex());
         //seenTransactionsLabel.setText(seenTransactionsBase + nodeInfo.getTransactionsToRequest());
+    }
+
+    private void setConnectionUnknown() {
+        onLineLabel.setToolTipText(localizer.getLocalText("serverFooterIccrNotConnectedTooltip"));
+        onLineLabel.setIcon(getUnknownIcon());
     }
 
     private void setIsConnected(boolean isConnected) {
@@ -67,6 +76,13 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
         return onLineIcon;
     }
 
+    private ImageIcon getUnknownIcon() {
+        if(unknownIcon == null) {
+            unknownIcon = UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_HELP);
+        }
+        return unknownIcon;
+    }
+
     private ImageIcon getOfflineIcon() {
         if(offLineIcon == null) {
             offLineIcon = UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_SERVER_OFFLINE);
@@ -81,7 +97,8 @@ public class FooterPanel extends JPanel implements PropertyChangeListener {
 
         onLineLabel = new JLabel(localizer.getLocalText("labelTextFooterOnline") + ":", null, JLabel.CENTER);
         onLineLabel.setHorizontalTextPosition(JLabel.LEFT);
-        setIsConnected(false);
+        //setIsConnected(false);
+        setConnectionUnknown();
         add(onLineLabel);
 
         add(Box.createHorizontalGlue());

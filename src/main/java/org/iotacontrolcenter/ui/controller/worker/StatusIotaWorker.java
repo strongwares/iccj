@@ -61,7 +61,8 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
 
-            ctlr.setIotaActive(false);
+            ctlr.setIotaActiveUnknown();
+            //ctlr.setIotaActive(false);
 
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
                     bre.resp.getMsg());
@@ -73,7 +74,8 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText("iccrApiException"));
             serverPanel.addConsoleLogLine(exc.getLocalizedMessage());
 
-            ctlr.setIotaActive(false);
+            ctlr.setIotaActiveUnknown();
+            //ctlr.setIotaActive(false);
 
             UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("statusIotaError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());

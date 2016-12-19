@@ -22,13 +22,13 @@ public class ServerConsoleLogPanel extends JPanel {
     }
 
     private void init() {
-        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5),
                 BorderFactory.createRaisedBevelBorder()));
 
         JPanel p1 = new JPanel();
         //p1.setBackground(Color.gray);
         p1.setLayout(new BorderLayout());
-        p1.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        p1.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
 
         JLabel consoleLogLabel = new JLabel(localizer.getLocalText("labelTextConsoleLog") + ":");
         consoleLogLabel.setAlignmentX(Component.LEFT_ALIGNMENT);

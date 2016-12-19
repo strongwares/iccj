@@ -13,8 +13,10 @@ public class Constants {
     public static final String IMAGE_ICON_FILENAME_LEFT_ARROW = "leftArrow.png";
     public static final String IMAGE_ICON_FILENAME_RIGHT_ARROW = "rightArrow.png";
     public static final String IMAGE_ICON_FILENAME_BLUE_LOADING = "blueLoading.gif";
+    public static final String IMAGE_ICON_FILENAME_HELP = "helpIcon.png";
 
     public static final String IS_CONNECTED_EVENT = "IS-CONNECTED-EVENT";
+    public static final String IS_CONNECTED_UNKNOWN_EVENT = "IS-CONNECTED-UNKNOWN-EVENT";
 
     public static final String IOTA_ACTION_INSTALL = "install";
     public static final String IOTA_ACTION_START = "start";

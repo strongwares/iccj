@@ -432,11 +432,11 @@ public class HttpProxy {
                 actionProps = new IccrPropertyListDto();
             }
 
-            System.out.println("actionProps: " + actionProps);
+            //System.out.println("actionProps: " + actionProps);
 
             response = proxy.doIotaAction(action, actionProps);
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() != HttpStatus.SC_OK) {
 

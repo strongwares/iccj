@@ -70,6 +70,7 @@ public class ServerActionPanel extends JPanel {
         stopIota.addActionListener(ctlr);
         internalPanel.add(stopIota);
 
+        /*
         startWallet = new JButton(localizer.getLocalText("buttonLabelStartWallet"));
         startWallet.setToolTipText(localizer.getLocalText("buttonLabelStartWalletTooltip"));
         startWallet.setBackground(Color.blue);
@@ -78,6 +79,7 @@ public class ServerActionPanel extends JPanel {
         startWallet.setActionCommand(Constants.SERVER_ACTION_START_WALLET);
         startWallet.addActionListener(ctlr);
         internalPanel.add(startWallet);
+        */
 
         deleteIotaDb = new JButton(localizer.getLocalText("buttonLabelDeleteIotaDb"));
         deleteIotaDb.setToolTipText(localizer.getLocalText("buttonLabelDeleteIotaDbTooltip"));
@@ -112,7 +114,7 @@ public class ServerActionPanel extends JPanel {
         internalPanel.add(iotaLog);
 
         SpringUtilities.makeCompactGrid(internalPanel,
-                9, 1, //rows, cols
+                8, 1, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 

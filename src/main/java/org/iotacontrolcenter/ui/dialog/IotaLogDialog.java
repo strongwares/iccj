@@ -13,6 +13,7 @@ public class IotaLogDialog extends JDialog {
 
     private ActionListener ctlr;
     private String[] dirChoices;
+    private String[]  dirChoiceTooltips;
     public JComboBox<String> dirChooser;
     //public JCheckBox head;
     public JButton headAdd;
@@ -83,8 +84,22 @@ public class IotaLogDialog extends JDialog {
         tailChoice = localizer.getLocalText("dialogIotaLogTail");
         headChoice = localizer.getLocalText("dialogIotaLogHead");
         dirChoices = new String[] {  tailChoice, headChoice };
+        dirChoiceTooltips = new String[]{
+                localizer.getLocalText("dialogIotaLogTailTooltip"),
+                localizer.getLocalText("dialogIotaLogHeadTooltip")
+        };
 
         dirChooser = new JComboBox<>(dirChoices);
+        dirChooser.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object val, int idx, boolean isSel, boolean cellHasFocus) {
+                JComponent comp = (JComponent)super.getListCellRendererComponent(list, val, idx, isSel, cellHasFocus);
+                if (-1 < idx && null != val) {
+                    list.setToolTipText(dirChoiceTooltips[idx]);
+                }
+                return comp;
+            }
+        });
         dirChooser.setToolTipText(localizer.getLocalText("dialogIotaLogDirectionTooltip"));
         dirChooser.setAlignmentX(Component.CENTER_ALIGNMENT);
         dirChooser.setActionCommand(Constants.DIALOG_IOTA_LOG_DIRECTION_CHOOSER);
