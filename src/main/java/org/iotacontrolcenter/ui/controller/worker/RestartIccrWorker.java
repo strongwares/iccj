@@ -26,7 +26,7 @@ public class RestartIccrWorker extends ActionResponseAbstractApiWorker {
 
     @Override
     protected void done() {
-        System.out.println(ctlr.name + " " + action + " done");
+        System.out.println(ctlr.name + " ICCR " + action + " done");
 
         Object rval = null;
         try {

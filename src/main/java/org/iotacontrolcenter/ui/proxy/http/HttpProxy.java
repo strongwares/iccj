@@ -57,6 +57,12 @@ public class HttpProxy {
         setUp();
     }
 
+    public void iccrPortNumberChange(String newPortNumber) {
+        // Update the server props
+        serverProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, newPortNumber);
+        setUp();
+    }
+
     public void apiKeyChange(String newApiKey) {
         headerFilter.setHeader(serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_HEADER_NAME_PROP), newApiKey);
     }

@@ -758,21 +758,26 @@ New RestartIccrWorker
 
 ToDo:
 Two ways that ICCR server port is changed
-Relative to the ICC UI, changing the ICCR server properties:
+1) Relative to the ICC UI, changing the ICCR server properties:
 Main menu -> Servers -> Manager -> <select server name> -> Edit
 Change the ICCR Port
 dana
 if it is loaded:
+Prompt user to push change to server
 Need to change http proxy already set with prev port
 Need to change server setting
 Need to prompt user to restart
 
-Relative to the ICCR server, changing the ICCR port property on the server:
+2) Relative to the ICCR server, changing the ICCR port property on the server:
          Selected server tab  -> Settings
          Change the ICCR Port
-dana
-Need to change server prop in UI
-Prompts user to restart server
+Pushes a prop change to server, detects change, prompt user to send iccr restart, sends iccr restart
+Change ICC server prop in UI settings before prompting user for iccr restart
+If user agrees to restart:
+- if refresh in progress, stop
+- first issue restart cmd
+- then change http proxy with new port
+- if refresh was in progress, start
 
 
 New Message localization strings:

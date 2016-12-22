@@ -16,6 +16,10 @@ public class ServerProxy {
         httpProxy = new HttpProxy(serverProps);
     }
 
+    public void iccrPortNumberChange(String newPortNumber) {
+        httpProxy.iccrPortNumberChange(newPortNumber);
+    }
+
     public void apiKeyChange(String newApiKey) {
         System.out.println("apiKeyChange: " + newApiKey);
         httpProxy.apiKeyChange(newApiKey);

@@ -250,6 +250,14 @@ public class PropertySource {
         servers = null;
     }
 
+    // Support for setting a server port number directly after it has been changed
+    // on the server action
+    public void setIccrServerPortNumber(String id, String portNum) {
+        System.out.println("setIccrServerPortNumber, id: " + id + ", new portNum: " + portNum);
+        setProperty(SERVERKEYS_ICCR_PORT_NUM_PREFIX_PROP + id, portNum);
+        storeProperties();
+    }
+
     public void setServerProperties(Properties newProps, Properties prevProps) {
         String id = prevProps.getProperty(SERVER_ID_PROP);
 

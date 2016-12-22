@@ -41,6 +41,7 @@ public class ServerController implements ActionListener, TableModelListener {
     public java.util.Timer iotaNodeinfoRefreshTimer;
     public java.util.Timer iotaLogRefreshTimer;
     public boolean isConnected = false;
+    public String id;
     public String name;
     public IccrIotaNeighborsPropertyDto nbrsDto;
     public PropertySource propertySource;
@@ -54,6 +55,7 @@ public class ServerController implements ActionListener, TableModelListener {
         this.localizer = localizer;
         this.proxy = proxy;
         this.serverProps = serverProps;
+        this.id = serverProps.getProperty(PropertySource.SERVER_ID_PROP);
         this.name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
         propertySource = PropertySource.getInstance();
     }
@@ -150,6 +152,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void stopRefreshTimers() {
+        System.out.println("stopping refresh timers");
         if(iotaNeighborRefreshTimer != null) {
             iotaNeighborRefreshTimer.cancel();
             iotaNeighborRefreshTimer = null;
@@ -189,7 +192,7 @@ public class ServerController implements ActionListener, TableModelListener {
             if(iotaNodeinfoRefreshTimer == null) {
                 iotaNodeinfoRefreshTimer = new java.util.Timer();
                 iotaNodeinfoRefreshTimer.schedule(new RefreshIotaNodeinfoTimerTask(this),
-                        1000,
+                        15000,
                         propertySource.getInteger(PropertySource.REFRESH_NODEINFO_PROP) * 1000);
             }
         }
@@ -201,7 +204,7 @@ public class ServerController implements ActionListener, TableModelListener {
             if(iotaNeighborRefreshTimer == null) {
                 iotaNeighborRefreshTimer = new java.util.Timer();
                 iotaNeighborRefreshTimer.schedule(new RefreshIotaNeighborTimerTask(this),
-                        5000,
+                        15000,
                         propertySource.getInteger(PropertySource.REFRESH_NBRS_PROP) * 1000);
             }
         }
@@ -987,7 +990,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
             if(portNumChanged) {
                 System.out.println(name + " ICCR Port number was changed!");
-                handleIccrPortNumberChange();
+                handleIccrPortNumberChange(iccrPortNumber);
             }
         }
         catch(BadResponseException bre) {
@@ -1014,10 +1017,32 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
-    private void handleIccrPortNumberChange() {
-        if(UiUtil.promptUserYorN(localizer.getLocalText("iccrPortNumberChangePromptTitle"),
+    private void handleIccrPortNumberChange(String newPortNum) {
+        // Need to mirror this change of ICCR port number initiated on the server settings to the
+        // server's settings on the ICC UI side
+        propertySource.setIccrServerPortNumber(this.id, newPortNum);
+
+        if(!UiUtil.promptUserYorN(localizer.getLocalText("iccrPortNumberChangePromptTitle"),
                 localizer.getLocalText("iccrPortNumberChangePrompt"))) {
-            doRestartIccr();
+            return;
+        }
+        // If nodeInfo is active, stop it while restart is in progress
+        boolean wasRefresh = propertySource.getRunIotaRefresh();
+        if(wasRefresh) {
+            stopRefreshTimers();
+        }
+	    
+        // do the restart before we change the port we talk to it on:
+        doRestartIccr();
+        proxy.iccrPortNumberChange(newPortNum);
+
+        if(wasRefresh) {
+            try {
+                Thread.sleep(5000);
+            }
+            catch(Exception e) {
+            }
+            startRefreshTimers();
         }
     }
 
