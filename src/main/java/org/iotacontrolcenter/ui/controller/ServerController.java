@@ -891,11 +891,13 @@ public class ServerController implements ActionListener, TableModelListener {
         }
 
         boolean isChanged = false;
+        boolean portNumChanged = false;
 
         String iccrPortNumber = serverSettingsDialog.iccrPortTextField.getText();
         if (!serverSettingsDialog.iccrProps.getProperty("iccrPortNumber").equals((iccrPortNumber))) {
             newProps.setProperty("iccrPortNumber", iccrPortNumber);
             isChanged = true;
+            portNumChanged = true;
         }
 
         String iotaDir = serverSettingsDialog.iotaFolderTextField.getText();
@@ -982,6 +984,11 @@ public class ServerController implements ActionListener, TableModelListener {
 
         try {
             proxy.iccrSetConfig(newProps);
+
+            if(portNumChanged) {
+                System.out.println(name + " ICCR Port number was changed!");
+                handleIccrPortNumberChange();
+            }
         }
         catch(BadResponseException bre) {
             System.out.println(name + " serverSettingsDialogSave: bad response: " + bre.errMsgkey +
@@ -1005,6 +1012,19 @@ public class ServerController implements ActionListener, TableModelListener {
                     localizer.getLocalText("iccrApiException") + ": " + e.getLocalizedMessage());
 
         }
+    }
+
+    private void handleIccrPortNumberChange() {
+        if(UiUtil.promptUserYorN(localizer.getLocalText("iccrPortNumberChangePromptTitle"),
+                localizer.getLocalText("iccrPortNumberChangePrompt"))) {
+            doRestartIccr();
+        }
+    }
+
+    public void doRestartIccr() {
+        RestartIccrWorker worker = new RestartIccrWorker(localizer, serverPanel,  proxy, this,
+                Constants.ICCR_ACTION_RESTART, null);
+        worker.execute();
     }
 
     private void showServerSettingsDialog() {

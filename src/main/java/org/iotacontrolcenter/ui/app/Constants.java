@@ -21,12 +21,13 @@ public class Constants {
     public static final String IOTA_ACTION_INSTALL = "install";
     public static final String IOTA_ACTION_START = "start";
     public static final String IOTA_ACTION_STOP = "stop";
-    public static final String IOTA_ACTION_RESTART = "restart";
     public static final String IOTA_ACTION_STATUS = "status";
     public static final String IOTA_ACTION_DELETEDB = "deletedb";
     public static final String IOTA_ACTION_DELETE = "delete";
     public static final String IOTA_ACTION_NEIGHBORS = "neighbors";
     public static final String IOTA_ACTION_NODEINFO = "nodeinfo";
+
+    public static final String ICCR_ACTION_RESTART = "restart";
 
     public static final String ACTION_STATUS_TRUE = "true";
     //  These must be same as action strings in the action impl classes
@@ -39,6 +40,7 @@ public class Constants {
     public static final String ACTION_RESPONSE_IOTA_DELETE_DB = "deleteIotaDb";
     public static final String ACTION_RESPONSE_IOTA_GET_NODEINFO = "getIotaNodeInfo";
     public static final String ACTION_RESPONSE_IOTA_GET_NBRS = "getIotaNeighbors";
+    public static final String ACTION_RESPONSE_ICCR_RESTART = "restartIccr";
 
     public static final String MM_ICC_SETTINGS_ACTION = "mm-icc-settings";
     public static final String MM_OPEN_SERVER_ACTION = "mm-open-server";

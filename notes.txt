@@ -693,10 +693,109 @@ Add load spinner for long runnning install iota operation.
 
 Released version 1.0.3
 
+sudo mv /opt/icc /opt/icc-pre-1.0.3
+sudo mkdir /opt/icc
+sudo chown dana:dana /opt/icc
+mkdir /opt/icc/repo
+mkdir /opt/icc/bin
+mkdir /opt/icc/conf
+cd /opt
+zip -r ~/projects/dist/iccj-1.0.3.zip icc
+
+cp changelog.txt ~/projects/dist/icc-1.0.3-changelog.txt
+
 checked in
 
+uploaded
+
+bumped to 1.0.4-SNAPSHOT
+
+---------------
+Wed: 12/21/2016
+
+Issues:
+1) fix log viewer issues:
+
+a) When viewing the "tail" in the log it shows all transactions except of the top 10 lines lines of the log, which probably wasn't intended to be like that.
+
+b) when the log refreshing is activated it will get for each refreshing the entire log (minus top 10 lines) and add it below the previously fetched log. Which leads to many copys of almost the same log being displayed in the IOTA Log console. And logically it gets very leggy as it refreshes, due to getting almost the entire log.
+
+c) And when switching to "head" view, it actually displayed the same log part as when viewing the "tail".
+
+2) Updated nbr format from iri:
+In the coming days there will be a update in the IRI to the getNeighbors API call, which will remove the "/" from the API return message. When that update is released, there needs to be a small change in the ICCR handling of the getNeighborInfo API call, to be compatible again.
+
+What I am talking about is this: Current IRI API output "address": "/82.241.71.230:14265" 
+And new output format will be: "address": "82.241.71.230:14265"
+
+3) B1 If a server is not actively open in the ICCJ, its not possible to remove a server by clicking "Close or Remove Selected" in the "Manage Servers" window.
+
+4) B2 When changing the IOTA Port to a custom port number, ICCJ will not be able to get the Neighbors and node info any more. This means that the localhost port number the ICCR uses to make the API calls to the IRI needs to be a variable equal to the user defined port number.
+In my last email, regarding version 1.0.2 I sad it would be best if we removed the "IOTA Port" Input field, so that the port number would just be included in the "IOTA Start Command" Input field. But as this issue shows, we probably need the "IOTA Port" Input field to stay, to set the port variable for the API calls...
+What are your thoughts on this?
+
+5) B3 When changing the ICCR port number, it requires the ICCR to restart for changes to take affect. Can the ICCR restart command be invoked on change of the ICCR port number?
+Else, a message notifying the user that a restart of ICCR is required for ICCR port changes to take affect would be good.
+
+
+done:
+Fixed B1 issue with removing ICCR server config.
+
+---------------
+Thu: 12/22/2016
+
+done:
+B3 changing iccr port number, requires an iccr restart:
+New REST api: added IccrService:doIccrAction
+Updated HttpProxy: doIccrAction
+New ServerProxy:doIccrAction
+Detect when ICCR Port changes and prompt user for restart
+Update iccj server configuration
+Server controller new doRestartIccr method
+New Constants.ICCR_ACTION_RESTART
+New RestartIccrWorker
+? Show spinner
+
+ToDo:
+Two ways that ICCR server port is changed
+Relative to the ICC UI, changing the ICCR server properties:
+Main menu -> Servers -> Manager -> <select server name> -> Edit
+Change the ICCR Port
+dana
+if it is loaded:
+Need to change http proxy already set with prev port
+Need to change server setting
+Need to prompt user to restart
+
+Relative to the ICCR server, changing the ICCR port property on the server:
+         Selected server tab  -> Settings
+         Change the ICCR Port
+dana
+Need to change server prop in UI
+Prompts user to restart server
+
+
+New Message localization strings:
+restartIccrActionError=Restart ICCR call failed
+iccrPortNumberChangePromptTitle=ICCR Port Number Change: Restart Required
+iccrPortNumberChangePrompt=The ICCR port number was changed, do you want to restart that ICCR now?
+restartIccrActionError=Restart ICCR call failed
+consoleLogIccrIsRestarted=ICCR was successfully restarted
+consoleLogIccrNotRestarted=ICCR was not restarted
+
+test:
+d B1
+B3
+
+checked in
+
+working:
+
 todo:
-not necessary: increase font size
+B2
+
+Add stop iccr action and worker
+
 
 For seen transaction metric in footer:
 The transactions data in IRI log:

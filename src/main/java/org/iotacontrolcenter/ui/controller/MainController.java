@@ -229,15 +229,26 @@ public class MainController implements ActionListener {
     }
 
     private void removeSelectedServer(String serverName) {
-        serverTabPanel.removeServerTabByName(serverName);
-
         openServerDialogClose();
 
-        if(UiUtil.promptUserYorN(localizer.getLocalText("deleteServerConfigPromptTitle"),
-                localizer.getLocalText("deleteServerConfigPromptMsg"))) {
-            propertySource.removeServerConfigByName(serverName);
+        boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
+        if(wasOpen) {
+            serverTabPanel.removeServerTabByName(serverName);
         }
 
+        boolean doDelete = false;
+        if(wasOpen) {
+            if (UiUtil.promptUserYorN(localizer.getLocalText("deleteServerConfigPromptTitle"),
+                    localizer.getLocalText("deleteServerConfigPromptMsg"))) {
+                doDelete = true;
+            }
+        }
+        else {
+            doDelete = true;
+        }
+        if(doDelete) {
+            propertySource.removeServerConfigByName(serverName);
+        }
     }
 
     private void showIccSettingsDialog() {

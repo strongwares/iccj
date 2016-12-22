@@ -75,7 +75,7 @@ public class StartIotaWorker extends ActionResponseAbstractApiWorker {
 
             ctlr.setIotaActive(false);
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("startIotaError"),
+            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("startIotaActionError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
         }

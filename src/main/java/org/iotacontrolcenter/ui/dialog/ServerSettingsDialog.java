@@ -105,6 +105,8 @@ public class ServerSettingsDialog extends JDialog {
         save.addActionListener(ctlr);
         buttonPanel.add(save);
 
+        getRootPane().setDefaultButton(save);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
         if(iccrProps != null) {

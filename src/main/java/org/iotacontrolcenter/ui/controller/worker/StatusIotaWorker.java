@@ -77,7 +77,7 @@ public class StatusIotaWorker extends ActionResponseAbstractApiWorker {
             ctlr.setIotaActiveUnknown();
             //ctlr.setIotaActive(false);
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("statusIotaError"),
+            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("statusIotaActionError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
         }

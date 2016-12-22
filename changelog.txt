@@ -128,5 +128,39 @@ fieldLabelNeighborRefreshTimeTooltip=Time in seconds refresh IOTA neighbors stat
 ---------------------------
 Version 1.0.3
 
+Delivered Sunday 12/18/2016
+
+1) Fixed IRI log file loading time issues:
+Previously the entire IRI log file was being loaded leading to long load times.
+Now there is a new control bar on IOTA Log dialog that supports:
+a) Viewing the end of the IOTA log file contents "tail" with automatic refresh and pause;
+b) Viewing the beginning of the IOTA log file contents "head" with button to display more.
+c) The initial default when the IOTA log file dialog is displayed is the tail with automatic refresh as new lines are added to the IOTA IRI log file.
+
+2) Added a new icon to the footer status indicator to indicate when the ICC is not connected to the ICCR: a question mark icon.
+
+3) Removed the Start Wallet server button from the server panel.
+
+4) Fixed the issues with saving neighbor table entries:
+a) Added error checking for duplicate neighbor ID values.
+b) Added error checking for duplicate neighbor URI values.
+c) Fixed when the neighbor table save button is enabled: only after user has done add, remove, and or neighbor edit operations.
+
+
+5) Added an "in-progress" loading spinner icon for while the potentially long runnning install iota operation is in progress.
+
+6) The above changes resulted the following changes to the MessagesBundle language localization property files:
+dialogIotaLogDirectionTooltip=Select the direction (head or tail) to show IOTA log file lines
+dialogIotaLogTail=Tail
+dialogIotaLogHead=Head
+dialogIotaLogTailTooltip=Show IOTA log lines from the tail of the IOTA log file
+dialogIotaLogHeadTooltip=Show IOTA log lines from the head of the IOTA log file
+dialogIotaLogTailPlayTooltip=Play: automatically refresh and display new lines from the tail of the IOTA log 
+dialogIotaLogTailPauseTooltip=Pause: pause refreshing new IOTA log lines
+dialogIotaLogHeadMoreTooltip=Display more IOTA log lines from the head of the IOTA log file
+serverFooterIccrNotConnectedTooltip=Not connected to ICCR, IOTA status is unknown
+neighborTableDuplicateNbrIdError=That neighbor ID already exists
+neighborTableDuplicateNbrError=That neighbor already exists
+
 
 

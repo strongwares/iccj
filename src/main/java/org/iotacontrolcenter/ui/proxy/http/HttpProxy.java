@@ -450,7 +450,7 @@ public class HttpProxy {
             dto = response.readEntity(ActionResponse.class);
         }
         catch(BadResponseException bre) {
-            System.out.println("Caught BRE, rethrowing");
+            //System.out.println("Caught BRE, rethrowing");
             throw bre;
         }
         catch(Exception e) {
@@ -467,6 +467,57 @@ public class HttpProxy {
             }
 
             throw new BadResponseException(action + "IotaActionError",
+                    new SimpleResponse(false, msg));
+        }
+        finally {
+            if(response != null) {
+                response.close();
+            }
+        }
+        return dto;
+    }
+
+
+    public ActionResponse doIccrAction(String action, IccrPropertyListDto actionProps)  throws BadResponseException {
+        System.out.println("doIccrAction " + action + "...");
+        Response response = null;
+        ActionResponse dto = null;
+        try {
+            if(actionProps == null) {
+                actionProps = new IccrPropertyListDto();
+            }
+
+            response = proxy.doIccrAction(action, actionProps);
+
+            if(response.getStatus() != HttpStatus.SC_OK) {
+
+                SimpleResponse simple = response.readEntity(SimpleResponse.class);
+
+                System.out.println("iccr action " + action + " failed: " + simple.getMsg());
+
+                throw new BadResponseException(action + "IccrActionError",
+                        simple);
+            }
+            dto = response.readEntity(ActionResponse.class);
+        }
+        catch(BadResponseException bre) {
+            //System.out.println("Caught BRE, rethrowing");
+            throw bre;
+        }
+        catch(Exception e) {
+            System.out.println("iccrAction" + action  + " exception: ");
+            e.printStackTrace();
+
+            Throwable cause = e.getCause();
+            String msg;
+            if(cause != null) {
+                msg = cause.getLocalizedMessage();
+            }
+            else {
+                msg = e.getLocalizedMessage();
+            }
+
+            throw new BadResponseException(action + "IccrActionError",
                     new SimpleResponse(false, msg));
         }
         finally {

@@ -99,6 +99,8 @@ public class IccSettingsDialog extends JDialog {
         save.addActionListener(ctlr);
         buttonPanel.add(save);
 
+        getRootPane().setDefaultButton(save);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
         insertValues();

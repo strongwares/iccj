@@ -11,16 +11,23 @@ import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.iotacontrolcenter.ui.proxy.ServerProxy;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
-public class StopIotaWorker extends ActionResponseAbstractApiWorker {
+public class RestartIccrWorker extends ActionResponseAbstractApiWorker {
 
-    public StopIotaWorker(Localizer localizer, ServerPanel serverPanel,
-                             ServerProxy proxy, ServerController ctlr, String action,
-                             IccrPropertyListDto actionProps) {
+    public RestartIccrWorker(Localizer localizer, ServerPanel serverPanel,
+                           ServerProxy proxy, ServerController ctlr, String action,
+                           IccrPropertyListDto actionProps) {
         super(localizer, serverPanel, proxy, ctlr, action, actionProps);
     }
 
     @Override
+    protected Object doIt() throws BadResponseException {
+        return proxy.doIccrAction(action, actionProps);
+    }
+
+    @Override
     protected void done() {
+        System.out.println(ctlr.name + " " + action + " done");
+
         Object rval = null;
         try {
             rval = get();
@@ -37,7 +44,6 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
         BadResponseException bre = null;
         Exception exc = null;
         ActionResponse resp = null;
-        boolean isSuccess = false;
 
         if (rval instanceof BadResponseException) {
             bre = (BadResponseException) rval;
@@ -50,9 +56,7 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             return;
         }
 
-        //ctlr.iotaActive = true;
-
-        ctlr.setConnected(bre == null && exc == null);
+        ctlr.setConnected(false);
 
         if (bre != null) {
             System.out.println(ctlr.name + " " + action + " bad response: " + bre.errMsgkey +
@@ -61,29 +65,29 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
             serverPanel.addConsoleLogLine(localizer.getLocalText(bre.errMsgkey));
             serverPanel.addConsoleLogLine(bre.resp.getMsg());
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
+            UiUtil.showErrorDialog(ctlr.name + " " + localizer.getLocalText(bre.errMsgkey),
                     bre.resp.getMsg());
         }
         else if (exc != null) {
-            System.out.println(ctlr.name + " " + action + "  exception from proxy: ");
+            System.out.println(ctlr.name + " " + action + " exception from proxy: ");
             exc.printStackTrace();
 
-            serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStopped"));
+            serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStarted"));
             serverPanel.addConsoleLogLine(exc.getLocalizedMessage());
 
-            UiUtil.showErrorDialog("Server " + ctlr.name + " " + localizer.getLocalText("stopIotaActionError"),
+            UiUtil.showErrorDialog(ctlr.name + " " + localizer.getLocalText("restartIccrActionError"),
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
 
         }
         else if (resp != null) {
-            String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_IOTA_STOP, resp);
+            String actionStatus = getActionStatusFromResponse(Constants.ACTION_RESPONSE_ICCR_RESTART, resp);
             if(actionStatus == null || actionStatus.isEmpty() ||
                     !actionStatus.equals(Constants.ACTION_STATUS_TRUE)) {
-                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaNotStopped"));
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIccrNotRestarted"));
             }
             else {
-                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIotaIsStopped"));
-                ctlr.setIotaActive(false);
+                ctlr.setIotaActive(true);
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIccrIsRestarted"));
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

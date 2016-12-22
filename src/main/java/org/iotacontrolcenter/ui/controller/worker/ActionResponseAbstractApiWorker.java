@@ -39,7 +39,7 @@ public abstract class ActionResponseAbstractApiWorker extends SwingWorker<Object
     @Override
     public Object doInBackground() {
         try {
-            return proxy.doIotaAction(action, actionProps);
+            return doIt();
         }
         catch(BadResponseException bre) {
             return bre;
@@ -47,6 +47,10 @@ public abstract class ActionResponseAbstractApiWorker extends SwingWorker<Object
         catch(Exception exc) {
             return exc;
         }
+    }
+
+    protected Object doIt() throws BadResponseException {
+        return proxy.doIotaAction(action, actionProps);
     }
 
     protected String getActionStatusFromResponse(String key, ActionResponse ar) {

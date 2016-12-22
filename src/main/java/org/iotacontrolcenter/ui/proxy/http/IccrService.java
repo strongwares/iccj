@@ -79,4 +79,11 @@ public interface IccrService {
                         @QueryParam("numLines") Long numLines,
                         @QueryParam("lastFileLength") Long lastFileLength,
                         @QueryParam("lastFilePosition") Long lastFilePosition);
+
+    @POST
+    @Path("/iccr/cmd/{action}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response doIccrAction(@DefaultValue("") @PathParam("action") String action, IccrPropertyListDto actionProps);
+
 }
