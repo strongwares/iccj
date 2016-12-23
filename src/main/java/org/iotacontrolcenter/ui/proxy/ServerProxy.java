@@ -21,7 +21,7 @@ public class ServerProxy {
     }
 
     public void apiKeyChange(String newApiKey) {
-        System.out.println("apiKeyChange: " + newApiKey);
+        //System.out.println("apiKeyChange: " + newApiKey);
         httpProxy.apiKeyChange(newApiKey);
     }
 

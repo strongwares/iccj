@@ -230,8 +230,8 @@ public class ServerController implements ActionListener, TableModelListener {
         boolean enableSave = false;
 
         if(changeType == TableModelEvent.DELETE) {
-            System.out.println(name + " server nbr table change event " + changeType +
-                    ", deleted row: " + row);
+            //System.out.println(name + " server nbr table change event " + changeType +
+            //        ", deleted row: " + row);
             enableSave = true;
         }
         else if(col >= 3) {
@@ -262,7 +262,7 @@ public class ServerController implements ActionListener, TableModelListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        System.out.println(name + " Server controller action: " + action);
+        //System.out.println(name + " Server controller action: " + action);
 
         if(action.equals(Constants.SERVER_ACTION_SETTINGS)) {
             showServerSettingsDialog();
@@ -370,7 +370,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
 
     public void getIccrEventLog() {
-        System.out.println(name + " getIccrEventLog");
+        //System.out.println(name + " getIccrEventLog");
 
         try {
             List<String> log = proxy.getIccrEventLog();
@@ -419,7 +419,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     public void getIotaLogUpdate(String fileDirection) {
-        System.out.println(name + " getIotaLogUpdate");
+        //System.out.println(name + " getIotaLogUpdate");
 
         if(iotaLogDialog == null) {
             return;
@@ -452,7 +452,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void openIotaLogDialog() {
-        System.out.println(name + " openIotaLogDialog");
+        //System.out.println(name + " openIotaLogDialog");
 
         if(iotaLogDialog != null) {
             iotaLogDialog.toFront();
@@ -498,7 +498,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
     // Head selected when in tail
     private void onIotaLogHead() {
-        System.out.println(name + " onIotaLogHead");
+        //System.out.println(name + " onIotaLogHead");
         if(iotaLogDialog == null) {
             System.out.println(name + " onIotaLogHead, dialog not found");
             return;
@@ -523,7 +523,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
     // Tail selected when in head
     private void onIotaLogTail() {
-        System.out.println(name + " onIotaLogTail");
+        //System.out.println(name + " onIotaLogTail");
         if(iotaLogDialog == null) {
             System.out.println(name + " onIotaLogTail, dialog not found");
             return;
@@ -550,7 +550,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void onIotaLogHeadMore() {
-        System.out.println(name + " onIotaLogHeadMore");
+        //System.out.println(name + " onIotaLogHeadMore");
         if(iotaLogDialog == null) {
             System.out.println(name + " onIotaLogHead, dialog not found");
             return;
@@ -568,7 +568,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
     // Play clicked when already in play
     private void onIotaLogTailPlay() {
-        System.out.println(name + " onIotaLogTailPlay");
+        //System.out.println(name + " onIotaLogTailPlay");
         if(iotaLogDialog == null) {
             System.out.println(name + " onIotaLogHead, dialog not found");
             return;
@@ -586,7 +586,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void onIotaLogTailPause() {
-        System.out.println(name + " onIotaLogTailPause");
+        //System.out.println(name + " onIotaLogTailPause");
         if(iotaLogDialog == null) {
             System.out.println(name + " onIotaLogHead, dialog not found");
             return;
@@ -606,7 +606,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private boolean nbrPanelRemoveSelected() {
 
         int row = serverPanel.neighborPanel.neighborTable.getSelectedRow();
-        System.out.println(name + " nbrPanelRemoveSelected, row: " + row);
+        //System.out.println(name + " nbrPanelRemoveSelected, row: " + row);
 
         if(row < 0) {
             UiUtil.showErrorDialog(localizer.getLocalText("dialogNbrErrorTitle"),
@@ -630,7 +630,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void doIotaLogHead() {
-        System.out.println(this.name + ", doIotaLogHead");
+        //System.out.println(this.name + ", doIotaLogHead");
         stopIotaLogTimer();
 
         AbstractSwingWorker worker = new AbstractSwingWorker(this) {
@@ -644,7 +644,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void doIotaLogHeadMore() {
-        System.out.println(this.name + ", doIotaLogHeadMore");
+        //System.out.println(this.name + ", doIotaLogHeadMore");
 
         AbstractSwingWorker worker = new AbstractSwingWorker(this) {
             @Override
@@ -657,7 +657,7 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void doIotaLogTailPause() {
-        System.out.println(this.name + ", doIotaLogTailPause");
+        //System.out.println(this.name + ", doIotaLogTailPause");
         stopIotaLogTimer();
     }
 
@@ -692,7 +692,7 @@ public class ServerController implements ActionListener, TableModelListener {
         String id;
         String uri;
         for(NeighborDto nbr : serverPanel.neighborPanel.neighborModel.nbrs) {
-            System.out.println(name + " saving nbr: " + nbr);
+            //System.out.println(name + " saving nbr: " + nbr);
 
             id = nbr.getKey();
             uri = nbr.getUri();
@@ -906,7 +906,7 @@ public class ServerController implements ActionListener, TableModelListener {
     private void serverSettingsDialogSave() {
         if(serverSettingsDialog == null) {
             // TODO: localization
-            System.out.println(name + " serverSettingsDialogSave: dialog found");
+            System.out.println(name + " serverSettingsDialogSave: dialog not found");
             UiUtil.showErrorDialog("Settings Save Fail", "Dialog not found");
             return;
         }
@@ -914,7 +914,7 @@ public class ServerController implements ActionListener, TableModelListener {
         if(serverSettingsDialog.propList == null ||
                 serverSettingsDialog.propList.isEmpty()) {
             // TODO: localization
-            System.out.println(name + " serverSettingsDialogSave: prop list found");
+            System.out.println(name + " serverSettingsDialogSave: prop list not found");
             UiUtil.showErrorDialog("Settings Save Fail", "Prop list not found");
             return;
         }
@@ -1030,7 +1030,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
 
             if(portNumChanged) {
-                System.out.println(name + " ICCR Port number was changed!");
+                //System.out.println(name + " ICCR Port number was changed!");
 
                 // And update the iccr port value in the cached server props
                 serverProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, iccrPortNumber);

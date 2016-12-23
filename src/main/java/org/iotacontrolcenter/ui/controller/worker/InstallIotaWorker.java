@@ -26,7 +26,7 @@ public class InstallIotaWorker extends ActionResponseAbstractApiWorker {
 
     @Override
     protected void done() {
-        System.out.println(ctlr.name + " InstallIotaWorker done");
+        //System.out.println(ctlr.name + " InstallIotaWorker done");
 
         ctlr.serverPanel.serverActionPanel.setDownloadActive(false);
 

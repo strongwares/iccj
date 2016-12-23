@@ -2,7 +2,10 @@ package org.iotacontrolcenter.ui.app;
 
 public class Constants {
 
-    public static final String IMAGE_ICON_FILENAME_MAIN_APP = "iccj-app-icon";
+    public static final String IMAGE_ICON_FILENAME_MAIN_1_APP = "ICC-Icon-20x20.png";
+    public static final String IMAGE_ICON_FILENAME_MAIN_2_APP = "ICC-Icon-40x40.png";
+    public static final String IMAGE_ICON_FILENAME_MAIN_3_APP = "ICC-Icon-512x512.png";
+
     public static final String IMAGE_ICON_FILENAME_SERVER_ONLINE = "online-icon";
     public static final String IMAGE_ICON_FILENAME_SERVER_OFFLINE = "offline-icon";
     public static final String IMAGE_ICON_FILENAME_PLAY_PRESSED = "playPressed.png";

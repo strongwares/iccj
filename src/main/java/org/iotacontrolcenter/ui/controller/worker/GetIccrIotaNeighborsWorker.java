@@ -18,7 +18,7 @@ public class GetIccrIotaNeighborsWorker extends ObjectAbstractApiWorker {
 
     @Override
     public Object doInBackground() {
-        System.out.println("GetIccrIotaNeighborsWorker do...");
+        //System.out.println("GetIccrIotaNeighborsWorker do...");
 
         try {
             return proxy.iccrGetNbrsConfigProperty();
@@ -33,7 +33,7 @@ public class GetIccrIotaNeighborsWorker extends ObjectAbstractApiWorker {
 
     @Override
     protected void done() {
-        System.out.println("GetIccrIotaNeighborsWorker done");
+        //System.out.println("GetIccrIotaNeighborsWorker done");
 
         Object rval = null;
         try {
@@ -90,7 +90,7 @@ public class GetIccrIotaNeighborsWorker extends ObjectAbstractApiWorker {
                     localizer.getLocalText("iccrApiException") + ": " + exc.getLocalizedMessage());
         }
         else {
-            System.out.println("GetIccrIotaNeighborsWorker done: no exceptions");
+            //System.out.println("GetIccrIotaNeighborsWorker done: no exceptions");
             ctlr.nbrsDto = dto;
 
             serverPanel.neighborPanel.setNeighbors(dto);

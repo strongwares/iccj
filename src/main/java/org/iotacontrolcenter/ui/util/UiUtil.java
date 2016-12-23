@@ -5,6 +5,7 @@ import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.app.Main;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -35,6 +36,26 @@ public class UiUtil {
         }
         return null;
     }
+
+    /*
+    public static Image loadImage(String imgFileName) {
+        try {
+            URL imgUrl = Main.mainFrame.getClass().getResource("/" + imgFileName);
+            if (imgUrl != null){
+                return new Image(imgUrl);
+            }
+            else {
+                System.out.println("for image " + imgFileName +", generated url is null");
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Exception loading icon from file " + imgFileName +
+                    ": " + e.getLocalizedMessage());
+        }
+        return null;
+    }
+    */
+
 
     public static boolean isPotentialIpv6(String ip) {
         return ip != null && (ip.startsWith("[") && ip.endsWith("]")) ||
@@ -76,19 +97,21 @@ public class UiUtil {
     }
 
     public static boolean isSameNbr(NeighborDto nbr, IotaNeighborDto iotaNbr) {
-        // The nbr uri is something like this:
+        // In our model, the nbr uri is something like this:
         //         udp://fred.com:14265
         //  or
         //         udp://10.0.0.0:14265
         //  or
         //         udp://[2a01:4f8:190:32cc::2]:14265
 
-        // The problem: iota nbr address is something like this:
+        // The problem: nbr coming from IOTA getNeighbors, the address is something like this:
         //         fred.com/93.188.173.198:14265
         //  or
         //         /10.0.0.0:14265
         //  or iv ipv6:
         //         /2a01:4f8:190:32cc:0:0:0:2:14265
+        //  or soon, no embedded "/":
+        //         93.188.173.198:14265
         String nbrUri = nbr.getUri();
         int addrSepIdx = nbrUri.indexOf("://");
         int portIdx = nbrUri.lastIndexOf(":");
@@ -111,14 +134,16 @@ public class UiUtil {
         String iotaPort = iotaUri.substring(portIdx);
         addrSepIdx = iotaUri.indexOf("/");
         if(addrSepIdx < 0) {
-            System.out.println("failed to find IOTA nbr host name address pieces");
-            System.out.println("IOTA nbr address was: " + iotaUri);
-            return false;
+            //System.out.println("failed to find IOTA nbr host name address pieces");
+            //System.out.println("IOTA nbr address was: " + iotaUri);
+            //return false;
+            addrSepIdx = 0;
         }
+        int addr2StartIdx = (addrSepIdx >= 0 ? addrSepIdx+1 : 0);
         String iotaAddr1 = iotaUri.substring(0, addrSepIdx);
         boolean iotaAddr1IsIpv6 = isPotentialIpv6(iotaAddr1);
 
-        String iotaAddr2 = iotaUri.substring(addrSepIdx+1, portIdx);
+        String iotaAddr2 = iotaUri.substring(addr2StartIdx, portIdx);
         boolean iotaAddr2IsIpv6 = isPotentialIpv6(iotaAddr2);
 
         boolean same = false;

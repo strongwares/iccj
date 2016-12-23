@@ -57,7 +57,7 @@ public abstract class ActionResponseAbstractApiWorker extends SwingWorker<Object
         String val = null;
         if(ar != null && ar.getProperties() !=  null) {
             for (IccrPropertyDto prop : ar.getProperties()) {
-                System.out.println(prop.getKey() + " -> " + prop.getValue());
+                //System.out.println(prop.getKey() + " -> " + prop.getValue());
                 if (prop.getKey().equals(key)) {
                     val = prop.getValue();
                     break;

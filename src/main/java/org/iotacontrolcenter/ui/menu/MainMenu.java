@@ -6,6 +6,7 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class MainMenu extends JMenuBar {
 
@@ -24,6 +25,7 @@ public class MainMenu extends JMenuBar {
         localizer = Localizer.getInstance();
 
         settings = new JButton(localizer.getLocalText("mainMenuSettingsLabel"));
+        //settings.setMnemonic(KeyEvent.VK_I);
         settings.setBorder(BorderFactory.createEmptyBorder());
         settings.setContentAreaFilled(false);
         settings.setBorderPainted(false);
@@ -43,6 +45,7 @@ public class MainMenu extends JMenuBar {
         add(sep);
 
         openAddServer = new JMenu(localizer.getLocalText("mainMenuOpenOrAddServerLabel"));
+        //openAddServer.setMnemonic(KeyEvent.VK_S);
         openAddServer.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
         //openAddServer.setBorder(BorderFactory.createEmptyBorder());
         //openAddServer.setContentAreaFilled(false);
@@ -50,11 +53,13 @@ public class MainMenu extends JMenuBar {
         //openAddServer.addActionListener(mainController);
 
         JMenuItem addServer = new JMenuItem(localizer.getLocalText("mainMenuAddServerLabel"));
+        //addServer.setMnemonic(KeyEvent.VK_A);
         addServer.setActionCommand(Constants.MM_ADD_SERVER_ACTION);
         addServer.addActionListener(mainController);
         openAddServer.add(addServer);
 
         JMenuItem openServer = new JMenuItem(localizer.getLocalText("mainMenuOpenServerLabel"));
+        //openServer.setMnemonic(KeyEvent.VK_M);
         openServer.setActionCommand(Constants.MM_OPEN_SERVER_ACTION);
         openServer.addActionListener(mainController);
         openAddServer.add(openServer);

@@ -41,7 +41,7 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
-        System.out.println("updating nbrInfo from: " + nbrInfo);
+        //System.out.println("updating nbrInfo from: " + nbrInfo);
         boolean found = true;
         if(nbrInfo !=  null && nbrInfo.getNeighbors() != null) {
             for(IotaNeighborDto iotaNbr :  nbrInfo.getNeighbors()) {
@@ -146,6 +146,7 @@ public class NeighborModel extends AbstractTableModel {
         nbr.setNumAt(2);
         nbr.setNumIt(3);
         */
+
         if(!nbrs.contains(nbr)) {
             nbrs.add(nbr);
         }
@@ -160,10 +161,12 @@ public class NeighborModel extends AbstractTableModel {
     }
 
     public void setValueAt(Object value, int row, int col) {
+        /*
         System.out.println("Setting value at " + row + "," + col
                     + " to " + value
                     + " (an instance of "
                     + value.getClass() + ")");
+        */
 
         NeighborDto nbr = getRow(row);
         if(nbr == null) {

@@ -68,12 +68,12 @@ public class HttpProxy {
     }
 
     public void deleteIccrEventLog() throws BadResponseException {
-        System.out.println("deleteIccrEventLog...");
+        //System.out.println("deleteIccrEventLog...");
         Response response = null;
         try {
             response = proxy.deleteIccrEventLog();
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 SimpleResponse sr = response.readEntity(SimpleResponse.class);
@@ -112,13 +112,13 @@ public class HttpProxy {
     }
 
     public List<String> getIccrEventLog() throws BadResponseException {
-        System.out.println("getIccrEventLog...");
+        //System.out.println("getIccrEventLog...");
         List<String> log = null;
         Response response = null;
         try {
             response = proxy.getIccrEventLog();
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 log = response.readEntity(List.class);
@@ -156,13 +156,13 @@ public class HttpProxy {
     }
 
     public LogLinesResponse getIotaLog(String fileDirection, Long numLines, Long lastFileLength, Long lastFilePosition) throws BadResponseException {
-        System.out.println("getIotaLog(" + fileDirection + ", " + numLines + ", " + lastFilePosition);
+        //System.out.println("getIotaLog(" + fileDirection + ", " + numLines + ", " + lastFilePosition);
         LogLinesResponse llr = null;
         Response response = null;
         try {
             response = proxy.getIotaLog(fileDirection, numLines, lastFileLength, lastFilePosition);
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 llr = response.readEntity(LogLinesResponse.class);
@@ -200,13 +200,13 @@ public class HttpProxy {
     }
 
     public IccrPropertyListDto iccrGetConfig() throws BadResponseException {
-        System.out.println("iccrGetConfig...");
+        //System.out.println("iccrGetConfig...");
         IccrPropertyListDto dto = null;
         Response response = null;
         try {
             response = proxy.getConfigProperties();
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 dto = response.readEntity(IccrPropertyListDto.class);
@@ -244,13 +244,13 @@ public class HttpProxy {
     }
 
     public IccrPropertyDto iccrGetConfigProperty(String key) throws BadResponseException {
-        System.out.println("iccrGetConfigProperty...");
+       // System.out.println("iccrGetConfigProperty...");
         IccrPropertyDto dto = null;
         Response response = null;
         try {
             response = proxy.getConfigProperty(key);
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 dto = response.readEntity(IccrPropertyDto.class);
@@ -288,13 +288,13 @@ public class HttpProxy {
     }
 
     public IccrIotaNeighborsPropertyDto iccrGetNbrsConfigProperty() throws BadResponseException {
-        System.out.println("iccrGetNbrsProperty...");
+        //System.out.println("iccrGetNbrsProperty...");
         IccrIotaNeighborsPropertyDto dto = null;
         Response response = null;
         try {
             response = proxy.getIotaNbrsConfig();
 
-            System.out.println("response status: " + response.getStatus());
+            //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
                 dto = response.readEntity(IccrIotaNeighborsPropertyDto.class);
@@ -332,7 +332,7 @@ public class HttpProxy {
     }
 
     public List<SimpleResponse> iccrSetConfig(Properties props) throws BadResponseException {
-        System.out.println("iccrSetConfig...");
+        //System.out.println("iccrSetConfig...");
 
         List<SimpleResponse> dtos = new ArrayList<>();
 
@@ -340,14 +340,14 @@ public class HttpProxy {
             String key = (String)o;
             String val = props.getProperty(key);
 
-            System.out.println("setting " + key + " -> " + val);
+            //System.out.println("setting " + key + " -> " + val);
 
             Response response =  null;
             SimpleResponse dto = null;
             try {
                 response = proxy.updateConfigProperty(key, new IccrPropertyDto(key, val));
 
-                System.out.println("response status: " + response.getStatus());
+                //System.out.println("response status: " + response.getStatus());
 
                 if(response.getStatus() != HttpStatus.SC_OK) {
                     throw new BadResponseException("iccrSetConfigError",
@@ -386,14 +386,14 @@ public class HttpProxy {
     }
 
     public SimpleResponse iccrUpdateIotaNbrs(IccrIotaNeighborsPropertyDto nbrs) throws BadResponseException {
-        System.out.println("iccrUpdateIotaNbrs...");
+        //System.out.println("iccrUpdateIotaNbrs...");
 
         Response response = null;
             SimpleResponse dto = null;
             try {
                 response = proxy.updateIotaNbrsConfig(nbrs);
 
-                System.out.println("response status: " + response.getStatus());
+                //System.out.println("response status: " + response.getStatus());
 
                 dto = response.readEntity(SimpleResponse.class);
                 if(response.getStatus() != HttpStatus.SC_OK) {
@@ -430,7 +430,7 @@ public class HttpProxy {
 
 
     public ActionResponse doIotaAction(String action, IccrPropertyListDto actionProps)  throws BadResponseException {
-        System.out.println("doIotaAction " + action + "...");
+        //System.out.println("doIotaAction " + action + "...");
         Response response = null;
         ActionResponse dto = null;
         try {
@@ -485,7 +485,7 @@ public class HttpProxy {
 
 
     public ActionResponse doIccrAction(String action, IccrPropertyListDto actionProps)  throws BadResponseException {
-        System.out.println("doIccrAction " + action + "...");
+        //System.out.println("doIccrAction " + action + "...");
         Response response = null;
         ActionResponse dto = null;
         try {
@@ -542,7 +542,7 @@ public class HttpProxy {
         String serverUrl = scheme + "://" + serverProps.getProperty(PropertySource.SERVER_IP_PROP) +
                 ":" + String.valueOf(port);
 
-        System.out.println("new server address: " + serverUrl);
+        //System.out.println("new server address: " + serverUrl);
 
         return serverUrl;
     }

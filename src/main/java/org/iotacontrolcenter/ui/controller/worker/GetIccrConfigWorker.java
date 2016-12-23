@@ -90,7 +90,7 @@ public class GetIccrConfigWorker extends ObjectAbstractApiWorker {
 
         }
         else {
-            System.out.println(ctlr.name + " GetIccrConfigWorker done: no exceptions");
+            //System.out.println(ctlr.name + " GetIccrConfigWorker done: no exceptions");
             ctlr.iccrProps = iccrProps;
         }
     }

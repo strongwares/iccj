@@ -13,12 +13,12 @@ public class RequestHeaderFilter implements ClientRequestFilter {
     }
 
     public void setHeader(String key, String value) {
-        System.out.println("setting header " + key + " -> " + value);
+        //System.out.println("setting header " + key + " -> " + value);
         props.setProperty(key, value);
     }
 
     public void addHeader(String key, String value) {
-        System.out.println("adding header " + key + " -> " + value);
+        //System.out.println("adding header " + key + " -> " + value);
         props.setProperty(key, value);
     }
 

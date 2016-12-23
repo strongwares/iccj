@@ -6,7 +6,10 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -49,13 +52,12 @@ public class Main {
         mainController = new MainController();
         mainFrame = new MainFrame(mainController);
 
-        ImageIcon myAppImage = UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_APP);
-        if(myAppImage != null) {
-            mainFrame.setIconImage(myAppImage.getImage());
-        }
-        else {
-            System.out.println("app icon is null");
-        }
+        List<Image> icons = new ArrayList<>();
+        icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_1_APP).getImage());
+        icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_2_APP).getImage());
+        icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_3_APP).getImage());
+        mainFrame.setIconImages(icons);
+        //mainFrame.setIconImage(myAppImage.getImage());
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();

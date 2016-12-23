@@ -843,20 +843,26 @@ When IOTA is deleted set iota as not active, stop the refresh timer.
 
 Checked in
 
+Added support for no leading "/" on iota nbrs
+
+Added new icons from Pascal
+
+d A2
+
+Bumped version to 1.0.4
+
+checked in
+
+
 todo:
-A2
-In the coming days there will be a update in the IRI to the getNeighbors API call, which will remove the "/" from the API return message. When that update is released, there needs to be a small change in the ICCR handling of the getNeighborInfo API call, to be compatible again.
-
-What I am talking about is this: Current IRI API output "address": "/82.241.71.230:14265" 
-And new output format will be: "address": "82.241.71.230:14265"
-
-Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
-
 Add keyboard short cuts for main menu:
 ICC Settings
 Servers
 -> Add New Server
 -> Manage
+
+
+Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
 Add stop iccr action and worker
 
