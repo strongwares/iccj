@@ -2,6 +2,7 @@ package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import org.iotacontrolcenter.ui.properties.source.PropertySource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,20 +120,20 @@ public class ServerSettingsDialog extends JDialog {
     private void insertValues() {
         propList = new ArrayList<>();
 
-        iccrPortTextField.setText(iccrProps.getProperty("iccrPortNumber"));
-        propList.add("iccrPortNumber");
+        iccrPortTextField.setText(iccrProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP));
+        propList.add(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
 
-        iotaFolderTextField.setText(iccrProps.getProperty("iotaDir"));
-        propList.add("iotaDir");
+        iotaFolderTextField.setText(iccrProps.getProperty(PropertySource.SERVER_IOTA_DIR_PROP));
+        propList.add(PropertySource.SERVER_IOTA_DIR_PROP);
 
-        nbrRefreshTextField.setText(iccrProps.getProperty("iotaNeighborRefreshTime"));
-        propList.add("iotaNeighborRefreshTime");
+        nbrRefreshTextField.setText(iccrProps.getProperty(PropertySource.SERVER_IOTA_NBR_REFRESH_TIME_PROP));
+        propList.add(PropertySource.SERVER_IOTA_NBR_REFRESH_TIME_PROP);
 
-        iotaPortTextField.setText(iccrProps.getProperty("iotaPortNumber"));
-        propList.add("iotaPortNumber");
+        iotaPortTextField.setText(iccrProps.getProperty(PropertySource.SERVER_IOTA_PORT_NUM_PROP));
+        propList.add(PropertySource.SERVER_IOTA_PORT_NUM_PROP);
 
-        iotaStartTextField.setText(iccrProps.getProperty("iotaStartCmd"));
-        propList.add("iotaStartCmd");
+        iotaStartTextField.setText(iccrProps.getProperty(PropertySource.SERVER_IOTA_START_CMD_PROP));
+        propList.add(PropertySource.SERVER_IOTA_START_CMD_PROP);
 
     }
 }

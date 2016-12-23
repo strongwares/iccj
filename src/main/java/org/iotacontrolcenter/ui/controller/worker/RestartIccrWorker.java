@@ -88,6 +88,7 @@ public class RestartIccrWorker extends ActionResponseAbstractApiWorker {
             else {
                 ctlr.setIotaActive(true);
                 serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogIccrIsRestarted"));
+                serverPanel.addConsoleLogLine(localizer.getLocalText("consoleLogReconnecting"));
             }
         } else {
             System.out.println(ctlr.name + " " + action + " done: unexpected place...");

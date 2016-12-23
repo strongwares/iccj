@@ -55,6 +55,10 @@ public class PropertySource {
     public static final String SERVER_IP_PROP = "ip";
     public static final String SERVER_NAME_PROP = "name";
     public static final String SERVER_ICCR_PORT_NUM_PROP = "iccrPortNumber";
+    public static final String SERVER_IOTA_DIR_PROP = "iotaDir";
+    public static final String SERVER_IOTA_PORT_NUM_PROP = "iotaPortNumber";
+    public static final String SERVER_IOTA_NBR_REFRESH_TIME_PROP = "iotaNeighborRefreshTime";
+    public static final String SERVER_IOTA_START_CMD_PROP = "iotaStartCmd";
     public static final String SERVER_ICCR_API_KEY_PROP = "iccrApiKey";
     public static final String SERVER_ICCR_API_KEY_HEADER_NAME_PROP = "iccrApiKeyHeaderName";
     public static final String SERVER_ICCR_API_KEY_HEADER_NAME_VAL = "ICCR-API-KEY";

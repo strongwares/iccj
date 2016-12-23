@@ -35,6 +35,8 @@ public class ServerController implements ActionListener, TableModelListener {
     public Localizer localizer;
     private List<PropertyChangeListener> listeners = new ArrayList<>();
     private boolean iotaActive = false;
+
+    // These are the latest properties loaded from the ICCR server:
     public Properties iccrProps;
     public IotaLogDialog iotaLogDialog;
     public java.util.Timer iotaNeighborRefreshTimer;
@@ -47,6 +49,8 @@ public class ServerController implements ActionListener, TableModelListener {
     public PropertySource propertySource;
     public ServerProxy proxy;
     public ServerPanel serverPanel;
+
+    // These are a copy of the server properties that are configured on the ICC UI side
     public Properties serverProps;
     public ServerSettingsDialog serverSettingsDialog;
 
@@ -897,33 +901,33 @@ public class ServerController implements ActionListener, TableModelListener {
         boolean portNumChanged = false;
 
         String iccrPortNumber = serverSettingsDialog.iccrPortTextField.getText();
-        if (!serverSettingsDialog.iccrProps.getProperty("iccrPortNumber").equals((iccrPortNumber))) {
-            newProps.setProperty("iccrPortNumber", iccrPortNumber);
+        if (!serverSettingsDialog.iccrProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP).equals((iccrPortNumber))) {
+            newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, iccrPortNumber);
             isChanged = true;
             portNumChanged = true;
         }
 
         String iotaDir = serverSettingsDialog.iotaFolderTextField.getText();
-        if (!serverSettingsDialog.iccrProps.getProperty("iotaDir").equals((iotaDir))) {
-            newProps.setProperty("iotaDir", iotaDir);
+        if (!serverSettingsDialog.iccrProps.getProperty(PropertySource.SERVER_IOTA_DIR_PROP).equals((iotaDir))) {
+            newProps.setProperty(PropertySource.SERVER_IOTA_DIR_PROP, iotaDir);
             isChanged = true;
         }
 
         String iotaNeighborRefreshTime = serverSettingsDialog.nbrRefreshTextField.getText();
-        if (!serverSettingsDialog.iccrProps.getProperty("iotaNeighborRefreshTime").equals((iotaNeighborRefreshTime))) {
-            newProps.setProperty("iotaNeighborRefreshTime", iotaNeighborRefreshTime);
+        if (!serverSettingsDialog.iccrProps.getProperty(PropertySource.SERVER_IOTA_NBR_REFRESH_TIME_PROP).equals((iotaNeighborRefreshTime))) {
+            newProps.setProperty(PropertySource.SERVER_IOTA_NBR_REFRESH_TIME_PROP, iotaNeighborRefreshTime);
             isChanged = true;
         }
 
         String iotaPortNumber = serverSettingsDialog.iotaPortTextField.getText();
-        if (!serverSettingsDialog.iccrProps.getProperty("iotaPortNumber").equals((iotaPortNumber))) {
-            newProps.setProperty("iotaPortNumber", iotaPortNumber);
+        if (!serverSettingsDialog.iccrProps.getProperty(PropertySource.SERVER_IOTA_PORT_NUM_PROP).equals((iotaPortNumber))) {
+            newProps.setProperty(PropertySource.SERVER_IOTA_PORT_NUM_PROP, iotaPortNumber);
             isChanged = true;
         }
 
         String iotaStartCmd = serverSettingsDialog.iotaStartTextField.getText();
-        if (!serverSettingsDialog.iccrProps.getProperty("iotaStartCmd").equals((iotaStartCmd))) {
-            newProps.setProperty("iotaStartCmd", iotaStartCmd);
+        if (!serverSettingsDialog.iccrProps.getProperty(PropertySource.SERVER_IOTA_START_CMD_PROP).equals((iotaStartCmd))) {
+            newProps.setProperty(PropertySource.SERVER_IOTA_START_CMD_PROP, iotaStartCmd);
             isChanged = true;
         }
 
@@ -971,8 +975,17 @@ public class ServerController implements ActionListener, TableModelListener {
             }
         }
 
+        if(iotaPortNumber != null && iccrPortNumber != null &&
+                iotaPortNumber.equals(iccrPortNumber)) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorPortNumberConflict");
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
+
         if(isError) {
-            UiUtil.showErrorDialog("dialogSaveErrorTitle", errors);
+            UiUtil.showErrorDialog(localizer.getLocalText("dialogSaveErrorTitle"), errors);
             return;
         }
 
@@ -988,9 +1001,23 @@ public class ServerController implements ActionListener, TableModelListener {
         try {
             proxy.iccrSetConfig(newProps);
 
+            // We've updated the properties on the ICCR server, now update the cached copy:
+            newProps.keySet().forEach((k) -> {
+                iccrProps.setProperty((String)k, newProps.getProperty((String)k));
+            });
+
+
             if(portNumChanged) {
                 System.out.println(name + " ICCR Port number was changed!");
-                handleIccrPortNumberChange(iccrPortNumber);
+
+                // And update the iccr port value in the cached server props
+                serverProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, iccrPortNumber);
+
+                // And mirror this change of ICCR port number initiated on the server settings to the
+                // server's settings on the ICC UI side:
+                propertySource.setIccrServerPortNumber(this.id, iccrPortNumber);
+
+                handleIccrPortNumberChange(iccrPortNumber, true);
             }
         }
         catch(BadResponseException bre) {
@@ -1017,14 +1044,51 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
-    private void handleIccrPortNumberChange(String newPortNum) {
-        // Need to mirror this change of ICCR port number initiated on the server settings to the
-        // server's settings on the ICC UI side
-        propertySource.setIccrServerPortNumber(this.id, newPortNum);
+    // Called from the main controller if this server's iccr port  number was changed from that route
+    public void iccrPortNumberChange(String newPortNum) {
+        serverProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, newPortNum);
 
-        if(!UiUtil.promptUserYorN(localizer.getLocalText("iccrPortNumberChangePromptTitle"),
-                localizer.getLocalText("iccrPortNumberChangePrompt"))) {
-            return;
+        // May not always be available, only there after we've successfully connected to server:
+        if(iccrProps != null) {
+            iccrProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, newPortNum);
+        }
+        boolean wasConnected = isConnected;
+
+        // If we were connected and user just wants to change the ICCR port number from
+        // the ICC UI manager server sequence then we need to push the port change to the server
+        // before restarting it:
+        try {
+            Properties newProps = new Properties();
+            newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, newPortNum);
+            proxy.iccrSetConfig(newProps);
+        }
+        catch(Exception e) {
+            System.out.println(name + ", exception telling procy to change ICCR port number: " + e);
+        }
+
+        // This sends the restart ICCR command to the server
+        // If we were not connected, this takes a bit of time to wind up
+        handleIccrPortNumberChange(newPortNum, false);
+
+        // So try to connect asap:
+        if(!wasConnected) {
+            // Delay a bit since the proxy port change was done on a swing worker background thread:
+            try {
+                Thread.sleep(1000);
+            }
+            catch (Exception e) {
+            }
+            initialConnect();
+        }
+    }
+
+    private void handleIccrPortNumberChange(String newPortNum, boolean doDelay) {
+        boolean wasConnected = isConnected;
+        if(wasConnected) {
+            if (!UiUtil.promptUserYorN(localizer.getLocalText("iccrPortNumberChangePromptTitle"),
+                    localizer.getLocalText("iccrPortNumberChangePrompt"))) {
+                return;
+            }
         }
         // If nodeInfo is active, stop it while restart is in progress
         boolean wasRefresh = propertySource.getRunIotaRefresh();
@@ -1033,23 +1097,55 @@ public class ServerController implements ActionListener, TableModelListener {
         }
 	    
         // do the restart before we change the port we talk to it on:
-        doRestartIccr();
-        proxy.iccrPortNumberChange(newPortNum);
-
-        if(wasRefresh) {
+        if(wasConnected) {
+            // Always pause a bit to let the prop change POST finish
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             }
-            catch(Exception e) {
+            catch (Exception e) {
             }
-            startRefreshTimers();
+            doRestartIccr();
         }
+
+        // And finish it up on a background thread
+        AbstractSwingWorker worker = new AbstractSwingWorker(this) {
+            @Override
+            public Void runIt() {
+                finishRestartIccr(newPortNum, wasRefresh, doDelay);
+                return null;
+            }
+        };
+        worker.execute();
     }
 
     public void doRestartIccr() {
         RestartIccrWorker worker = new RestartIccrWorker(localizer, serverPanel,  proxy, this,
                 Constants.ICCR_ACTION_RESTART, null);
         worker.execute();
+    }
+
+    public void finishRestartIccr(String newPortNum, boolean wasRefresh, boolean doDelay) {
+        // Adding a bit of delay to not change proxy out from under the restart request
+        if(doDelay) {
+            try {
+                Thread.sleep(1000);
+            }
+            catch (Exception e) {
+            }
+        }
+
+        proxy.iccrPortNumberChange(newPortNum);
+
+        if(wasRefresh) {
+            if(doDelay) {
+                try {
+                    Thread.sleep(5000);
+                }
+                catch (Exception e) {
+                }
+            }
+            startRefreshTimers();
+        }
     }
 
     private void showServerSettingsDialog() {

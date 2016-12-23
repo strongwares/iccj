@@ -1,5 +1,7 @@
 package org.iotacontrolcenter.ui.panel;
 
+import org.iotacontrolcenter.ui.properties.source.PropertySource;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,6 +34,33 @@ public class ServerTabPanel extends JTabbedPane {
         return panel;
     }
 
+    public String getIotaPortNumber(String serverName) {
+        Component panel = getPanelByName(serverName);
+
+        if(panel == null) {
+            throw new IllegalStateException("Get IOTA Port Number: panel for server name " + serverName + " not found");
+        }
+        ServerPanel serverPanel = ((ServerPanel) panel);
+        if(serverPanel.ctlr.iccrProps == null) {
+            throw new IllegalStateException("Server ICCR Props not available");
+        }
+        return serverPanel.ctlr.iccrProps.getProperty(PropertySource.SERVER_IOTA_PORT_NUM_PROP);
+    }
+
+    public String getIccrPortNumber(String serverName) {
+        Component panel = getPanelByName(serverName);
+
+        if(panel == null) {
+            throw new IllegalStateException("Get ICCR Port Number: panel for server name " + serverName + " not found");
+        }
+        ServerPanel serverPanel = ((ServerPanel) panel);
+
+        if(serverPanel.ctlr.iccrProps == null) {
+            throw new IllegalStateException("Server ICCR Props not available");
+        }
+        return serverPanel.ctlr.iccrProps.getProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP);
+    }
+
     public void serverApiKeyChange(String serverName, String newApiKey) {
         Component panel = getPanelByName(serverName);
 
@@ -39,7 +68,20 @@ public class ServerTabPanel extends JTabbedPane {
             throw new IllegalStateException("API Key Change: panel for server name " + serverName + " not found");
         }
         ServerPanel serverPanel = ((ServerPanel) panel);
+        if(serverPanel.ctlr.proxy == null) {
+            throw new IllegalStateException("Server proxy not available");
+        }
         serverPanel.ctlr.proxy.apiKeyChange(newApiKey);
+    }
+
+    public void serverIccrPortNumberChange(String serverName, String newIccrPortNumber) {
+        Component panel = getPanelByName(serverName);
+
+        if(panel == null) {
+            throw new IllegalStateException("ICCR Port Change: panel for server name " + serverName + " not found");
+        }
+        ServerPanel serverPanel = ((ServerPanel) panel);
+        serverPanel.ctlr.iccrPortNumberChange(newIccrPortNumber);
     }
 
     public void serverNameChange(String prevName, String newName) {

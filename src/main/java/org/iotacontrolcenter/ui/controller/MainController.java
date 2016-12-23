@@ -319,12 +319,18 @@ public class MainController implements ActionListener {
         }
 
         boolean isAdd = cfgServerDialog.isAdd;
+        boolean isIccrPortNumChange = false;
 
         Properties newProps = new Properties();
         String ip = cfgServerDialog.serverIpTextField.getText();
         newProps.setProperty(PropertySource.SERVER_IP_PROP, ip);
 
         String port = cfgServerDialog.iccrPortTextField.getText();
+        if (!isAdd && port != null && !port.isEmpty()) {
+            isIccrPortNumChange = !port.equals(cfgServerDialog.serverProps.getProperty(
+                        PropertySource.SERVER_ICCR_PORT_NUM_PROP));
+        }
+
         newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, port);
 
         String apiKey = cfgServerDialog.iccrPwdTextField.getText();
@@ -395,6 +401,24 @@ public class MainController implements ActionListener {
             }
         }
         */
+
+        // Need to check if the iccr port that is changing and it conflicts with the
+        // iota port of an iccr server that is loaded:
+        if(!isError && isIccrPortNumChange && serverTabPanel.serverIsOpen(name)) {
+            try {
+                if (port.equals(serverTabPanel.getIotaPortNumber(name))) {
+                    isError = true;
+                    errors += sep + localizer.getLocalText("dialogSaveErrorPortNumberConflict");
+                    if (sep.isEmpty()) {
+                        sep = "\n";
+                    }
+                }
+            }
+            catch(IllegalStateException ise) {
+                System.out.println("Check for IOTA port conflict: illegal state exception: " + ise);
+            }
+        }
+
         if(isError) {
             UiUtil.showErrorDialog(
                     action.equals(Constants.DIALOG_CONFIG_ADD_SERVER_SAVE) ? "Add Server Save Error" :
@@ -404,33 +428,56 @@ public class MainController implements ActionListener {
         }
 
         boolean apiKeyChange = false;
+        boolean needToRestartIccr = false;
+
         if(isAdd) {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
         }
         else {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
+
             apiKeyChange = !newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP).equals(
                     cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
 
-            System.out.println("server configuration edit: apiKeyChange: " + apiKeyChange);
+            if(isIccrPortNumChange && serverTabPanel.serverIsOpen(name)) {
+
+                try {
+                    needToRestartIccr = !port.equals(serverTabPanel.getIccrPortNumber(name));
+                }
+                catch(IllegalStateException ise) {
+                    System.out.println("Check for ICCR port change, illegal state exception: " + ise);
+                }
+            }
         }
 
         persistCfgServerSettings(newProps, cfgServerDialog.serverProps, cfgServerDialog.isAdd);
 
-        if(!cfgServerDialog.isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
+        if(!isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
             serverTabPanel.serverNameChange(cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
         }
 
         if(apiKeyChange) {
-            serverTabPanel.serverApiKeyChange(
-                    cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP),
-                    newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
+            try {
+                serverTabPanel.serverApiKeyChange(name,
+                        //cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP),
+                        newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
+            }
+            catch(IllegalStateException ise) {
+                System.out.println("API key change, illegal state exception: " + ise);
+            }
         }
 
         cfgServerDialogClose();
 
         if(isAdd) {
             showOpenServerDialog();
+        }
+        else {
+            if(serverTabPanel.serverIsOpen(name) &&
+                    (needToRestartIccr || isIccrPortNumChange)) {
+                // This will prompt user for need to change and restart:
+                serverTabPanel.serverIccrPortNumberChange(name, port);
+            }
         }
     }
 

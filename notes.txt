@@ -756,21 +756,26 @@ New Constants.ICCR_ACTION_RESTART
 New RestartIccrWorker
 ? Show spinner
 
-ToDo:
+On svr ctlr iccr prop changes, mirror those changes to ctlr iccrProps
+On main ctlr manage server changes, mirror those changes to ctlr serverProps
+
+done
 Two ways that ICCR server port is changed
 1) Relative to the ICC UI, changing the ICCR server properties:
 Main menu -> Servers -> Manager -> <select server name> -> Edit
 Change the ICCR Port
-dana
-if it is loaded:
-Prompt user to push change to server
-Need to change http proxy already set with prev port
-Need to change server setting
-Need to prompt user to restart
 
+if server open:
+Check for iota port conflict
+Check for iccr port change
+Call same method as used by ctlr initiated change to prompt user
+
+
+done:
 2) Relative to the ICCR server, changing the ICCR port property on the server:
          Selected server tab  -> Settings
          Change the ICCR Port
+Check for iota port conflict
 Pushes a prop change to server, detects change, prompt user to send iccr restart, sends iccr restart
 Change ICC server prop in UI settings before prompting user for iccr restart
 If user agrees to restart:
@@ -787,17 +792,38 @@ iccrPortNumberChangePrompt=The ICCR port number was changed, do you want to rest
 restartIccrActionError=Restart ICCR call failed
 consoleLogIccrIsRestarted=ICCR was successfully restarted
 consoleLogIccrNotRestarted=ICCR was not restarted
+dialogSaveErrorPortNumberConflict=The ICCR port number conflicts with the IOTA port number
+consoleLogReconnecting=Reconnecting...
 
 test:
 d B1
-B3
+d B3
+
+checked in
+--------------
+Fri 12/23/2016
+
+Finishing up B3 change in iccr port number initiated from server
+
+After "successfully restrted", add a reconnecting... log line
 
 checked in
 
-working:
 
 todo:
 B2
+
+How to handle changing IP of existing server from the ICC manage server?
+- Not allow if the server is open?
+- Check for conflicts with existing server?
+
+Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
+
+Add keyboard short cuts for main menu:
+ICC Settings
+Servers
+-> Add New Server
+-> Manage
 
 Add stop iccr action and worker
 
