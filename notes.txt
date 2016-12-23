@@ -825,7 +825,7 @@ In my last email, regarding version 1.0.2 I sad it would be best if we removed t
 
 Suggested we leave as is, iota port num as separate variable
 
-A1
+d A1
 a) When viewing the "tail" in the log it shows all transactions except of the top 10 lines lines of the log, which probably wasn't intended to be like that.
 
 d b) when the log refreshing is activated it will get for each refreshing the entire log (minus top 10 lines) and add it below the previously fetched log. Which leads to many copys of almost the same log being displayed in the IOTA Log console. And logically it gets very leggy as it refreshes, due to getting almost the entire log.
@@ -839,9 +839,11 @@ Kept log caret at bottom always
 
 checkin
 
-todo:
-Deleting IOTA the didn't mark iota as stopped, kept running the refresh timer
+When IOTA is deleted set iota as not active, stop the refresh timer.
 
+Checked in
+
+todo:
 A2
 In the coming days there will be a update in the IRI to the getNeighbors API call, which will remove the "/" from the API return message. When that update is released, there needs to be a small change in the ICCR handling of the getNeighborInfo API call, to be compatible again.
 

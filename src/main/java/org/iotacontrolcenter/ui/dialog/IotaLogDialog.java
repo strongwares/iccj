@@ -7,7 +7,6 @@ import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionListener;
 

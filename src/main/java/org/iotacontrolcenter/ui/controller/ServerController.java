@@ -864,6 +864,18 @@ public class ServerController implements ActionListener, TableModelListener {
 
         DeleteIotaDbWorker worker = new DeleteIotaDbWorker(localizer, serverPanel,  proxy, this,
                 Constants.IOTA_ACTION_DELETEDB, null);
+
+        /*
+        worker.addPropertyChangeListener(e -> {
+            if(e.getPropertyName().equals("state")) {
+                SwingWorker.StateValue state = (SwingWorker.StateValue)e.getNewValue();
+                if(state == SwingWorker.StateValue.DONE) {
+                    stopRefreshTimers();
+                    setIotaActive(false);
+                }
+            }
+        });
+        */
         worker.execute();
     }
 
@@ -877,6 +889,17 @@ public class ServerController implements ActionListener, TableModelListener {
 
         DeleteIotaWorker worker = new DeleteIotaWorker(localizer, serverPanel,  proxy, this,
                 Constants.IOTA_ACTION_DELETE, null);
+
+        worker.addPropertyChangeListener(e -> {
+            if(e.getPropertyName().equals("state")) {
+                SwingWorker.StateValue state = (SwingWorker.StateValue)e.getNewValue();
+                if(state == SwingWorker.StateValue.DONE) {
+                    stopRefreshTimers();
+                    setIotaActive(false);
+                }
+            }
+        });
+
         worker.execute();
     }
 
