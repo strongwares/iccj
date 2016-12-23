@@ -87,5 +87,5 @@ public class Constants {
 
     public static final String IOTA_LOG_QP_DIRECTION_TAIL = "tail";
     public static final String IOTA_LOG_QP_DIRECTION_HEAD = "head";
-    public static final Long IOTA_LOG_QP_NUMLINES_DEFAULT = 500L;
+    public static final Long IOTA_LOG_QP_NUMLINES_DEFAULT = 250L;
 }

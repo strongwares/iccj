@@ -433,11 +433,7 @@ public class ServerController implements ActionListener, TableModelListener {
                     iotaLogDialog.refreshLastFilePosition);
 
             if (resp.isSuccess()) {
-                for (String s : resp.getLines()) {
-                    iotaLogDialog.logText.append(s + "\n");
-                }
-                iotaLogDialog.refreshLastFilePosition =  resp.getLastFilePosition();
-                iotaLogDialog.refreshLastFileSize =  resp.getLastFileSize();
+                iotaLogDialog.addNewLines(resp);
             }
             else {
                 System.out.println("getIotaLogTailUpdate: bad response: " + resp.getMsg());
@@ -508,6 +504,7 @@ public class ServerController implements ActionListener, TableModelListener {
             return;
         }
 
+        iotaLogDialog.numLines = 0;
         iotaLogDialog.logText.setText("");
         iotaLogDialog.headAdd.setEnabled(true);
 
@@ -531,6 +528,8 @@ public class ServerController implements ActionListener, TableModelListener {
             System.out.println(name + " onIotaLogTail, dialog not found");
             return;
         }
+
+        iotaLogDialog.numLines = 0;
         iotaLogDialog.logText.setText("");
 
         //iotaLogDialog.head.setSelected(false);
@@ -1092,8 +1091,12 @@ public class ServerController implements ActionListener, TableModelListener {
         }
         // If nodeInfo is active, stop it while restart is in progress
         boolean wasRefresh = propertySource.getRunIotaRefresh();
+        boolean wasIotaLogRefresh = iotaLogRefreshTimer  != null;
         if(wasRefresh) {
             stopRefreshTimers();
+        }
+        if(wasIotaLogRefresh) {
+            stopIotaLogTimer();
         }
 	    
         // do the restart before we change the port we talk to it on:
@@ -1111,7 +1114,7 @@ public class ServerController implements ActionListener, TableModelListener {
         AbstractSwingWorker worker = new AbstractSwingWorker(this) {
             @Override
             public Void runIt() {
-                finishRestartIccr(newPortNum, wasRefresh, doDelay);
+                finishRestartIccr(newPortNum, wasRefresh, wasIotaLogRefresh, doDelay);
                 return null;
             }
         };
@@ -1124,7 +1127,7 @@ public class ServerController implements ActionListener, TableModelListener {
         worker.execute();
     }
 
-    public void finishRestartIccr(String newPortNum, boolean wasRefresh, boolean doDelay) {
+    public void finishRestartIccr(String newPortNum, boolean wasRefresh, boolean wasIotaLogRefresh, boolean doDelay) {
         // Adding a bit of delay to not change proxy out from under the restart request
         if(doDelay) {
             try {
@@ -1136,7 +1139,7 @@ public class ServerController implements ActionListener, TableModelListener {
 
         proxy.iccrPortNumberChange(newPortNum);
 
-        if(wasRefresh) {
+        if(wasRefresh || wasIotaLogRefresh) {
             if(doDelay) {
                 try {
                     Thread.sleep(5000);
@@ -1144,7 +1147,12 @@ public class ServerController implements ActionListener, TableModelListener {
                 catch (Exception e) {
                 }
             }
-            startRefreshTimers();
+            if(wasRefresh) {
+                startRefreshTimers();
+            }
+            if(wasIotaLogRefresh) {
+                startIotaLogTimer();
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package org.iotacontrolcenter.ui.dialog;
 
 
+import org.iotacontrolcenter.dto.LogLinesResponse;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
@@ -21,6 +22,7 @@ public class IotaLogDialog extends JDialog {
     public String headChoice;
     private Localizer localizer;
     public JTextArea logText;
+    public long numLines = 0;
     public Long refreshLastFilePosition;
     public Long refreshLastFileSize;
     //public JCheckBox tail;
@@ -37,6 +39,31 @@ public class IotaLogDialog extends JDialog {
         init();
     }
 
+    public void addNewLines(LogLinesResponse resp) {
+        long prevNumLines = numLines;
+        long numNewLines = resp.getLines().size();
+        boolean doRemove = ((prevNumLines + numNewLines) > Constants.IOTA_LOG_QP_NUMLINES_DEFAULT * 2);
+
+        if(doRemove) {
+            long numLinesToRemove = ((prevNumLines + numNewLines) - (Constants.IOTA_LOG_QP_NUMLINES_DEFAULT * 2));
+            try {
+                logText.replaceRange("", 0, logText.getLineEndOffset((int)numLinesToRemove));
+                numLines  -= numLinesToRemove;
+            }
+            catch(Exception e) {
+                System.out.println("iota log line remove exception: " + e);
+            }
+        }
+
+        for (String s : resp.getLines()) {
+            logText.append(s + "\n");
+            numLines++;
+        }
+        logText.setCaretPosition(logText.getDocument().getLength());
+        refreshLastFilePosition =  resp.getLastFilePosition();
+        refreshLastFileSize =  resp.getLastFileSize();
+    }
+
     private void init() {
         setTitle(title);
         setModal(false);
@@ -49,8 +76,8 @@ public class IotaLogDialog extends JDialog {
         logText.setForeground(Color.yellow);
         logText.setEditable(false);
 
-        DefaultCaret caret = (DefaultCaret)logText.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        //DefaultCaret caret = (DefaultCaret)logText.getCaret();
+        //caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         JScrollPane scrollPane = new JScrollPane(logText);
         scrollPane.getVerticalScrollBar().setUnitIncrement(50);

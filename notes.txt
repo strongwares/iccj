@@ -714,7 +714,7 @@ bumped to 1.0.4-SNAPSHOT
 Wed: 12/21/2016
 
 Issues:
-1) fix log viewer issues:
+d 1) A1 fix log viewer issues:
 
 a) When viewing the "tail" in the log it shows all transactions except of the top 10 lines lines of the log, which probably wasn't intended to be like that.
 
@@ -722,19 +722,19 @@ b) when the log refreshing is activated it will get for each refreshing the enti
 
 c) And when switching to "head" view, it actually displayed the same log part as when viewing the "tail".
 
-2) Updated nbr format from iri:
+2) A2 Updated nbr format from iri:
 In the coming days there will be a update in the IRI to the getNeighbors API call, which will remove the "/" from the API return message. When that update is released, there needs to be a small change in the ICCR handling of the getNeighborInfo API call, to be compatible again.
 
 What I am talking about is this: Current IRI API output "address": "/82.241.71.230:14265" 
 And new output format will be: "address": "82.241.71.230:14265"
 
-3) B1 If a server is not actively open in the ICCJ, its not possible to remove a server by clicking "Close or Remove Selected" in the "Manage Servers" window.
+d 3) B1 If a server is not actively open in the ICCJ, its not possible to remove a server by clicking "Close or Remove Selected" in the "Manage Servers" window.
 
-4) B2 When changing the IOTA Port to a custom port number, ICCJ will not be able to get the Neighbors and node info any more. This means that the localhost port number the ICCR uses to make the API calls to the IRI needs to be a variable equal to the user defined port number.
+d 4) B2 When changing the IOTA Port to a custom port number, ICCJ will not be able to get the Neighbors and node info any more. This means that the localhost port number the ICCR uses to make the API calls to the IRI needs to be a variable equal to the user defined port number.
 In my last email, regarding version 1.0.2 I sad it would be best if we removed the "IOTA Port" Input field, so that the port number would just be included in the "IOTA Start Command" Input field. But as this issue shows, we probably need the "IOTA Port" Input field to stay, to set the port variable for the API calls...
 What are your thoughts on this?
 
-5) B3 When changing the ICCR port number, it requires the ICCR to restart for changes to take affect. Can the ICCR restart command be invoked on change of the ICCR port number?
+d 5) B3 When changing the ICCR port number, it requires the ICCR to restart for changes to take affect. Can the ICCR restart command be invoked on change of the ICCR port number?
 Else, a message notifying the user that a restart of ICCR is required for ICCR port changes to take affect would be good.
 
 
@@ -818,9 +818,35 @@ Handle changing IP of existing server from the ICC manage server?
 
 checked in
 
-todo:
-B2
+On port change, stop/restart iota log timer
 
+B2  When changing the IOTA Port to a custom port number, ICCJ will not be able to get the Neighbors and node info any more. This means that the localhost port number the ICCR uses to make the API calls to the IRI needs to be a variable equal to the user defined port number.
+In my last email, regarding version 1.0.2 I sad it would be best if we removed the "IOTA Port" Input field, so that the port number would just be included in the "IOTA Start Command" Input field. But as this issue shows, we probably need the "IOTA Port" Input field to stay, to set the port variable for the API calls...
+
+Suggested we leave as is, iota port num as separate variable
+
+A1
+a) When viewing the "tail" in the log it shows all transactions except of the top 10 lines lines of the log, which probably wasn't intended to be like that.
+
+d b) when the log refreshing is activated it will get for each refreshing the entire log (minus top 10 lines) and add it below the previously fetched log. Which leads to many copys of almost the same log being displayed in the IOTA Log console. And logically it gets very leggy as it refreshes, due to getting almost the entire log.
+
+d c) And when switching to "head" view, it actually displayed the same log part as when viewing the "tail".
+
+Fixed the iccr log reader.
+Set max num  lines to request to be 250
+Remove previous lines from log area when size is max * 2
+Kept log caret at bottom always
+
+checkin
+
+todo:
+Deleting IOTA the didn't mark iota as stopped, kept running the refresh timer
+
+A2
+In the coming days there will be a update in the IRI to the getNeighbors API call, which will remove the "/" from the API return message. When that update is released, there needs to be a small change in the ICCR handling of the getNeighborInfo API call, to be compatible again.
+
+What I am talking about is this: Current IRI API output "address": "/82.241.71.230:14265" 
+And new output format will be: "address": "82.241.71.230:14265"
 
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
