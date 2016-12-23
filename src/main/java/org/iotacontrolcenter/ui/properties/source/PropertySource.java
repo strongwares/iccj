@@ -192,6 +192,15 @@ public class PropertySource {
 
     }
 
+    public boolean isServerIpTaken(String ip) {
+        for(String id : getServerIds()) {
+            if(ip.equalsIgnoreCase(getServerIp(id))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isServerNameTaken(String name) {
         for(String id : getServerIds()) {
             if(name.equalsIgnoreCase(getServerName(id))) {
@@ -205,7 +214,14 @@ public class PropertySource {
         if(servers == null) {
             getServers();
         }
-        return getServerProperties(id).getProperty("name");
+        return getServerProperties(id).getProperty(SERVER_NAME_PROP);
+    }
+
+    public String getServerIp(String id) {
+        if(servers == null) {
+            getServers();
+        }
+        return getServerProperties(id).getProperty(SERVER_IP_PROP);
     }
 
     public Properties getServerProperties(String id) {

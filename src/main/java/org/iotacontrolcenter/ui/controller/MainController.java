@@ -320,9 +320,14 @@ public class MainController implements ActionListener {
 
         boolean isAdd = cfgServerDialog.isAdd;
         boolean isIccrPortNumChange = false;
+        boolean isIpChange = false;
 
         Properties newProps = new Properties();
         String ip = cfgServerDialog.serverIpTextField.getText();
+        if (!isAdd && ip != null && !ip.isEmpty() &&
+                !ip.equals(cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_IP_PROP))) {
+            isIpChange = true;
+        }
         newProps.setProperty(PropertySource.SERVER_IP_PROP, ip);
 
         String port = cfgServerDialog.iccrPortTextField.getText();
@@ -330,7 +335,6 @@ public class MainController implements ActionListener {
             isIccrPortNumChange = !port.equals(cfgServerDialog.serverProps.getProperty(
                         PropertySource.SERVER_ICCR_PORT_NUM_PROP));
         }
-
         newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, port);
 
         String apiKey = cfgServerDialog.iccrPwdTextField.getText();
@@ -387,6 +391,14 @@ public class MainController implements ActionListener {
                 sep = "\n";
             }
         }
+        else if(cfgServerDialog.isAdd && propertySource.isServerIpTaken(ip)) {
+            isError = true;
+            errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
+                    localizer.getLocalText("dialogSaveErrorServerIpTaken");
+            if(sep.isEmpty()) {
+                sep = "\n";
+            }
+        }
         // Not doing wallet command for now
         /*
         if(!isError) {
@@ -404,18 +416,28 @@ public class MainController implements ActionListener {
 
         // Need to check if the iccr port that is changing and it conflicts with the
         // iota port of an iccr server that is loaded:
-        if(!isError && isIccrPortNumChange && serverTabPanel.serverIsOpen(name)) {
-            try {
-                if (port.equals(serverTabPanel.getIotaPortNumber(name))) {
-                    isError = true;
-                    errors += sep + localizer.getLocalText("dialogSaveErrorPortNumberConflict");
-                    if (sep.isEmpty()) {
-                        sep = "\n";
-                    }
+        if(!isError && serverTabPanel.serverIsOpen(name)) {
+
+            if(isIpChange) {
+                isError = true;
+                errors += sep + localizer.getLocalText("dialogSaveErrorIpServerOpen");
+                if (sep.isEmpty()) {
+                    sep = "\n";
                 }
             }
-            catch(IllegalStateException ise) {
-                System.out.println("Check for IOTA port conflict: illegal state exception: " + ise);
+
+            if(isIccrPortNumChange) {
+                try {
+                    if (port.equals(serverTabPanel.getIotaPortNumber(name))) {
+                        isError = true;
+                        errors += sep + localizer.getLocalText("dialogSaveErrorPortNumberConflict");
+                        if (sep.isEmpty()) {
+                            sep = "\n";
+                        }
+                    }
+                } catch (IllegalStateException ise) {
+                    System.out.println("Check for IOTA port conflict: illegal state exception: " + ise);
+                }
             }
         }
 

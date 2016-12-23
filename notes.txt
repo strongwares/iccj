@@ -794,6 +794,9 @@ consoleLogIccrIsRestarted=ICCR was successfully restarted
 consoleLogIccrNotRestarted=ICCR was not restarted
 dialogSaveErrorPortNumberConflict=The ICCR port number conflicts with the IOTA port number
 consoleLogReconnecting=Reconnecting...
+dialogSaveErrorServerIpTaken=server IP or hostname is already in use
+dialogSaveErrorIpServerOpen=
+
 
 test:
 d B1
@@ -809,13 +812,15 @@ After "successfully restrted", add a reconnecting... log line
 
 checked in
 
+Handle changing IP of existing server from the ICC manage server?
+- Check for conflicts with existing server IP?
+- Not allow if the server is open?
+
+checked in
 
 todo:
 B2
 
-How to handle changing IP of existing server from the ICC manage server?
-- Not allow if the server is open?
-- Check for conflicts with existing server?
 
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
