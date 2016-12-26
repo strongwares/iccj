@@ -163,4 +163,48 @@ neighborTableDuplicateNbrIdError=That neighbor ID already exists
 neighborTableDuplicateNbrError=That neighbor already exists
 
 
+-----------------------------
+Version 1.0.4
+Delivered Friday 12/23/2016
+
+Fixed A1 IOTA log viewer issues. The following behavior is supported:
+a) When the dialog first opens up, it will attempt to load last 250 lines from the IOTA log file.
+b) As the IOTA log file changes, new lines will be added in the UI.
+c) When the IOTA log file head direction is requested, the first 250 lines will be loaded from the top of the IOTA log file.
+d) When the IOTA log file head add button is clicked, the next 250 lines will be loaded from the top of the IOTA log file.
+e) There will only ever be a max of 500 log file lines displayed in the UI IOTA log file viewer, as new lines are loaded, older lines will be removed to insure the viewer does not grow too large.
+
+Addressed A2 suport for new IRI getNeighbors result format with no leading "/"
+
+Fixed B1 issue, now possible to remove a server by clicking "Close or Remove Selected" in the "Manage Servers" window.
+
+Fixed B3 issue, with two ways that ICCR server port is changed, the user will be prompted to send a restart command to ICCR
+1) Relative to the ICC UI, changing the ICCR server properties:
+   Main menu -> Servers -> Manager -> <select server name> -> Edit
+
+2) Relative to the ICCR server, changing the ICCR port property on the server:
+   Selected server tab  -> Settings
+
+Added checking for conflicts with the IOTA port when changing the ICCR port number.
+
+Added checking for conflicts with existing ICCR server IP and hostnames when changing an ICCR IP or hostname.
+
+Added alert to not allow the user to change an ICCR server IP or hostname when that ICCR server is open.
+
+Added the three new ICC 20x20, 40x40, and 512x512 icons.
+
+New Message localization strings:
+restartIccrActionError=Restart ICCR call failed
+iccrPortNumberChangePromptTitle=ICCR Port Number Change: Restart Required
+iccrPortNumberChangePrompt=The ICCR port number was changed, do you want to restart that ICCR now?
+restartIccrActionError=Restart ICCR call failed
+consoleLogIccrIsRestarted=ICCR was successfully restarted
+consoleLogIccrNotRestarted=ICCR was not restarted
+dialogSaveErrorPortNumberConflict=The ICCR port number conflicts with the IOTA port number
+consoleLogReconnecting=Reconnecting...
+dialogSaveErrorServerIpTaken=server IP or hostname is already in use
+dialogSaveErrorIpServerOpen=You can not change the ICCR IP or hostname when the server is open
+
+Fixed issue where the iota neighbors were sometimes not being added to IRI when iccr was told to start IOTA. The workaround would be to do a save of neighbors from the ICC UI to add neighbors. The problem was that sometimes the IRI would take a longer time than expected to spin up.
+
 

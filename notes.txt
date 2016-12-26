@@ -853,16 +853,21 @@ Bumped version to 1.0.4
 
 checked in
 
+Fixed issue editing a server when it is not open.
+
+Did 1.0.4 release
 
 todo:
+Add the server name to title of popup dialogs like the iota log, iccr event, etc.
+
+Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
+
+
 Add keyboard short cuts for main menu:
 ICC Settings
 Servers
 -> Add New Server
 -> Manage
-
-
-Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
 Add stop iccr action and worker
 

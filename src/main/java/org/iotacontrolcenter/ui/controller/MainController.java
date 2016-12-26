@@ -475,7 +475,13 @@ public class MainController implements ActionListener {
         persistCfgServerSettings(newProps, cfgServerDialog.serverProps, cfgServerDialog.isAdd);
 
         if(!isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
-            serverTabPanel.serverNameChange(cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
+            try {
+                serverTabPanel.serverNameChange(
+                        cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
+            }
+            catch(IllegalStateException ise) {
+                System.out.println("API key change, illegal state exception: " + ise);
+            }
         }
 
         if(apiKeyChange) {
