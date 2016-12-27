@@ -857,7 +857,27 @@ Fixed issue editing a server when it is not open.
 
 Did 1.0.4 release
 
+-------------------------
+Tue: 12/27/2016
+
+Updated deploy and install scripts (user and group)
+
+Fix failing to run on mac: java_home not set,
+Put this in icc script:
+if [ -e /usr/libexec/java_home ]; then
+    val=`/usr/libexec/java_home`
+    JAVA_HOME=$val
+    echo java_home is $JAVA_HOME
+else
+    echo java_home setter not found
+fi
+
+
+
+
 todo:
+fix the A2 issue
+
 Add the server name to title of popup dialogs like the iota log, iccr event, etc.
 
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
