@@ -397,7 +397,7 @@ public class HttpProxy {
 
                 dto = response.readEntity(SimpleResponse.class);
                 if(response.getStatus() != HttpStatus.SC_OK) {
-                    throw new BadResponseException("iccrSetNbrsConfigError", dto);
+                    throw new BadResponseException("iccrUpdateIotaNbrsError", dto);
                 }
             }
             catch(BadResponseException bre) {
@@ -416,7 +416,7 @@ public class HttpProxy {
                     msg = e.getLocalizedMessage();
                 }
 
-                throw new BadResponseException("iccrSetNbrsConfigError",
+                throw new BadResponseException("iccrUpdateIotaNbrsError",
                         new SimpleResponse(false, msg));
             }
             finally {
