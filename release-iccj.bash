@@ -1,29 +1,84 @@
 #!/bin/bash
 
-#version=1.0.3
+if [ -z "${1}" ]; then
+    echo "Pass version user  and group on command line"
+    echo You are:
+    id
+    exit
+fi
+if [ -z "${2}" ]; then
+    echo "Pass version user  and group on command line"
+    echo You are:
+    id
+    exit
+fi
+
+if [ -z "${3}" ]; then
+    echo "Pass version user  and group on command line"
+    echo You are:
+    id
+    exit
+fi
+
+mac=false
+darwin=`uname | grep -i darwin`
+if [ $darwin = "Darwin" ]; then
+    mac=true
+fi
 version=$1
+user=$2
+group=$3
+dir=/opt
+iccdir=$dir/icc
+dist=~/projects/dist
 
-rm -rf  /opt/icc-pre-${version} > /dev/null 2>&1 
+if [ -d $dir/icc-pre-${version} ]; then
+    rm -rf $dir/icc-pre-${version} > /dev/null 2>&1 
+fi
 
-mv /opt/icc /opt/icc-pre-${version}
-mkdir /opt/icc
-mkdir /opt/icc/bin
-mkdir /opt/icc/repo
-mkdir /opt/icc/conf
+if [ ! -d $dir ]; then
+    sudo mkdir $dir
+    sudo chown $user:$group $dir
+fi
 
-chown -R dana:dana /opt/icc
+if [ -d $iccdir ]; then
+    mv $iccdir $dir/icc-pre-${version}
+fi
+
+
+if [ ! -d $iccdir ]; then
+    sudo mkdir $iccdir
+    sudo chown $user:$group $iccdir
+    mkdir $iccdir/bin
+    mkdir $iccdir/repo
+    mkdir $iccdir/conf
+fi
 
 ./deploy-iccj.bash
+if [ ! -z "${mac}" ]; then
+    echo "waiting..."
+    read
+fi
 
-cp changelog.txt ~/projects/dist/icc-${version}-changelog.txt
 
-cd /opt
-rm -f ~/projects/dist/iccj-${version}.zip  > /dev/null 2>&1
-zip -r ~/projects/dist/iccj-${version}.zip icc
+if [ ! -d $dist ]; then
+    mkdir $dist
+fi
+
+cp changelog.txt $dist/icc-${version}-changelog.txt
+
+cd $dir
+
+
+rm -f $dist/iccj-${version}.zip  > /dev/null 2>&1
+zip -r $dist/iccj-${version}.zip icc
 
 # for immediate testing:
-rm -rf icc-${version}-dist > /dev/null 2>&1 
+rm -rf icc-${version}-dist > /dev/null 2>&1
+
 mv icc icc-${version}-dist
-unzip ~/projects/dist/iccj-${version}.zip
-chown -R dana:dana icc
+
+unzip $dist/iccj-${version}.zip
+
+sudo chown -R $user:$group icc
 

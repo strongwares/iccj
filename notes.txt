@@ -857,6 +857,21 @@ Fixed issue editing a server when it is not open.
 
 Did 1.0.4 release
 
+-------------------------
+Tue: 12/27/2016
+
+Updated deploy and install scripts (user and group)
+
+Fix failing to run on mac: java_home not set,
+Put this in icc script:
+if [ -e /usr/libexec/java_home ]; then
+    val=`/usr/libexec/java_home`
+    JAVA_HOME=$val
+    echo java_home is $JAVA_HOME
+else
+    echo java_home setter not found
+fi
+
 ----------------------
 Tue: 1/3/2013
 
