@@ -857,6 +857,15 @@ Fixed issue editing a server when it is not open.
 
 Did 1.0.4 release
 
+----------------------
+Tue: 1/3/2013
+
+Fixed A2 Updated nbr format from iri with no leading "/"
+
+checked in
+
+- When iota nbr refresh has nbrs not found, refresh nbr config
+
 todo:
 Add the server name to title of popup dialogs like the iota log, iccr event, etc.
 

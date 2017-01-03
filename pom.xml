@@ -19,6 +19,7 @@
     <version.commons-configuration>1.10</version.commons-configuration>
     <version.gjson>2.3.1</version.gjson>
     <version.resteasy>3.0.19.Final</version.resteasy>
+    <version.junit>4.12</version.junit>
     <jar.final.name>icc</jar.final.name>
     <main.class>org.iotacontrolcenter.ui.app.Main</main.class>
   </properties>
@@ -64,10 +65,16 @@
       <artifactId>resteasy-jaxb-provider</artifactId>
       <version>${version.resteasy}</version>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jackson-provider</artifactId>
       <version>${version.resteasy}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${version.junit}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

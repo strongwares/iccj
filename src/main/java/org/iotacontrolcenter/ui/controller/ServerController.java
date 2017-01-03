@@ -1121,7 +1121,7 @@ public class ServerController implements ActionListener, TableModelListener {
         if(wasIotaLogRefresh) {
             stopIotaLogTimer();
         }
-	    
+
         // do the restart before we change the port we talk to it on:
         if(wasConnected) {
             // Always pause a bit to let the prop change POST finish

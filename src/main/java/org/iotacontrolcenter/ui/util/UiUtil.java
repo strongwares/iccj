@@ -5,7 +5,6 @@ import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.app.Main;
 
 import javax.swing.*;
-import java.awt.*;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -133,16 +132,11 @@ public class UiUtil {
         portIdx = iotaUri.lastIndexOf(":");
         String iotaPort = iotaUri.substring(portIdx);
         addrSepIdx = iotaUri.indexOf("/");
-        if(addrSepIdx < 0) {
-            //System.out.println("failed to find IOTA nbr host name address pieces");
-            //System.out.println("IOTA nbr address was: " + iotaUri);
-            //return false;
-            addrSepIdx = 0;
-        }
-        int addr2StartIdx = (addrSepIdx >= 0 ? addrSepIdx+1 : 0);
-        String iotaAddr1 = iotaUri.substring(0, addrSepIdx);
+
+        String iotaAddr1 = addrSepIdx < 0 ? "" : iotaUri.substring(0, addrSepIdx);
         boolean iotaAddr1IsIpv6 = isPotentialIpv6(iotaAddr1);
 
+        int addr2StartIdx = addrSepIdx >= 0 ? addrSepIdx+1 : 0;
         String iotaAddr2 = iotaUri.substring(addr2StartIdx, portIdx);
         boolean iotaAddr2IsIpv6 = isPotentialIpv6(iotaAddr2);
 
@@ -171,6 +165,9 @@ public class UiUtil {
             same = isSameIpv6(nbrHost, iotaAddr2) || isSameIpv6(nbrHost, iotaAddr1);
         }
         else {
+            //System.out.println("nbrHost: " + nbrHost);
+            //System.out.println("iotaAddr1: " + iotaAddr1);
+            //System.out.println("iotaAddr2: " + iotaAddr2);
             same = nbrHost.equalsIgnoreCase(iotaAddr2) || nbrHost.equalsIgnoreCase(iotaAddr1);
         }
         return same;
