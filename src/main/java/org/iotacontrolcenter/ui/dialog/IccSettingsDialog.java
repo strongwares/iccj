@@ -2,9 +2,9 @@ package org.iotacontrolcenter.ui.dialog;
 
 
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
-import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +34,7 @@ public class IccSettingsDialog extends JDialog {
     }
 
     private void init() {
+        setIconImages(Main.icons);
         setTitle(localizer.getLocalText("dialogTitleIccSettings"));
         setModal(true);
         setLayout(new BorderLayout());

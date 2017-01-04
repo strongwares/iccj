@@ -99,7 +99,10 @@ public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
                     Gson gson = new GsonBuilder().create();
                     dto = gson.fromJson(resp.getContent(), IotaGetNeighborsResponseDto.class);
 
-                    serverPanel.neighborPanel.neighborModel.updateNbrInfo(dto);
+                    boolean nbrsFound = serverPanel.neighborPanel.neighborModel.updateNbrInfo(dto);
+                    if(!nbrsFound) {
+                        ctlr.serverActionGetConfigNbrsList();
+                    }
                 }
                 catch(Exception e) {
                     System.out.println(action + ", exception mapping json response: " + e);

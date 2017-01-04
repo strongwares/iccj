@@ -14,6 +14,7 @@ import java.util.List;
 public class Main {
 
     public static MainFrame mainFrame;
+    public static List<Image> icons = new ArrayList<>();
     public static boolean doSsl = true;
     static MainController mainController;
 
@@ -52,12 +53,10 @@ public class Main {
         mainController = new MainController();
         mainFrame = new MainFrame(mainController);
 
-        List<Image> icons = new ArrayList<>();
         icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_1_APP).getImage());
         icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_2_APP).getImage());
         icons.add(UiUtil.loadIcon(Constants.IMAGE_ICON_FILENAME_MAIN_3_APP).getImage());
         mainFrame.setIconImages(icons);
-        //mainFrame.setIconImage(myAppImage.getImage());
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.prepareUi();

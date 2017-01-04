@@ -1,27 +1,30 @@
 #!/bin/bash
 
-if [ -z "${1}" ]; then
-    echo "Pass user and group on command line"
-    echo You are:
-    id
-    exit
-fi
+dir=/opt
+iccdir=$dir/icc
 
-if [ -z "${2}" ]; then
-    echo "Pass user and group on command line"
-    echo You are:
-    id
-    exit
+if [ ! -d $dir ]; then
+    if [ -z "${1}" ]; then
+        echo "For initial deploy, pass user and group on command line"
+        echo You are:
+        id
+        exit
+    fi
+
+    if [ -z "${2}" ]; then
+        echo "For initial deploy, pass user and group on command line"
+        echo You are:
+        id
+        exit
+    fi
 fi
 
 user=$1
 group=$2
-dir=/opt
-iccdir=$dir/icc
 
 mac=false
 darwin=`uname | grep -i darwin`
-if [ $darwin = "Darwin" ]; then
+if [ "${darwin}" = "Darwin" ]; then
     mac=true
 fi
 
@@ -46,20 +49,22 @@ if [ -z "${3}" ]; then
     cp -r target/appassembler/conf/* $iccdir/conf
 fi
 
-if [ -e /usr/libexec/java_home ]; then
-    echo "Add the following to $iccdir/bin/icc near the end before the check for -x \$JAVACMD"
+#if [ -e /usr/libexec/java_home ]; then
+echo "Before release:"
+echo "Add the following to $iccdir/bin/icc near the end before the check for -x \$JAVACMD"
+echo "Around line # 81 probably"
 
-    echo 'if $darwin; then'
-    echo '   if [ ! -d $JAVA_HOME ]; then'
-    echo '      JAVA_HOME=`/usr/libexec/java_home`'
-    echo '      JAVACMD="$JAVA_HOME/bin/java"'
-    echo "   fi"
-    echo "fi"
-    
-    #echo "if [ -e /usr/libexec/java_home ]; then"
-    #echo "   export JAVA_HOME=`/usr/libexec/java_home`"
-    #echo "fi"
-fi
+echo 'if $darwin; then'
+echo '   if [ ! -d $JAVA_HOME ]; then'
+echo '      JAVA_HOME=`/usr/libexec/java_home`'
+echo '      JAVACMD="$JAVA_HOME/bin/java"'
+echo "   fi"
+echo "fi"
+
+#echo "if [ -e /usr/libexec/java_home ]; then"
+#echo "   export JAVA_HOME=`/usr/libexec/java_home`"
+#echo "fi"
+#fi
 
 
 

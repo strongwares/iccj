@@ -32,6 +32,10 @@ dir=/opt
 iccdir=$dir/icc
 dist=~/projects/dist
 
+echo "Did you insert the mac specific checks?"
+read yNo
+echo Ok then...
+
 if [ -d $dir/icc-pre-${version} ]; then
     rm -rf $dir/icc-pre-${version} > /dev/null 2>&1 
 fi

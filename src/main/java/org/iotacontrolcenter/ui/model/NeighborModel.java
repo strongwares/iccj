@@ -40,7 +40,7 @@ public class NeighborModel extends AbstractTableModel {
                 localizer.getLocalText("neighborTableColumnTitleDescription") };
     }
 
-    public void updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
+    public boolean updateNbrInfo(IotaGetNeighborsResponseDto nbrInfo) {
         //System.out.println("updating nbrInfo from: " + nbrInfo);
         boolean found = true;
         if(nbrInfo !=  null && nbrInfo.getNeighbors() != null) {
@@ -56,6 +56,7 @@ public class NeighborModel extends AbstractTableModel {
         if(found) {
             fireTableDataChanged();
         }
+        return found;
     }
 
     private boolean updateNbrRow(IotaNeighborDto iotaNbr) {

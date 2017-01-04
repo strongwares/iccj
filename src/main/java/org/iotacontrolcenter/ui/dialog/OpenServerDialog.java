@@ -2,6 +2,7 @@ package org.iotacontrolcenter.ui.dialog;
 
 
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 
@@ -36,7 +37,7 @@ public class OpenServerDialog extends JDialog  {
     }
 
     private void init() {
-        System.out.println("open server dialog init");
+        setIconImages(Main.icons);
         setTitle(title);
         setModal(true);
         setLayout(new BorderLayout());

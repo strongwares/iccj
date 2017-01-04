@@ -1,9 +1,9 @@
 package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
-import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +39,7 @@ public class ConfigureServerDialog extends JDialog {
 
     private void init() {
         setTitle(title);
+        setIconImages(Main.icons);
         setModal(true);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

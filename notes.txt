@@ -879,13 +879,18 @@ Fixed A2 Updated nbr format from iri with no leading "/"
 
 checked in
 
-- When iota nbr refresh has nbrs not found, refresh nbr config
+Changed version to 1.0.5
 
-todo:
+When iota nbr refresh has nbrs not found, refresh nbr config
+
 Add the server name to title of popup dialogs like the iota log, iccr event, etc.
 
-Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
+Add icon to popup dialog windows
 
+checked in
+
+todo:
+Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
 Add keyboard short cuts for main menu:
 ICC Settings

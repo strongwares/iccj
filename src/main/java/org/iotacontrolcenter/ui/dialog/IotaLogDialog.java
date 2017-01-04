@@ -3,16 +3,17 @@ package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.dto.LogLinesResponse;
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
+import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class IotaLogDialog extends JDialog {
 
-    private ActionListener ctlr;
+    private ServerController ctlr;
     private String[] dirChoices;
     private String[]  dirChoiceTooltips;
     public JComboBox<String> dirChooser;
@@ -30,7 +31,7 @@ public class IotaLogDialog extends JDialog {
     public JButton tailPause;
     private String title;
 
-    public IotaLogDialog(Localizer localizer, String title, ActionListener ctlr) {
+    public IotaLogDialog(Localizer localizer, String title, ServerController ctlr) {
         super();
         this.title = title;
         this.localizer = localizer;
@@ -64,7 +65,8 @@ public class IotaLogDialog extends JDialog {
     }
 
     private void init() {
-        setTitle(title);
+        setIconImages(Main.icons);
+        setTitle(ctlr.name + " " + title);
         setModal(false);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(600, 500));

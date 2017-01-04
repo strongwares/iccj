@@ -433,7 +433,12 @@ public class ServerController implements ActionListener, TableModelListener {
                     iotaLogDialog.refreshLastFilePosition);
 
             if (resp.isSuccess()) {
-                iotaLogDialog.addNewLines(resp);
+                try {
+                    iotaLogDialog.addNewLines(resp);
+                }
+                catch(Exception e) {
+                    System.out.println("getIotaLogTailUpdate: exeption adding lines: " + e);
+                }
             }
             else {
                 System.out.println("getIotaLogTailUpdate: bad response: " + resp.getMsg());

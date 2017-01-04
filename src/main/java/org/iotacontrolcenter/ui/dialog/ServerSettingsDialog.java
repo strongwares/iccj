@@ -1,19 +1,20 @@
 package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
+import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class ServerSettingsDialog extends JDialog {
 
     public JButton cancel;
-    private ActionListener ctlr;
+    private ServerController ctlr;
     private Localizer localizer;
     public Properties iccrProps;
     public JTextField iccrPortTextField;
@@ -25,7 +26,7 @@ public class ServerSettingsDialog extends JDialog {
     public java.util.List<String> propList;
     public JButton save;
 
-    public ServerSettingsDialog(Localizer localizer, ActionListener ctlr, Properties iccrProps) {
+    public ServerSettingsDialog(Localizer localizer, ServerController ctlr, Properties iccrProps) {
         super();
         this.localizer = localizer;
         this.ctlr = ctlr;
@@ -34,7 +35,8 @@ public class ServerSettingsDialog extends JDialog {
     }
 
     private void init() {
-        setTitle(localizer.getLocalText("dialogTitleSettings"));
+        setIconImages(Main.icons);
+        setTitle(ctlr.name + " " + localizer.getLocalText("dialogTitleSettings"));
         setModal(true);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

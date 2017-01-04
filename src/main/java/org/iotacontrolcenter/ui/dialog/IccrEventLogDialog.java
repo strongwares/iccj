@@ -1,21 +1,22 @@
 package org.iotacontrolcenter.ui.dialog;
 
 import org.iotacontrolcenter.ui.app.Constants;
+import org.iotacontrolcenter.ui.app.Main;
+import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class IccrEventLogDialog extends JDialog {
 
     public JButton clear;
-    private ActionListener ctlr;
+    private ServerController ctlr;
     private Localizer localizer;
     private String title;
     public JTextArea eventText;
 
-    public IccrEventLogDialog(Localizer localizer, String title, ActionListener ctlr) {
+    public IccrEventLogDialog(Localizer localizer, String title, ServerController ctlr) {
         super();
         this.title = title;
         this.localizer = localizer;
@@ -24,7 +25,8 @@ public class IccrEventLogDialog extends JDialog {
     }
 
     private void init() {
-        setTitle(title);
+        setTitle(ctlr.name + " " + title);
+        setIconImages(Main.icons);
         setModal(true);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(600, 500));
