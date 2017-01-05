@@ -894,6 +894,9 @@ Wed: 1/4/2017
 
 d 3.) In the ICCJ config, changing the default Neighbor Status refresh time to "10"  and the NodeInfo refresh time to "60" (I personally found that its more practicable with this settings, then the initial values I had put in the PoC)
 
+Changed version to 1.0.6-SNAPSHOT
+
+checkedin
 
 todo:
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"

@@ -1,40 +1,36 @@
 #!/bin/bash
 
 if [ -z "${1}" ]; then
-    echo "Pass version user  and group on command line"
+    echo "Pass version, user, and group on command line"
     echo You are:
     id
     exit
 fi
 if [ -z "${2}" ]; then
-    echo "Pass version user  and group on command line"
+    echo "Pass version, user, and group on command line"
     echo You are:
     id
     exit
 fi
 
 if [ -z "${3}" ]; then
-    echo "Pass version user  and group on command line"
+    echo "Pass version, user, and group on command line"
     echo You are:
     id
     exit
 fi
 
-mac=false
-darwin=`uname | grep -i darwin`
-if [ $darwin = "Darwin" ]; then
-    mac=true
-fi
+#mac=false
+#darwin=`uname | grep -i darwin`
+#if [ ${darwin = "Darwin" ]; then
+#    mac=true
+#fi
 version=$1
 user=$2
 group=$3
 dir=/opt
 iccdir=$dir/icc
 dist=~/projects/dist
-
-echo "Did you insert the mac specific checks?"
-read yNo
-echo Ok then...
 
 if [ -d $dir/icc-pre-${version} ]; then
     rm -rf $dir/icc-pre-${version} > /dev/null 2>&1 
@@ -58,11 +54,17 @@ if [ ! -d $iccdir ]; then
     mkdir $iccdir/conf
 fi
 
-./deploy-iccj.bash
-if [ ! -z "${mac}" ]; then
-    echo "waiting..."
-    read
-fi
+./deploy-iccj.bash $user $group
+
+echo "Did you insert the mac specific checks?"
+read yNo
+echo Ok then...
+
+
+#if [ ! -z "${mac}" ]; then
+#    echo "waiting..."
+#    read
+#fi
 
 
 if [ ! -d $dist ]; then
