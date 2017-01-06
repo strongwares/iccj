@@ -5,7 +5,7 @@
 
   <groupId>org.iotacontrolcenter.ui</groupId>
   <artifactId>icc</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
