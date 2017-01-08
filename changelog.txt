@@ -228,7 +228,7 @@ Delivered Thu 01/05/2017
 
 1) In the ICCR iccr.properties config file, changed the default IOTA Start Command from "java -jar IRI.jar" to "java -jar IRI.jar -p"
 
-2) In the ICCJ iccr.properties config file, changed the default IOTA Client Download Link to "http://85.93.93.110/iri-1.1.2.3.jar"
+2) In the ICCJ icc.properties config file, changed the default IOTA Client Download Link to "http://85.93.93.110/iri-1.1.2.3.jar"
 
 3) In the ICCJ icc.properties config file, changed the default Neighbor Status refresh time to "10"  and the NodeInfo refresh time to "60".
 
@@ -240,7 +240,7 @@ Delivered Thu 01/05/2017
 
 7) Updated the install-iccr.bash script to prompt for and set an ICCR password
 
-8) Updated patch-iccr.bash script to prompt the user to automatically insert the new default values for the IOTA client download link and IOTA start command config properties.
+8) Updated patch-iccr.bash script to prompt the user to automatically insert the new default values for the IOTA client download link and IOTA start command config properties into their iccr.properties configuration file when that file still has the original defaults.
 
 
 ICCR pkg archive installation notes:
@@ -259,7 +259,7 @@ ICCR pkg archive installation notes:
 
 5) To update an existing ICCR installation without overwriting the existing configuration files, run the patch-iccr.bash script:
     /opt/iccr/bin/iccr-ctl stop
-   ./patch-iccr.bash
+    ./patch-iccr.bash
     /opt/iccr/bin/iccr-ctl start
 
 
@@ -277,7 +277,6 @@ unzip ~/Downloads/iccj-1.0.6.zip
 
 
 ICCJ patch notes, how to update an existing ICC installation without losing the existing property files:
-
 This assumes the ICC is installed in /opt
 
 1) Make a backup dir:
@@ -294,6 +293,11 @@ unzip ~/Downloads/iccj-1.0.6.zip
 
 5) Restore the previous property files:
 cp -f /tmp/icc-props/* /opt/icc/conf/
+
+Note that this 1.0.6 release has new default values for the following properties in the ICCJ icc.properties file:
+iotaDownloadLink=http://85.93.93.110/IRI-1.1.2.3.jar
+refreshNeighborsTime=10
+refreshNodeInfoTime=60
 
 6) Start the ICC:
 /opt/icc/bin/icc

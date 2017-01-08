@@ -22,12 +22,6 @@ fi
 user=$1
 group=$2
 
-mac=false
-darwin=`uname | grep -i darwin`
-if [ "${darwin}" = "Darwin" ]; then
-    mac=true
-fi
-
 if [ ! -d $dir ]; then
     sudo mkdir $dir
     sudo chown $user:$group $dir
