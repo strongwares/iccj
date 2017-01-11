@@ -898,6 +898,15 @@ Changed version to 1.0.6-SNAPSHOT
 
 checkedin
 
+-------------------
+Sun: 1/8/2017
+
+Fix issue: if there is a server that fails to connect initially with refresh on, is seems to get stuck with an active refresh still hitting that old node
+
+Fix issue: iota nbr is returning a node id that I dont' know  about, it is a verizon: caused by IRI doing DNS resolution
+
+Fix issue: copy and paste on MAC from iri log file
+
 todo:
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
 
