@@ -245,11 +245,13 @@ Delivered Thu 01/05/2017
 
 -----------------------------
 Version 1.0.7
-Delivered Tue 01/10/2017
+Delivered Wed 01/11/2017
 
 1) Fixed the copy and paste shortcut keystrokes in ICCJ when running on MAC OS.
 
 2) Fixed the script in the ICCR that checks for IOTA status when running on MAC OS.
+
+3) Fixed the install-iccr.bash script to add an apt-get update call prior to the apt-get call to install java
 
 
 ICCR pkg archive installation notes:
