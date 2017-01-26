@@ -914,6 +914,64 @@ im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEd
 im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
 
+---------------------
+
+As the last release doesn't seem to have any critical bugs any more, I think its time to get the final release rolling.
+
+1.) Documentation of ICCR
+I would like to write a documentation for the ICCR how it works and what settings there are in the config, etc.
+What I would need are all API calls and how they are formatted.
+
+me: I'll add that to the README files that are on github right now, for both the ICCJ and the ICCR
+
+2.) Documentation of Building ICCR and ICCJ from source.
+Could you  write instructions on how to build the ICCR and the ICCJ from source?
+
+me: I'll also add some build instructions in an additional README file on github for each.
+
+3.)Where should the ICC be hosted?
+You have more experience in this then I do, where and who should host the ICC compiled files and the source files?
+For the compiled files its probably best I host them on one of my servers.
+And Source is probably best to host on Github. If so, do you wan't to host them in your GitHub repository, or should I put them to my GitHub Account?
+
+me: That sounds good.
+me: >Source: Should I put them to my GitHub Account?
+me: That is probably the best idea, that way you can maintain ownership, have visibility into pull requests and other feedback, etc.  And choose to lock it down (i.e. go private) if and when you ever wanted to :-)
+
+4.) Licenses 
+Do you know what we have to add fore licence document for release? E.g. that its open source, that we are not reliable for any software failure or data loss that might be caused by the ICC and this kind of stuff.
+
+me: I'll look into some wording to accomplish that and let you now.
+
+5.) A security update to the ICCR install bash
+It is important that the majority of the users use a strong password for the ICCR API, so that an attacker can't exploit the ICCR to gain access to it, as this could lead to an Desaster.
+So could the setting of the password be made mandatory in the install-iccr.bash and have a minimum character count? 
+What do you think would be a secure length for the password?
+
+
+me: 'll send you back some suggestions for that, but a minimum length of 6 is at the low end, but common. In addition we could have the script enforce some password complexity requirements. I'll also send you some back some suggestions for that.
+
+
+6. Initial release version number and development road map
+I think its best to tag the initial release version 0.9, as it should imply that its not the final release.
+If the development costs get donated back to me by the community (Which I hope for), this would be the development road map I was thinking about.
+Version 0.9.5: Adding ssh connection to the ICCJ, so a user can just enter server user name and root password in the ICCJ and can then install the ICCR via the GUI.
+And bug fixes.
+Version 1.0 Adding Windows support to the ICCR. Adding better scaling for the ICCJ on a 4k monitor (if possible and only if not to much work)
+Adding Neighbor online status logging to the ICCR and ICCJ (when did a neighbor last send transactions?)
+And Bug fixes.
+
+me: sound good start 0.9, 0.9.5 soon
+
+7. Your payment
+First of, when do you want your payment? You just have to let me know and I will send it to you.
+Also, could you give me an estimate how much you want for developing the futures in the above development road-map?
+
+me: this week
+me: I'll let you know
+
+
+
 
 todo:
 Don't spam the iccr console with repeated fail to load iota info, do it every so often "repeated"
