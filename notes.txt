@@ -994,17 +994,21 @@ me: this week
 me: I'll let you know
 
 -----------------------
-Wed: 1/25/2017
+Sun: 1/29/2017
 
 todo:
+checkin pki keys, scripts
+delete unused props from iccr.properties
 delete iccr installiri.bash:
+automatically insert mac stuff in iccj.bash script
+manage log file size
 
-1) iccr readme.txt:
-- how it works
-- config settings
+1) iccr README.md
+d- how it works
+d- config settings
 - api calls
 
-2) iccj readme.txt
+2) iccj README.md
 - how it works
 - config settings
 
