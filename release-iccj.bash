@@ -20,11 +20,6 @@ if [ -z "${3}" ]; then
     exit
 fi
 
-#mac=false
-#darwin=`uname | grep -i darwin`
-#if [ ${darwin = "Darwin" ]; then
-#    mac=true
-#fi
 version=$1
 user=$2
 group=$3
@@ -55,17 +50,6 @@ if [ ! -d $iccdir ]; then
 fi
 
 ./deploy-iccj.bash $user $group
-
-echo "Did you insert the mac specific checks?"
-read yNo
-echo Ok then...
-
-
-#if [ ! -z "${mac}" ]; then
-#    echo "waiting..."
-#    read
-#fi
-
 
 if [ ! -d $dist ]; then
     mkdir $dist

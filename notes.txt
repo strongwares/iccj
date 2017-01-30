@@ -914,9 +914,11 @@ im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEd
 im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
 
----------------------
+released 1.0.7
 
-Todo: 
+----
+From pascal:
+
 As the last release doesn't seem to have any critical bugs any more, I think its time to get the final release rolling.
 
 1.) Documentation of ICCR
@@ -974,6 +976,8 @@ me: 'll send you back some suggestions for that, but a minimum length of 6 is at
 I think its best to tag the initial release version 0.9, as it should imply that its not the final release.
 If the development costs get donated back to me by the community (Which I hope for), this would be the development road map I was thinking about.
 
+
+
 Version 0.9.5: Adding ssh connection to the ICCJ, so a user can just enter server user name and root password in the ICCJ and can then install the ICCR via the GUI.
 And bug fixes.
 
@@ -996,17 +1000,44 @@ me: I'll let you know
 -----------------------
 Sun: 1/29/2017
 
+
 todo:
-checkin pki keys, scripts
-delete unused props from iccr.properties
-delete iccr installiri.bash:
-automatically insert mac stuff in iccj.bash script
+d set versions to 0.0.9-SNAPSHOT
+d automatically insert mac stuff in iccj.bash script
+
+iccr stuff:
+d checkin pki keys, scripts:
+  d ~/projects/pki/icc$ cp icc-pki-1.0.1-zip  ~/projects/iccr/iccr/
+  d no delete if from git
+  add to gdrive:
+  d  cp ~/projects/pki/icc/icc-pki-1.0.1-zip ~/projects/dist/
+     upload 
+d delete unused props from iccr.properties
+d delete iccr installiri.bash
+d set versions to 0.9.0-SNAPSHOT
+d add api key complexity 
+x add swagger dep
+x add swagger annotations
+
+d add curl examples
+
+checkin iccr artifacts to allow standalone iccj build
 manage log file size
 
+
+todo:
+iccj readme
+iccr build doc
+iccj build doc
+license
+
+
+docs:
 1) iccr README.md
 d- how it works
 d- config settings
-- api calls
+d- api calls
+d- curl
 
 2) iccj README.md
 - how it works
@@ -1018,10 +1049,19 @@ d- config settings
 
 5) research license and wording
 
-6) iccr install strong password
-- get pattern
-- email pascal
-- insert in install script
+d 6) iccr install strong password
+d- get pattern
+- email pascal:
+You need to set the  API access key (password) now.
+
+Enter an API access key with this complexity:
+- at least 6 characters in length
+- at least one upper case character
+- at least one lower case character
+- at least one numeric digit
+- at least one special case character from this set of characters: !@#$&_
+
+d - insert in iccr install script
 
 
 7) investigate ssh from java to do push install iccr from iccj
