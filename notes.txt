@@ -1002,7 +1002,7 @@ Sun: 1/29/2017
 
 
 todo:
-d set versions to 0.0.9-SNAPSHOT
+d set versions to 0.9.0-SNAPSHOT
 d automatically insert mac stuff in iccj.bash script
 
 iccr stuff:
@@ -1021,6 +1021,25 @@ x add swagger annotations
 
 d add curl examples
 
+------------------
+Tue: 1/31/2017
+
+iccr:
+d release 0.9.0
+checkin
+upload
+
+iccj:
+d release 0.9.0
+checkin
+upload
+
+email
+- release
+- pwd complexity
+
+
+todo:
 checkin iccr artifacts to allow standalone iccj build
 manage log file size
 
