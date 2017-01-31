@@ -48,7 +48,7 @@ MAC_FIX='if $darwin;  then JAVA_HOME=`/usr/libexec/java_home`; JAVACMD="$JAVA_HO
 ICC_SCRIPT=target/appassembler/bin/icc
 
 if [ "${mac}" = "1" ]; then
-    # Stupid sed on macos, doen't interpret \n as newline in replacement pattern:
+    # Stupid sed on macos, doesn't interpret \n as newline in replacement pattern:
     lf=$'\n'
     sed -i '' "s#^\\(if.*-x.*JAVACMD.*then\\)\$#${MAC_FIX}\\${lf}\\${lf}\\1#g" $ICC_SCRIPT
 else
