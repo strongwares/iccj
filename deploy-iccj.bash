@@ -38,9 +38,22 @@ fi
 
 cp -r target/appassembler/repo/* $iccdir/repo
 
+mac=0
+darwin=`uname | grep -i darwin`
+if [ "${darwin}" = "Darwin" ]; then
+    mac=1
+fi
+
 MAC_FIX='if $darwin;  then JAVA_HOME=`/usr/libexec/java_home`; JAVACMD="$JAVA_HOME/bin/java"; fi'
 ICC_SCRIPT=target/appassembler/bin/icc
-sed -i "s#^\\(if.*-x.*JAVACMD.*then\\)\$#${MAC_FIX}\\n\\n\\1#g" $ICC_SCRIPT
+
+if [ "${mac}" = "1" ]; then
+    # Stupid sed on macos, doen't interpret \n as newline in replacement pattern:
+    lf=$'\n'
+    sed -i '' "s#^\\(if.*-x.*JAVACMD.*then\\)\$#${MAC_FIX}\\${lf}\\${lf}\\1#g" $ICC_SCRIPT
+else
+    sed -i "s#^\\(if.*-x.*JAVACMD.*then\\)\$#${MAC_FIX}\\n\\n\\1#g" $ICC_SCRIPT
+fi
 
 if [ -z "${3}" ]; then
     cp -r target/appassembler/bin/* $iccdir/bin
