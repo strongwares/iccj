@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class ServerTabPanel extends JTabbedPane {
 
+    private static final long serialVersionUID = -3917320680855314326L;
+
     public ServerTabPanel() {
         super();
     }

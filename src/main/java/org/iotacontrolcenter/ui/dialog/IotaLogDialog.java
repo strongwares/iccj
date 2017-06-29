@@ -13,6 +13,7 @@ import java.awt.*;
 
 public class IotaLogDialog extends JDialog {
 
+    private static final long serialVersionUID = -7678882820998863056L;
     private ServerController ctlr;
     private String[] dirChoices;
     private String[]  dirChoiceTooltips;
@@ -123,6 +124,8 @@ public class IotaLogDialog extends JDialog {
 
         dirChooser = new JComboBox<>(dirChoices);
         dirChooser.setRenderer(new DefaultListCellRenderer() {
+			       private static final long serialVersionUID = -8993843708407522418L;
+
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object val, int idx, boolean isSel, boolean cellHasFocus) {
                 JComponent comp = (JComponent)super.getListCellRendererComponent(list, val, idx, isSel, cellHasFocus);

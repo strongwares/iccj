@@ -1,20 +1,26 @@
 package org.iotacontrolcenter.ui.panel;
 
+import java.awt.event.MouseEvent;
+
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+
 import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.model.NeighborModel;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
-import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import java.awt.event.MouseEvent;
-
 public class NeighborTable extends JTable {
+
+
+    private static final long serialVersionUID = -1864468307325256081L;
 
     private static final int METRIC_COL_WIDTH = 45;
 
+    @SuppressWarnings("unused")
     private ServerController ctlr;
-    private Localizer localizer;
-    private NeighborModel neighborModel;
+    private Localizer        localizer;
+    @SuppressWarnings("unused")
+    private NeighborModel    neighborModel;
 
     protected String[] columnToolTips = {
             "AT",
@@ -58,8 +64,10 @@ public class NeighborTable extends JTable {
 
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
+
+            private static final long serialVersionUID = 8953171382075962395L;
+
             public String getToolTipText(MouseEvent e) {
-                String tip = null;
                 java.awt.Point p = e.getPoint();
                 int index = columnModel.getColumnIndexAtX(p.x);
                 int realIndex = columnModel.getColumn(index).getModelIndex();

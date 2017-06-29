@@ -10,6 +10,7 @@ import java.awt.*;
 
 public class IccrEventLogDialog extends JDialog {
 
+	   private static final long serialVersionUID = -1673039786025331546L;
     public JButton clear;
     private ServerController ctlr;
     private Localizer localizer;

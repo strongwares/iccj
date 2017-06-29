@@ -13,6 +13,7 @@ import java.awt.*;
 
 public class NeighborPanel extends JPanel {
 
+    private static final long serialVersionUID = 5635868102897311850L;
     private JButton add;
     private Localizer localizer;
     private ServerController ctlr;

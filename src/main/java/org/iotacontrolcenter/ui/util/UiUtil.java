@@ -212,7 +212,7 @@ public class UiUtil {
 
     public static boolean isValidNumber(String num) {
         try {
-            Integer i = Integer.parseInt(num);
+            Integer.parseInt(num);
             return true;
         }
         catch(Exception e) {

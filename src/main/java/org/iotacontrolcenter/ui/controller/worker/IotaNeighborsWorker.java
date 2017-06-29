@@ -1,19 +1,18 @@
 package org.iotacontrolcenter.ui.controller.worker;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.iotacontrolcenter.dto.ActionResponse;
 import org.iotacontrolcenter.dto.IccrPropertyListDto;
 import org.iotacontrolcenter.dto.IotaGetNeighborsResponseDto;
-import org.iotacontrolcenter.dto.IotaGetNodeInfoResponseDto;
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.ServerController;
 import org.iotacontrolcenter.ui.panel.ServerPanel;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.proxy.BadResponseException;
 import org.iotacontrolcenter.ui.proxy.ServerProxy;
-import org.iotacontrolcenter.ui.util.UiUtil;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class IotaNeighborsWorker extends ActionResponseAbstractApiWorker {
 

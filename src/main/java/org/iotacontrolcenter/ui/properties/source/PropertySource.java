@@ -44,6 +44,7 @@ public class PropertySource {
     //public static final String WALLET_START_PROP = "iotaDownloadFilename";
     public static final String SERVERKEYS_PROP = "serverKeys";
 
+    @SuppressWarnings("unused")
     private static final String SERVER_LOCAL_KEY_VAL="local";
     private static final String SERVERKEYS_NAME_PREFIX_PROP = "server.name.";
     private static final String SERVERKEYS_IP_PREFIX_PROP = "server.ip.";
@@ -303,13 +304,11 @@ public class PropertySource {
         String sep = "";
 
         String foundId = null;
-        Properties foundProp = null;
         for(String id : getServerIds()) {
             Properties props = getServerProperties(id);
 
             if(props != null && serverName.equals(props.getProperty(SERVER_NAME_PROP))) {
                 foundId = id;
-                foundProp = props;
             }
             else {
                 serverIds += sep + id;

@@ -12,6 +12,7 @@ import java.awt.*;
 
 public class ServerActionPanel extends JPanel {
 
+    private static final long serialVersionUID = 5504842877319309913L;
     private ServerController ctlr;
     private JButton deleteIotaDb;
     private JButton deleteIota;
@@ -22,6 +23,7 @@ public class ServerActionPanel extends JPanel {
     private Localizer localizer;
     private JButton settings;
     private JButton startIota;
+    @SuppressWarnings("unused")
     private JButton startWallet;
     private JButton stopIota;
 

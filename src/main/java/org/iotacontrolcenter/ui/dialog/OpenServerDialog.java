@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 
 public class OpenServerDialog extends JDialog  {
 
+    private static final long serialVersionUID = -6072121209754382479L;
     private Localizer localizer;
     private String title;
 

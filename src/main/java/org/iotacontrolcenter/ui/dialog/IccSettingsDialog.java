@@ -12,7 +12,8 @@ import java.awt.event.ActionListener;
 
 public class IccSettingsDialog extends JDialog {
 
-    private Localizer localizer;
+    private static final long serialVersionUID = -5108543673619516848L;
+
 
     public JButton cancel;
     private ActionListener ctlr;

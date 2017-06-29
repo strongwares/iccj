@@ -337,7 +337,7 @@ public class MainController implements ActionListener {
         }
         newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, port);
 
-        String apiKey = cfgServerDialog.iccrPwdTextField.getText();
+        String apiKey = String.valueOf(cfgServerDialog.iccrPwdTextField.getPassword());
         newProps.setProperty(PropertySource.SERVER_ICCR_API_KEY_PROP, apiKey);
 
         String name = cfgServerDialog.serverNameTextField.getText();

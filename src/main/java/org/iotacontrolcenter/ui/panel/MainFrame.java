@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
+    private static final long serialVersionUID = -7426735036400855096L;
     private MainController mainController;
     private MainMenu mainMenu;
     private MainPanel mainPanel;

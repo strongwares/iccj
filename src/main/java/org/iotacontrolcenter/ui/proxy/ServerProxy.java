@@ -9,6 +9,7 @@ import java.util.Properties;
 public class ServerProxy {
 
     private HttpProxy httpProxy;
+    @SuppressWarnings("unused")
     private Properties serverProps;
 
     public ServerProxy(Properties serverProps) {

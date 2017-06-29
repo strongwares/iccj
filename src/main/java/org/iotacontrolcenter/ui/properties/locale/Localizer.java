@@ -20,6 +20,7 @@ public class Localizer {
         }
     }
 
+    @SuppressWarnings("unused")
     private String confDir;
     private String country;
     private Locale defaultLoc;
