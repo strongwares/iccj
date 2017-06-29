@@ -14,12 +14,16 @@ import org.iotacontrolcenter.ui.util.UiUtil;
 
 public class NeighborModel extends AbstractTableModel {
 
-    private static final int AT_COL = 0;
-    private static final int IT_COL = 1;
-    private static final int NT_COL = 2;
-    private static final int STATUS_COL = 3;
-    private static final int IP_COL = 4;
-    private static final int DESCR_COL = 5;
+    private static final long serialVersionUID = -2718352604413872647L;
+
+    private static final int AT_COL        = 0;
+    private static final int IT_COL        = 1;
+    private static final int NT_COL        = 2;
+    private static final int DAYSTATS_COL  = 3;
+    private static final int WEEKSTATS_COL = 4;
+    private static final int STATUS_COL    = 5;
+    private static final int IP_COL        = 6;
+    private static final int DESCR_COL     = 7;
 
     private String[] columnNames;
     public List<NeighborDto> nbrs = new ArrayList<>();
@@ -36,6 +40,8 @@ public class NeighborModel extends AbstractTableModel {
                 localizer.getLocalText("neighborTableColumnTitleAT"),
                 localizer.getLocalText("neighborTableColumnTitleIT"),
                 localizer.getLocalText("neighborTableColumnTitleNT"),
+                localizer.getLocalText("neighborTableColumnTitleDayStats"),
+                localizer.getLocalText("neighborTableColumnTitleWeekStats"),
                 localizer.getLocalText("neighborTableColumnTitleStatus"),
                 localizer.getLocalText("neighborTableColumnTitleNeighbor"),
                 localizer.getLocalText("neighborTableColumnTitleDescription") };
@@ -118,6 +124,12 @@ public class NeighborModel extends AbstractTableModel {
         else if(col == NT_COL) {
             return nbr.getNumNt();
         }
+        else if (col == DAYSTATS_COL) {
+            return nbr.getActivityPercentageOverLastDay();
+        }
+        else if (col == WEEKSTATS_COL) {
+            return nbr.getActivityPercentageOverLastWeek();
+        }
         return null;
     }
 
@@ -132,14 +144,16 @@ public class NeighborModel extends AbstractTableModel {
         else if(col == DESCR_COL) {
             return String.class;
         }
-        else if(col == AT_COL || col == IT_COL || col == NT_COL) {
+        else if (col == AT_COL || col == IT_COL || col == NT_COL
+                || col == DAYSTATS_COL || col == WEEKSTATS_COL) {
             return Integer.class;
         }
         return null;
     }
 
     public boolean isCellEditable(int row, int col) {
-        return col != AT_COL && col != IT_COL  && col != NT_COL;
+        return col != AT_COL && col != IT_COL && col != NT_COL
+                && col != DAYSTATS_COL && col != WEEKSTATS_COL;
     }
 
     public void addNeighbor(NeighborDto nbr) {
