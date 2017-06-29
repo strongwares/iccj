@@ -1,6 +1,19 @@
 package org.iotacontrolcenter.ui.proxy.http;
 
-import org.apache.commons.io.FileUtils;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -8,13 +21,17 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
-import org.iotacontrolcenter.dto.*;
+import org.iotacontrolcenter.dto.ActionResponse;
+import org.iotacontrolcenter.dto.IccrIotaNeighborsPropertyDto;
+import org.iotacontrolcenter.dto.IccrPropertyDto;
+import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.LogLinesResponse;
+import org.iotacontrolcenter.dto.SimpleResponse;
 import org.iotacontrolcenter.ui.app.Main;
 import org.iotacontrolcenter.ui.properties.source.PropertySource;
 import org.iotacontrolcenter.ui.proxy.BadResponseException;
@@ -22,21 +39,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
-
-import javax.net.ssl.*;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public class HttpProxy {
 
@@ -76,7 +78,7 @@ public class HttpProxy {
             //System.out.println("response status: " + response.getStatus());
 
             if(response.getStatus() == HttpStatus.SC_OK) {
-                SimpleResponse sr = response.readEntity(SimpleResponse.class);
+                response.readEntity(SimpleResponse.class);
             }
             else {
                 throw new BadResponseException("deleteIccrEventLog",
@@ -111,6 +113,7 @@ public class HttpProxy {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getIccrEventLog() throws BadResponseException {
         //System.out.println("getIccrEventLog...");
         List<String> log = null;
@@ -343,7 +346,6 @@ public class HttpProxy {
             //System.out.println("setting " + key + " -> " + val);
 
             Response response =  null;
-            SimpleResponse dto = null;
             try {
                 response = proxy.updateConfigProperty(key, new IccrPropertyDto(key, val));
 

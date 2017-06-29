@@ -1,15 +1,21 @@
 package org.iotacontrolcenter.ui.menu;
 
+import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 import org.iotacontrolcenter.ui.app.Constants;
 import org.iotacontrolcenter.ui.controller.MainController;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-
 public class MainMenu extends JMenuBar {
 
+    private static final long serialVersionUID = -4490811224635367854L;
     private Localizer localizer;
     private MainController mainController;
     private JMenu openAddServer;

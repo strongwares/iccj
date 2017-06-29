@@ -1,17 +1,21 @@
 package org.iotacontrolcenter.ui.app;
 
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.InputMap;
+import javax.swing.JFrame;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
+
 import org.iotacontrolcenter.ui.controller.MainController;
 import org.iotacontrolcenter.ui.panel.MainFrame;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 

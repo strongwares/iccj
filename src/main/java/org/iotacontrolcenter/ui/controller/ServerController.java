@@ -224,6 +224,7 @@ public class ServerController implements ActionListener, TableModelListener {
     @Override
     public void tableChanged(TableModelEvent e) {
         int changeType = e.getType();
+        @SuppressWarnings("unused")
         int row = e.getFirstRow();
         int col = e.getColumn();
 
@@ -687,7 +688,6 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void nbrPanelSave() {
-        boolean isSuccess = false;
         IccrIotaNeighborsPropertyDto nbrs = new IccrIotaNeighborsPropertyDto();
 
         Properties seenNbrs = new Properties();
@@ -756,8 +756,6 @@ public class ServerController implements ActionListener, TableModelListener {
     }
 
     private void doInstallIota() {
-        boolean isSuccess = false;
-
         IccrPropertyListDto actionProps = new IccrPropertyListDto();
         actionProps.addProperty(new IccrPropertyDto(PropertySource.IOTA_DLD_LINK_PROP,
                 propertySource.getIotaDownloadLink()));
@@ -1215,6 +1213,7 @@ public class ServerController implements ActionListener, TableModelListener {
         }
     }
 
+    @SuppressWarnings("unused")
     private String getActionStatusFromResponse(String key, ActionResponse ar) {
         String val = null;
         if(ar != null && ar.getProperties() !=  null) {

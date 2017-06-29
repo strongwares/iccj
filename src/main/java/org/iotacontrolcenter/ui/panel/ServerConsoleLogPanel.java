@@ -10,6 +10,8 @@ import java.awt.*;
 
 public class ServerConsoleLogPanel extends JPanel {
 
+    private static final long serialVersionUID = -6272542257359373435L;
+    @SuppressWarnings("unused")
     private ServerController ctlr;
     private Localizer localizer;
     public JTextArea consoleText;

@@ -30,7 +30,8 @@ public class IccrTest {
                 uiNbr1Uri,
                 String.valueOf(nbrKey),
                 String.valueOf(nbrKey),
-                true);
+                true,
+                10);
 
         IotaNeighborDto iotaNbr = new IotaNeighborDto();
         iotaNbr.setAddress(iotaNbr1Uri);

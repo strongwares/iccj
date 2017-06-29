@@ -1,15 +1,16 @@
 package org.iotacontrolcenter.ui.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
 import org.iotacontrolcenter.dto.IotaGetNeighborsResponseDto;
 import org.iotacontrolcenter.dto.IotaNeighborDto;
 import org.iotacontrolcenter.dto.NeighborDto;
 import org.iotacontrolcenter.ui.properties.locale.Localizer;
 import org.iotacontrolcenter.ui.util.UiUtil;
-
-import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NeighborModel extends AbstractTableModel {
 
@@ -120,6 +121,7 @@ public class NeighborModel extends AbstractTableModel {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public Class getColumnClass(int col) {
         if(col == STATUS_COL) {
             return Boolean.class;

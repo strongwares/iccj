@@ -1,17 +1,23 @@
 package org.iotacontrolcenter.ui.panel;
 
 
-import org.iotacontrolcenter.ui.controller.ServerController;
-import org.iotacontrolcenter.ui.model.NeighborModel;
-import org.iotacontrolcenter.ui.properties.locale.Localizer;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
+import org.iotacontrolcenter.ui.controller.ServerController;
+import org.iotacontrolcenter.ui.properties.locale.Localizer;
 
 public class ServerPanel extends JPanel {
 
+    private static final long serialVersionUID = -1891996302220018209L;
     public ServerController ctlr;
     public FooterPanel footerPanel;
+    @SuppressWarnings("unused")
     private String id;
     private JPanel internalPanel;
     private Localizer localizer;
