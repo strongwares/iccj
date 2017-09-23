@@ -1,10 +1,14 @@
 package org.iotacontrolcenter.ui.proxy;
 
-import org.iotacontrolcenter.dto.*;
-import org.iotacontrolcenter.ui.proxy.http.HttpProxy;
-
 import java.util.List;
 import java.util.Properties;
+
+import org.iotacontrolcenter.dto.ActionResponse;
+import org.iotacontrolcenter.dto.IccrIotaNeighborsPropertyDto;
+import org.iotacontrolcenter.dto.IccrPropertyDto;
+import org.iotacontrolcenter.dto.IccrPropertyListDto;
+import org.iotacontrolcenter.dto.LogLinesResponse;
+import org.iotacontrolcenter.ui.proxy.http.HttpProxy;
 
 public class ServerProxy {
 
@@ -43,6 +47,9 @@ public class ServerProxy {
 
         IccrPropertyListDto dto = httpProxy.iccrGetConfig();
         for(IccrPropertyDto prop : dto.getProperties()) {
+            if (prop.getKey() == null || prop.getValue() == null) {
+                continue;
+            }
             resp.setProperty(prop.getKey(), prop.getValue());
         }
             /*

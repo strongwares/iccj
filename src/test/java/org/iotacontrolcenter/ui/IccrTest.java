@@ -1,10 +1,8 @@
 package org.iotacontrolcenter.ui;
 
-import org.iotacontrolcenter.ui.util.UiUtil;
 import org.iotacontrolcenter.dto.IotaNeighborDto;
 import org.iotacontrolcenter.dto.NeighborDto;
-
-
+import org.iotacontrolcenter.ui.util.UiUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,8 +28,7 @@ public class IccrTest {
                 uiNbr1Uri,
                 String.valueOf(nbrKey),
                 String.valueOf(nbrKey),
-                true,
-                10);
+                true);
 
         IotaNeighborDto iotaNbr = new IotaNeighborDto();
         iotaNbr.setAddress(iotaNbr1Uri);
