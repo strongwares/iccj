@@ -11,9 +11,10 @@ public class Localizer {
 
     private static Localizer instance;
     private static Object SYNC_INST = new Object();
+
     public static Localizer getInstance() {
         synchronized (SYNC_INST) {
-            if(Localizer.instance == null) {
+            if (Localizer.instance == null) {
                 Localizer.instance = new Localizer();
             }
             return Localizer.instance;
@@ -60,8 +61,7 @@ public class Localizer {
 
             // From classpath
             defLocText = ResourceBundle.getBundle("MessagesBundle", defaultLoc);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Localizer exception: " + e.getLocalizedMessage());
         }
     }
@@ -71,7 +71,7 @@ public class Localizer {
     }
 
     public String getLocalTextWithFixed(String key, String fixed) {
-        return getLocalText(key) + fixed;
+        return getLocalText(key) + " " + fixed;
     }
 
     public String getFixedWithLocalText(String fixed, String key) {
@@ -88,8 +88,7 @@ public class Localizer {
                     txt = key;
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("getLocalText exception: " + e.getLocalizedMessage());
             txt = key;
         }

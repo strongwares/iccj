@@ -49,11 +49,10 @@ public class MainController implements ActionListener {
             }
         }
         */
-        if(propertySource.getNumServers() == 0) {
+        if (propertySource.getNumServers() == 0) {
             UiUtil.showInfoDialog(localizer.getLocalText("initialAddServerTitle"),
                     localizer.getLocalText("initialAddServerMsg"));
-        }
-        else {
+        } else {
             showOpenServerDialog();
         }
     }
@@ -62,42 +61,57 @@ public class MainController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         System.out.println(action);
-        if(action.equals(Constants.MM_ADD_SERVER_ACTION)) {
+        if (action.equals(Constants.MM_ADD_SERVER_ACTION)) {
             showAddOrEditServerDialog(localizer.getLocalText("dialogTitleAddServer"), null, null, true);
-        }
-        else if(action.equals(Constants.MM_OPEN_SERVER_ACTION)) {
+        } else if (action.equals(Constants.MM_OPEN_SERVER_ACTION)) {
             showOpenServerDialog();
-        }
-        else if(action.equals(Constants.MM_ICC_SETTINGS_ACTION)) {
+        } else if (action.equals(Constants.MM_ICC_SETTINGS_ACTION)) {
             showIccSettingsDialog();
-        }
-        else if(action.equals(Constants.DIALOG_CONFIG_ADD_SERVER_SAVE)) {
+        } else if (action.equals(Constants.DIALOG_CONFIG_ADD_SERVER_SAVE)) {
             cfgServerDialogSave(action);
-        }
-        else if(action.equals(Constants.DIALOG_CONFIG_EDIT_SERVER_SAVE)) {
+        } else if (action.equals(Constants.DIALOG_CONFIG_EDIT_SERVER_SAVE)) {
             cfgServerDialogSave(action);
-        }
-        else if(action.equals(Constants.DIALOG_CONFIG_SERVER_CANCEL)) {
+        } else if (action.equals(Constants.DIALOG_CONFIG_SERVER_CANCEL)) {
             cfgServerDialogClose();
-        }
-        else if(action.equals(Constants.DIALOG_ICC_SETTINGS_CANCEL)) {
+        } else if (action.equals(Constants.DIALOG_ICC_SETTINGS_CANCEL)) {
             iccSettingsDialogClose();
-        }
-        else if(action.equals(Constants.DIALOG_ICC_SETTINGS_SAVE)) {
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_CLOSE)) {
+            int sizeofSelectedList = openServerDialog.serverList.getSelectedValuesList().size();
+            if (sizeofSelectedList == 0) {
+                UiUtil.showErrorDialog(localizer.getLocalText("dialogOpenServerErrorTitle"),
+                        localizer.getLocalText("dialogServerErrorUnselected"));
+            } else {
+                boolean selection = UiUtil.promptUserYorN(localizer.getLocalText("dialogCloseTitle"),
+                        localizer.getLocalText("closeSelectedServers"));
+                if (selection) {
+                    for (String serverName : openServerDialog.serverList.getSelectedValuesList()) {
+                        try {
+                            iccCloseOpenServer(serverName);
+                        } catch (IllegalStateException ise) {
+                            System.out.println("Ill State Exception opening server: " + ise.getLocalizedMessage());
+                            UiUtil.showErrorDialog(localizer.getLocalText("dialogCloseServerErrorTitle"),
+                                    ise.getMessage());
+                        }
+                    }
+                    openServerDialogClose();
+                }
+            }
+        } else if (action.equals(Constants.DIALOG_ICC_SETTINGS_SAVE)) {
             iccSettingsDialogSave();
-        }
-        else if(action.equals(Constants.DIALOG_OPEN_SERVER_OPEN)) {
-            String serverName = openServerDialog.serverList.getSelectedValue();
-            if(serverName == null || serverName.isEmpty()) {
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_OPEN)) {
+            int sizeofSelectedList = openServerDialog.serverList.getSelectedValuesList().size();
+            if (sizeofSelectedList == 0) {
                 UiUtil.showErrorDialog(localizer.getLocalText("dialogOpenServerErrorTitle"),
                         localizer.getLocalText("dialogServerErrorUnselected"));
                 return;
             }
-            openSelectedServer(serverName);
-        }
-        else if(action.equals(Constants.DIALOG_OPEN_SERVER_EDIT)) {
+            for (String serverName : openServerDialog.serverList.getSelectedValuesList()) {
+                openSelectedServer(serverName);
+            }
+
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_EDIT)) {
             String serverName = openServerDialog.serverList.getSelectedValue();
-            if(serverName == null || serverName.isEmpty()) {
+            if (serverName == null || serverName.isEmpty()) {
                 UiUtil.showErrorDialog(localizer.getLocalText("dialogEditServerErrorTitle"),
                         localizer.getLocalText("dialogServerErrorUnselected"));
                 return;
@@ -107,22 +121,30 @@ public class MainController implements ActionListener {
 
             Properties serverProps = propertySource.getServerPropertiesForServerName(serverName);
 
-            showAddOrEditServerDialog(localizer.getLocalText("dialogTitleEditServer"), serverName, serverProps, false);
-        }
-        else if(action.equals(Constants.DIALOG_OPEN_SERVER_ADD_SERVER)) {
+            showAddOrEditServerDialog(localizer.getLocalText("dialogTitleEditServer"), serverName, serverProps,
+                    false);
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_ADD_SERVER)) {
             openServerDialogClose();
-            showAddOrEditServerDialog(localizer.getLocalText("dialogTitleAddServer"), null, null, true);
-        }
-        else if(action.equals(Constants.DIALOG_OPEN_SERVER_REMOVE)) {
-            String serverName = openServerDialog.serverList.getSelectedValue();
-            if(serverName == null || serverName.isEmpty()) {
+            showAddOrEditServerDialog(localizer.getLocalText("dialogTitleAddServer"), null,
+                    null, true);
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_REMOVE)) {
+            int serverName = openServerDialog.serverList.getSelectedValuesList().size();
+            if (serverName == 0) {
                 UiUtil.showErrorDialog(localizer.getLocalText("dialogRemoveServerErrorTitle"),
                         localizer.getLocalText("dialogServerErrorUnselected"));
                 return;
+            } else {
+                boolean selection = UiUtil.promptUserYorN(localizer.getLocalText("dialogDeleteTitle"),
+                        localizer.getLocalText("deleteSelectedServers"));
+                if (selection) {
+                    for (String selectedserver : openServerDialog.serverList.getSelectedValuesList()) {
+                        removeSelectedServer(selectedserver);
+                    }
+                }
             }
-            removeSelectedServer(serverName);
-        }
-        else if(action.equals(Constants.DIALOG_OPEN_SERVER_CANCEL)) {
+
+
+        } else if (action.equals(Constants.DIALOG_OPEN_SERVER_CANCEL)) {
             openServerDialogClose();
         }
         // No, change to run refresh will be activated on the icc dialog save
@@ -141,8 +163,22 @@ public class MainController implements ActionListener {
         this.serverTabPanel = serverTabPanel;
     }
 
+    private void iccCloseOpenServer(String serverName) {
+        Properties serverProps = propertySource.getServerPropertiesForServerName(serverName);
+        String name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
+        if (!serverTabPanel.serverIsOpen(name)) {
+            throw new IllegalStateException(localizer.getLocalTextWithFixed("dialogServerErrorAlreadyClose",
+                    serverName));
+        } else {
+            boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
+            if (wasOpen) {
+                serverTabPanel.removeServerTabByName(serverName);
+            }
+        }
+    }
+
     private boolean iccSettingsDialogSave() {
-        if(iccSettingsDialog == null) {
+        if (iccSettingsDialog == null) {
             System.out.println("iccSettingsDialog not found!");
 
             // TODO: localization
@@ -153,38 +189,38 @@ public class MainController implements ActionListener {
         String nbrRefresh = iccSettingsDialog.nbrRefreshTimeTextField.getText();
         String nodeInfoRefresh = iccSettingsDialog.nodeInfoRefreshTimeTextField.getText();
         String iotaDldLink = iccSettingsDialog.iotaDownloadLinkTextField.getText();
-                boolean runRefresh = iccSettingsDialog.runRefresh.isSelected();
+        boolean runRefresh = iccSettingsDialog.runRefresh.isSelected();
 
         String errors = "";
         String sep = "";
         boolean isError = false;
-        if(nbrRefresh == null || nbrRefresh.isEmpty() || !UiUtil.isValidPositiveNumber(nbrRefresh)) {
+        if (nbrRefresh == null || nbrRefresh.isEmpty() || !UiUtil.isValidPositiveNumber(nbrRefresh)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     iccSettingsDialog.nbrRefreshTimeTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
-        if(nodeInfoRefresh == null || nodeInfoRefresh.isEmpty() ||
+        if (nodeInfoRefresh == null || nodeInfoRefresh.isEmpty() ||
                 !UiUtil.isValidPositiveNumber(nodeInfoRefresh)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     iccSettingsDialog.nodeInfoRefreshTimeTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
-        if(iotaDldLink == null || iotaDldLink.isEmpty()) {
+        if (iotaDldLink == null || iotaDldLink.isEmpty()) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     iccSettingsDialog.iotaDownloadLinkTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
 
-        if(isError) {
+        if (isError) {
             UiUtil.showErrorDialog(localizer.getLocalText("dialogSaveIccErrorTitle"), errors);
             return false;
         }
@@ -195,13 +231,13 @@ public class MainController implements ActionListener {
         propertySource.setProperty(PropertySource.REFRESH_NBRS_PROP, nbrRefresh);
         propertySource.setProperty(PropertySource.REFRESH_NODEINFO_PROP, nodeInfoRefresh);
         propertySource.setProperty(PropertySource.IOTA_DLD_LINK_PROP, iotaDldLink);
-        propertySource.setProperty(PropertySource.RUN_IOTA_REFRESH_PROP,  String.valueOf(runRefresh).toLowerCase());
+        propertySource.setProperty(PropertySource.RUN_IOTA_REFRESH_PROP, String.valueOf(runRefresh).toLowerCase());
 
         propertySource.storeProperties();
 
         iccSettingsDialogClose();
 
-        if(refreshChanged) {
+        if (refreshChanged) {
             System.out.println("Changed IOTA refresh settings");
             serverTabPanel.updateIotaRefresh();
         }
@@ -210,7 +246,7 @@ public class MainController implements ActionListener {
     }
 
     private void iccSettingsDialogClose() {
-        if(iccSettingsDialog != null) {
+        if (iccSettingsDialog != null) {
             iccSettingsDialog.dispose();
             iccSettingsDialog = null;
         }
@@ -218,9 +254,8 @@ public class MainController implements ActionListener {
 
     private void openSelectedServer(String serverName) {
         try {
-            addServerTabPanel(propertySource.getServerPropertiesForServerName(serverName));
-        }
-        catch(IllegalStateException ise) {
+            addServerTabPanel(propertySource.getServerPropertiesForServerName(serverName), serverName);
+        } catch (IllegalStateException ise) {
             System.out.println("Ill State Exception opening server: " + ise.getLocalizedMessage());
             UiUtil.showErrorDialog(localizer.getLocalText("dialogOpenServerErrorTitle"), ise.getMessage());
             return;
@@ -230,23 +265,21 @@ public class MainController implements ActionListener {
 
     private void removeSelectedServer(String serverName) {
         openServerDialogClose();
-
         boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
-        if(wasOpen) {
+        if (wasOpen) {
             serverTabPanel.removeServerTabByName(serverName);
         }
 
         boolean doDelete = false;
-        if(wasOpen) {
+        if (wasOpen) {
             if (UiUtil.promptUserYorN(localizer.getLocalText("deleteServerConfigPromptTitle"),
                     localizer.getLocalText("deleteServerConfigPromptMsg"))) {
                 doDelete = true;
             }
-        }
-        else {
+        } else {
             doDelete = true;
         }
-        if(doDelete) {
+        if (doDelete) {
             propertySource.removeServerConfigByName(serverName);
         }
     }
@@ -274,8 +307,8 @@ public class MainController implements ActionListener {
 
     private void showAddOrEditServerDialog(String title, String serverName, Properties serverProps, boolean isAdd) {
         // TODO: localization
-        if(serverName != null && serverProps == null) {
-            System.out.println("server properties is null for serverName "  + serverName);
+        if (serverName != null && serverProps == null) {
+            System.out.println("server properties is null for serverName " + serverName);
             UiUtil.showErrorDialog("Settings Error",
                     "Server properties not found!");
             return;
@@ -285,12 +318,12 @@ public class MainController implements ActionListener {
         cfgServerDialog.setLocationRelativeTo(serverTabPanel);
 
         cfgServerDialog.addWindowListener(new WindowAdapter() {
-                                        @Override
-                                        public void windowClosed(WindowEvent e) {
-                                            super.windowClosed(e);
-                                            cfgServerDialog = null;
-                                        }
-                                    });
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                cfgServerDialog = null;
+            }
+        });
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -298,7 +331,7 @@ public class MainController implements ActionListener {
             }
         });
 
-        if(isAdd) {
+        if (isAdd) {
             cfgServerDialog.iccrPortTextField.setText(propertySource.getIccrDefaultPortNumber());
             cfgServerDialog.iccrPwdTextField.setText(propertySource.getIccrDefaultApiKey());
         }
@@ -307,7 +340,7 @@ public class MainController implements ActionListener {
     }
 
     private void cfgServerDialogSave(String action) {
-        if(cfgServerDialog == null) {
+        if (cfgServerDialog == null) {
             System.out.println("cfgServerDialog not found!");
 
             // TODO: localization
@@ -333,7 +366,7 @@ public class MainController implements ActionListener {
         String port = cfgServerDialog.iccrPortTextField.getText();
         if (!isAdd && port != null && !port.isEmpty()) {
             isIccrPortNumChange = !port.equals(cfgServerDialog.serverProps.getProperty(
-                        PropertySource.SERVER_ICCR_PORT_NUM_PROP));
+                    PropertySource.SERVER_ICCR_PORT_NUM_PROP));
         }
         newProps.setProperty(PropertySource.SERVER_ICCR_PORT_NUM_PROP, port);
 
@@ -351,51 +384,49 @@ public class MainController implements ActionListener {
         String errors = "";
         String sep = "";
         boolean isError = false;
-        if(ip == null || ip.isEmpty()) { // || !UiUtil.isValidIpV4(ip)) {
+        if (ip == null || ip.isEmpty()) { // || !UiUtil.isValidIpV4(ip)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.serverIpTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
-        if(port == null || port.isEmpty() || !UiUtil.isValidPositiveNumber(port)) {
+        if (port == null || port.isEmpty() || !UiUtil.isValidPositiveNumber(port)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.iccrPortTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
-        if(apiKey == null || apiKey.isEmpty()) {
+        if (apiKey == null || apiKey.isEmpty()) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.iccrPwdTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
-        if(name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     cfgServerDialog.serverNameTextField.getName();
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
-        }
-        else if(cfgServerDialog.isAdd && propertySource.isServerNameTaken(name)) {
+        } else if (cfgServerDialog.isAdd && propertySource.isServerNameTaken(name)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     localizer.getLocalText("dialogSaveErrorServerNameTaken");
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
-        }
-        else if(cfgServerDialog.isAdd && propertySource.isServerIpTaken(ip)) {
+        } else if (cfgServerDialog.isAdd && propertySource.isServerIpTaken(ip)) {
             isError = true;
             errors += sep + localizer.getLocalText("dialogSaveErrorInvalidFieldValue") + " " +
                     localizer.getLocalText("dialogSaveErrorServerIpTaken");
-            if(sep.isEmpty()) {
+            if (sep.isEmpty()) {
                 sep = "\n";
             }
         }
@@ -416,9 +447,9 @@ public class MainController implements ActionListener {
 
         // Need to check if the iccr port that is changing and it conflicts with the
         // iota port of an iccr server that is loaded:
-        if(!isError && serverTabPanel.serverIsOpen(name)) {
+        if (!isError && serverTabPanel.serverIsOpen(name)) {
 
-            if(isIpChange) {
+            if (isIpChange) {
                 isError = true;
                 errors += sep + localizer.getLocalText("dialogSaveErrorIpServerOpen");
                 if (sep.isEmpty()) {
@@ -426,7 +457,7 @@ public class MainController implements ActionListener {
                 }
             }
 
-            if(isIccrPortNumChange) {
+            if (isIccrPortNumChange) {
                 try {
                     if (port.equals(serverTabPanel.getIotaPortNumber(name))) {
                         isError = true;
@@ -441,7 +472,7 @@ public class MainController implements ActionListener {
             }
         }
 
-        if(isError) {
+        if (isError) {
             UiUtil.showErrorDialog(
                     action.equals(Constants.DIALOG_CONFIG_ADD_SERVER_SAVE) ? "Add Server Save Error" :
                             "Edit Server Save Error",
@@ -452,21 +483,19 @@ public class MainController implements ActionListener {
         boolean apiKeyChange = false;
         boolean needToRestartIccr = false;
 
-        if(isAdd) {
+        if (isAdd) {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
-        }
-        else {
+        } else {
             newProps.setProperty(PropertySource.SERVER_ID_PROP, UiUtil.genServerId(name));
 
             apiKeyChange = !newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP).equals(
                     cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
 
-            if(isIccrPortNumChange && serverTabPanel.serverIsOpen(name)) {
+            if (isIccrPortNumChange && serverTabPanel.serverIsOpen(name)) {
 
                 try {
                     needToRestartIccr = !port.equals(serverTabPanel.getIccrPortNumber(name));
-                }
-                catch(IllegalStateException ise) {
+                } catch (IllegalStateException ise) {
                     System.out.println("Check for ICCR port change, illegal state exception: " + ise);
                 }
             }
@@ -474,34 +503,31 @@ public class MainController implements ActionListener {
 
         persistCfgServerSettings(newProps, cfgServerDialog.serverProps, cfgServerDialog.isAdd);
 
-        if(!isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
+        if (!isAdd && propertySource.isServerNameChange(newProps, cfgServerDialog.serverProps)) {
             try {
                 serverTabPanel.serverNameChange(
                         cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP), name);
-            }
-            catch(IllegalStateException ise) {
+            } catch (IllegalStateException ise) {
                 System.out.println("API key change, illegal state exception: " + ise);
             }
         }
 
-        if(apiKeyChange) {
+        if (apiKeyChange) {
             try {
                 serverTabPanel.serverApiKeyChange(name,
                         //cfgServerDialog.serverProps.getProperty(PropertySource.SERVER_NAME_PROP),
                         newProps.getProperty(PropertySource.SERVER_ICCR_API_KEY_PROP));
-            }
-            catch(IllegalStateException ise) {
+            } catch (IllegalStateException ise) {
                 System.out.println("API key change, illegal state exception: " + ise);
             }
         }
 
         cfgServerDialogClose();
 
-        if(isAdd) {
+        if (isAdd) {
             showOpenServerDialog();
-        }
-        else {
-            if(serverTabPanel.serverIsOpen(name) &&
+        } else {
+            if (serverTabPanel.serverIsOpen(name) &&
                     (needToRestartIccr || isIccrPortNumChange)) {
                 // This will prompt user for need to change and restart:
                 serverTabPanel.serverIccrPortNumberChange(name, port);
@@ -510,23 +536,22 @@ public class MainController implements ActionListener {
     }
 
     private void persistCfgServerSettings(Properties newProps, Properties prevProps, boolean isAdd) {
-        if(isAdd) {
+        if (isAdd) {
             propertySource.addServerProperties(newProps);
-        }
-        else {
+        } else {
             propertySource.setServerProperties(newProps, prevProps);
         }
     }
 
     private void openServerDialogClose() {
-        if(openServerDialog != null) {
+        if (openServerDialog != null) {
             openServerDialog.dispose();
             openServerDialog = null;
         }
     }
 
     private void cfgServerDialogClose() {
-        if(cfgServerDialog != null) {
+        if (cfgServerDialog != null) {
             cfgServerDialog.dispose();
             cfgServerDialog = null;
         }
@@ -549,10 +574,11 @@ public class MainController implements ActionListener {
         openServerDialog.setVisible(true);
     }
 
-    private void addServerTabPanel(Properties serverProps) {
+    private void addServerTabPanel(Properties serverProps, String serverName) {
         String name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
-        if(serverTabPanel.serverIsOpen(name)) {
-            throw new IllegalStateException(localizer.getLocalText("dialogServerErrorAlreadyOpen"));
+        if (serverTabPanel.serverIsOpen(name)) {
+            throw new IllegalStateException(localizer.getLocalTextWithFixed("dialogServerErrorAlreadyOpen",
+                    serverName));
         }
         ServerProxy proxy = new ServerProxy(serverProps);
         ServerController ctlr = new ServerController(localizer, proxy, serverProps);

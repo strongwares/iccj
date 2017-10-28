@@ -22,6 +22,7 @@ public class OpenServerDialog extends JDialog  {
     private ActionListener ctlr;
     public JButton editServer;
     public JButton openServer;
+    public JButton closeServer;
     private PropertySource propertySource = PropertySource.getInstance();
     public JButton remove;
     public JPanel serverActionPanel;
@@ -81,6 +82,12 @@ public class OpenServerDialog extends JDialog  {
         openServer.addActionListener(ctlr);
         serverActionPanel.add(openServer);
 
+        closeServer = new JButton(localizer.getLocalText("buttonLabelClose"));
+        closeServer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        closeServer.setActionCommand(Constants.DIALOG_OPEN_SERVER_CLOSE);
+        closeServer.addActionListener(ctlr);
+        serverActionPanel.add(closeServer);
+
         if(idToSelect >= 0) {
             getRootPane().setDefaultButton(openServer);
         }
@@ -98,9 +105,10 @@ public class OpenServerDialog extends JDialog  {
         serverActionPanel.add(addServer);
 
         SpringUtilities.makeCompactGrid(serverActionPanel,
-                3, 1, //rows, cols
-                6, 6,        //initX, initY
+                4, 1, //rows, cols
+                8, 8,        //initX, initY
                 6, 6);       //xPad, yPad
+
 
         add(serverActionPanel, BorderLayout.EAST);
 
