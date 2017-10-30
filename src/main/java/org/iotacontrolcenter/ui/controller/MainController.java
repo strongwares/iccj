@@ -88,7 +88,7 @@ public class MainController implements ActionListener {
                         try {
                             iccCloseOpenServer(serverName);
                         } catch (IllegalStateException ise) {
-                            System.out.println("Ill State Exception opening server: " + ise.getLocalizedMessage());
+                            System.out.println("Ill State Exception  server: " + ise.getLocalizedMessage());
                             UiUtil.showErrorDialog(localizer.getLocalText("dialogCloseServerErrorTitle"),
                                     ise.getMessage());
                         }
