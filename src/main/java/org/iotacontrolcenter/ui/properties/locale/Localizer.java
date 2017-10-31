@@ -74,14 +74,29 @@ public class Localizer {
         return getLocalText(key) + " " + fixed;
     }
 
+    /**
+     * this function takes two key values and one fixed which we want to be insert in between two key
+     * values
+     * @param keyValueFirstPart
+     * @param keyValueSecondPart
+     * @param insertValue
+     * @return
+     */
+    public String getLocalTextWithInsertValue(String keyValueFirstPart, String keyValueSecondPart, String insertValue){
+        return getLocalText(keyValueFirstPart) + " " +  insertValue.toUpperCase() +  " " +
+                getLocalText(keyValueSecondPart);
+    }
+
     public String getFixedWithLocalText(String fixed, String key) {
         return fixed + getLocalText(key);
     }
 
     public String getLocalText(String key) {
         String txt = null;
+        System.out.println(locText.getKeys());
         try {
             txt = locText.getString(key);
+
             if (txt == null || txt.isEmpty()) {
                 txt = defLocText.getString(key);
                 if (txt == null || txt.isEmpty()) {
