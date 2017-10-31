@@ -78,7 +78,7 @@ public class MainController implements ActionListener {
         } else if (action.equals(Constants.DIALOG_OPEN_SERVER_CLOSE)) {
             int sizeofSelectedList = openServerDialog.serverList.getSelectedValuesList().size();
             if (sizeofSelectedList == 0) {
-                UiUtil.showErrorDialog(localizer.getLocalText("dialogOpenServerErrorTitle"),
+                UiUtil.showErrorDialog(localizer.getLocalText("dialogCloseServerErrorTitle"),
                         localizer.getLocalText("dialogServerErrorUnselected"));
             } else {
                 boolean selection = UiUtil.promptUserYorN(localizer.getLocalText("dialogCloseTitle"),
@@ -167,7 +167,8 @@ public class MainController implements ActionListener {
         Properties serverProps = propertySource.getServerPropertiesForServerName(serverName);
         String name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
         if (!serverTabPanel.serverIsOpen(name)) {
-            throw new IllegalStateException(localizer.getLocalTextWithFixed("dialogServerErrorAlreadyClose",
+            throw new IllegalStateException(localizer.getLocalTextWithInsertValue(
+                    "dialogServer", "dialogServerAlreadyClosed",
                     serverName));
         } else {
             boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
@@ -577,7 +578,8 @@ public class MainController implements ActionListener {
     private void addServerTabPanel(Properties serverProps, String serverName) {
         String name = serverProps.getProperty(PropertySource.SERVER_NAME_PROP);
         if (serverTabPanel.serverIsOpen(name)) {
-            throw new IllegalStateException(localizer.getLocalTextWithFixed("dialogServerErrorAlreadyOpen",
+            throw new IllegalStateException(localizer.getLocalTextWithInsertValue(
+                    "dialogServer", "dialogServeAlreadyOpend",
                     serverName));
         }
         ServerProxy proxy = new ServerProxy(serverProps);
