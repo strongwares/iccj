@@ -93,7 +93,7 @@ public class MainController implements ActionListener {
                                     ise.getMessage());
                         }
                     }
-                    openServerDialogClose();
+                   // openServerDialogClose();
                 }
             }
         } else if (action.equals(Constants.DIALOG_ICC_SETTINGS_SAVE)) {
@@ -137,8 +137,9 @@ public class MainController implements ActionListener {
                 boolean selection = UiUtil.promptUserYorN(localizer.getLocalText("dialogDeleteTitle"),
                         localizer.getLocalText("deleteSelectedServers"));
                 if (selection) {
-                    for (String selectedserver : openServerDialog.serverList.getSelectedValuesList()) {
-                        removeSelectedServer(selectedserver);
+                    for (String selectedServer : openServerDialog.serverList.getSelectedValuesList()) {
+                        openServerDialog.serverListModel.remove(propertySource.getServerIds().indexOf(selectedServer));
+                        removeSelectedServer(selectedServer);
                     }
                 }
             }
@@ -265,7 +266,7 @@ public class MainController implements ActionListener {
     }
 
     private void removeSelectedServer(String serverName) {
-        openServerDialogClose();
+        //openServerDialogClose();
         boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
         if (wasOpen) {
             serverTabPanel.removeServerTabByName(serverName);
