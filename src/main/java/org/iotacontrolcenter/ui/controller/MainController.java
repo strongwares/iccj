@@ -93,7 +93,6 @@ public class MainController implements ActionListener {
                                     ise.getMessage());
                         }
                     }
-                   // openServerDialogClose();
                 }
             }
         } else if (action.equals(Constants.DIALOG_ICC_SETTINGS_SAVE)) {
@@ -266,7 +265,6 @@ public class MainController implements ActionListener {
     }
 
     private void removeSelectedServer(String serverName) {
-        //openServerDialogClose();
         boolean wasOpen = serverTabPanel.serverIsOpen(serverName);
         if (wasOpen) {
             serverTabPanel.removeServerTabByName(serverName);
