@@ -57,6 +57,7 @@ public class Constants {
     public static final String DIALOG_CONFIG_EDIT_SERVER_SAVE = "dialog-cfg-edit-server-save";
 
     public static final String DIALOG_OPEN_SERVER_OPEN = "dialog-cfg-server-open";
+    public static final String DIALOG_OPEN_SERVER_CLOSE = "dialog-cfg-server-close";
     public static final String DIALOG_OPEN_SERVER_EDIT = "dialog-cfg-server-edit";
     public static final String DIALOG_OPEN_SERVER_ADD_SERVER = "dialog-cfg-server-add-server";
     public static final String DIALOG_OPEN_SERVER_CANCEL = "dialog-open-server-cancel";

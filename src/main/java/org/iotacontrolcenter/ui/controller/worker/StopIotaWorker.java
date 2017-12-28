@@ -37,8 +37,6 @@ public class StopIotaWorker extends ActionResponseAbstractApiWorker {
         BadResponseException bre = null;
         Exception exc = null;
         ActionResponse resp = null;
-        boolean isSuccess = false;
-
         if (rval instanceof BadResponseException) {
             bre = (BadResponseException) rval;
         } else if (rval instanceof Exception) {

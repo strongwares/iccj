@@ -1,10 +1,8 @@
 package org.iotacontrolcenter.ui;
 
-import org.iotacontrolcenter.ui.util.UiUtil;
 import org.iotacontrolcenter.dto.IotaNeighborDto;
 import org.iotacontrolcenter.dto.NeighborDto;
-
-
+import org.iotacontrolcenter.ui.util.UiUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

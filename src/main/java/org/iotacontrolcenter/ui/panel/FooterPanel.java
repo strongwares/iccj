@@ -14,6 +14,8 @@ import java.beans.PropertyChangeListener;
 
 public class FooterPanel extends JPanel implements PropertyChangeListener {
 
+    private static final long serialVersionUID = 1074412373923413157L;
+    @SuppressWarnings("unused")
     private ServerController ctlr;
     private Localizer localizer;
     private ImageIcon offLineIcon;

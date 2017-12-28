@@ -12,6 +12,7 @@ import java.util.Properties;
 
 public class ConfigureServerDialog extends JDialog {
 
+	   private static final long serialVersionUID = -746470123274444100L;
     public JButton cancel;
     private ActionListener ctlr;
     public boolean isAdd;

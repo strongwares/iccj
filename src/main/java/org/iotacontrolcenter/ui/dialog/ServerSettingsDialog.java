@@ -13,6 +13,7 @@ import java.util.Properties;
 
 public class ServerSettingsDialog extends JDialog {
 
+    private static final long serialVersionUID = 7365317866829009588L;
     public JButton cancel;
     private ServerController ctlr;
     private Localizer localizer;

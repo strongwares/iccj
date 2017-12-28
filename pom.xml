@@ -5,14 +5,14 @@
 
   <groupId>org.iotacontrolcenter.ui</groupId>
   <artifactId>icc</artifactId>
-  <version>0.9.0</version>
+  <version>1.0.0-rc3</version>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <iccr.group.id>org.iotacontrolcenter</iccr.group.id>
-    <version.iccr>0.9.0</version.iccr>
+    <version.iccr>1.0.0-rc3</version.iccr>
 
     <version.apache-httpclient>4.5.2</version.apache-httpclient>
     <version.commons-io>2.4</version.commons-io>
@@ -67,7 +67,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jackson-provider</artifactId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
       <version>${version.resteasy}</version>
     </dependency>
     <dependency>

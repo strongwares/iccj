@@ -4,6 +4,7 @@ import org.iotacontrolcenter.dto.SimpleResponse;
 
 public class BadResponseException extends Exception {
 
+    private static final long serialVersionUID = 6366830358965900220L;
     public String errMsgkey;
     public SimpleResponse resp;
 

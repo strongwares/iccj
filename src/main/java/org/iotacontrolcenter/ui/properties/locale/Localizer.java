@@ -11,15 +11,17 @@ public class Localizer {
 
     private static Localizer instance;
     private static Object SYNC_INST = new Object();
+
     public static Localizer getInstance() {
         synchronized (SYNC_INST) {
-            if(Localizer.instance == null) {
+            if (Localizer.instance == null) {
                 Localizer.instance = new Localizer();
             }
             return Localizer.instance;
         }
     }
 
+    @SuppressWarnings("unused")
     private String confDir;
     private String country;
     private Locale defaultLoc;
@@ -59,8 +61,7 @@ public class Localizer {
 
             // From classpath
             defLocText = ResourceBundle.getBundle("MessagesBundle", defaultLoc);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Localizer exception: " + e.getLocalizedMessage());
         }
     }
@@ -70,7 +71,20 @@ public class Localizer {
     }
 
     public String getLocalTextWithFixed(String key, String fixed) {
-        return getLocalText(key) + fixed;
+        return getLocalText(key) + " " + fixed;
+    }
+
+    /**
+     * this function takes two key values and one fixed which we want to be insert in between two key
+     * values
+     * @param keyValueFirstPart
+     * @param keyValueSecondPart
+     * @param insertValue
+     * @return
+     */
+    public String getLocalTextWithInsertValue(String keyValueFirstPart, String keyValueSecondPart, String insertValue){
+        return getLocalText(keyValueFirstPart) + " " +  insertValue.toUpperCase() +  " " +
+                getLocalText(keyValueSecondPart);
     }
 
     public String getFixedWithLocalText(String fixed, String key) {
@@ -79,16 +93,17 @@ public class Localizer {
 
     public String getLocalText(String key) {
         String txt = null;
+        System.out.println(locText.getKeys());
         try {
             txt = locText.getString(key);
+
             if (txt == null || txt.isEmpty()) {
                 txt = defLocText.getString(key);
                 if (txt == null || txt.isEmpty()) {
                     txt = key;
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("getLocalText exception: " + e.getLocalizedMessage());
             txt = key;
         }
